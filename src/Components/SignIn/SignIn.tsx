@@ -1,29 +1,36 @@
 import React from 'react'
 import { useState, useEffect } from 'react'
 // import { submitSignIn } from "./utils"
-import { useNavigate } from 'react-router-dom'
 import { useCreateRequestSignInMutation } from '../../api/mutations'
 
 export default function SignIn() {
 
   const [signInEmail, setSignInEmail] = useState<string>("")
-  const navigate = useNavigate()
+  const requestSignInMutation = useCreateRequestSignInMutation();
 
   const changeEmail = (e: any) => {
     setSignInEmail(e.target.value)
   }
 
-  const requestSingInMutation = useCreateRequestSignInMutation()
+  const { isLoading, isSuccess, isError, data } = requestSignInMutation
 
   const submitSignIn = async (e: any, email: string) => {
     e.preventDefault()
-    requestSingInMutation.mutate(email)
-    console.log(requestSingInMutation.status)
-    
+    requestSignInMutation.mutate(email)
+
     // navigate('/continue ')
   }
 
- 
+  if (isSuccess) {
+    // Mutation was successful
+    console.log("isSuccess:", data);
+    // You can navigate to the next page here
+  }
+
+  if (isError) {
+    // An error occurred during the mutation
+    console.error("isError:", requestSignInMutation.error.response.status);
+  }
 
   return (
     <div>
@@ -35,9 +42,9 @@ export default function SignIn() {
         onChange={e => changeEmail(e)}
       />
       <button
-        disabled={requestSingInMutation.isLoading}
+        disabled={isLoading}
         onClick={(e) => submitSignIn(e, signInEmail)}>
-        {requestSingInMutation.isLoading ? "Loading..." : "Submit"}
+        {isLoading ? "Loading..." : "Submit"}
       </button>
 
     </div >
