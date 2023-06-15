@@ -20,7 +20,7 @@ export default function SignIn() {
     requestSingInMutation.mutate(email)
     console.log(requestSingInMutation.status)
     
-    // navigate('/continue')
+    // navigate('/continue ')
   }
 
  
