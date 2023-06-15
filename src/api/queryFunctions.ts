@@ -1,8 +1,8 @@
 import axios from 'axios';
 
-export async function getGroups() {
+export async function getGroupById(groupId: string) {
 
-  const response = await axios.post(`${process.env.REACT_APP_APIURL}/group/getgroupbyid`, { GroupId: "640f58b7435d877f0e088bd6" });
+  const response = await axios.post(`${process.env.REACT_APP_APIURL}/group/getgroupbyid`, { GroupId: groupId });
 
   return response.data;
 }
