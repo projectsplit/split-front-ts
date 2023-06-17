@@ -1,29 +1,13 @@
 import { useMutation } from "@tanstack/react-query"
 import { requestSignIn } from "./mutationFunctions"
+import { OnErrorCallback, OnSuccessCallback } from "../types"
 
+export function useCreateRequestSignInMutation(onError: OnErrorCallback, onSuccess: OnSuccessCallback) {
 
-export function useCreateRequestSignInMutation() {
-
-  const request = useMutation({
+  return useMutation({
 
     mutationFn: (email: string) => requestSignIn(email),
-    onSuccess: (response) => {
-      // console.log("onSuccess response: " + response)
-    },
-    onError: (error: any) => {
-      // console.log("onError error:", error);
-      // console.log("onError error:", error.response.status);
-    },
-    onSettled(data, error, variables, context) {
-      // console.log("onSettled data: " + data)
-      // console.log("onSettled error: " + error)
-      // console.log("onSettled variables: " + variables)
-      // console.log("onSettled context: " + context)
-    },
-    onMutate(variables) {
-      // console.log("onMutate variables: " + variables)
-    },
+    onError: onError,
+    onSuccess: onSuccess
   })
-
-  return request
 } 
