@@ -1,15 +1,23 @@
 import React from 'react'
-import { useGetGroupById } from '../../api/queries';
+import { api } from '../../apis/api'
+import { useQuery } from '@tanstack/react-query'
+import { GetGroupRequest, GetGroupResponse } from '../../types';
 
 export default function SignUp() {
+  
+  const request: GetGroupRequest = { id: '6400aa69233f84cc4adbeb4a' }
 
-  const { isError, isSuccess, isLoading, data, error, fetchStatus } = useGetGroupById()
+  const getGroupByIdQuery = useQuery<GetGroupResponse, any, any>({
+    queryKey: ['group-6400aa69233f84cc4adbeb4a'],
+    queryFn: () => api.getGroupById(request),
+    onSuccess: (response: GetGroupResponse) => console.log(response.baseCurrency),
+    onError: (error) => console.log("onError", error.message),
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false
+    // enabled: false,
+    // manual: true
+  })
 
-  if (isLoading) return <div>Loading...</div>
-
-  if (isError) return <div>Error!</div>
-
-  return (<div>
-    {data?.title}
-  </div>)
+  return (<div>{JSON.stringify(getGroupByIdQuery)}</div>)
 }

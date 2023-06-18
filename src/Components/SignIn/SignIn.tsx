@@ -1,52 +1,45 @@
 import React from 'react'
-import { useState, useEffect } from 'react'
-// import { submitSignIn } from "./utils"
-import { useCreateRequestSignInMutation } from '../../api/mutations'
+import { useMutation } from "@tanstack/react-query"
+import { useState } from 'react'
+import { SignInWithEmailLinkRequest, SignInWithEmailLinkResponse } from "../../types"
+import { authApi } from '../../apis/authApi'
+import { setAccessToken } from '../../util/accessToken'
 
 export default function SignIn() {
 
   const [signInEmail, setSignInEmail] = useState<string>("")
-  const requestSignInMutation = useCreateRequestSignInMutation();
 
-  const changeEmail = (e: any) => {
+  const changeEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSignInEmail(e.target.value)
   }
 
-  const { isLoading, isSuccess, isError, data } = requestSignInMutation
+  const signInWithEmailLinkMutation = useMutation<SignInWithEmailLinkResponse, any, SignInWithEmailLinkRequest>({
+    mutationKey: ['lala'],
+    mutationFn: authApi.signInWithEmailLink,
+    onSuccess: (response: SignInWithEmailLinkResponse) => setAccessToken(response as string),
+    onError: () => console.log("onError")
+  });
 
-  const submitSignIn = async (e: any, email: string) => {
+  const submitSignIn = async (e: React.FormEvent<HTMLButtonElement>) => {
     e.preventDefault()
-    requestSignInMutation.mutate(email)
-
-    // navigate('/continue ')
-  }
-
-  if (isSuccess) {
-    // Mutation was successful
-    console.log("isSuccess:", data);
-    // You can navigate to the next page here
-  }
-
-  if (isError) {
-    // An error occurred during the mutation
-    console.error("isError:", requestSignInMutation.error.response.status);
+    signInWithEmailLinkMutation.mutate({
+      email: signInEmail
+    })
   }
 
   return (
     <div>
-
       <input
         inputMode='email'
         value={signInEmail}
         placeholder='john@rambo.com'
-        onChange={e => changeEmail(e)}
+        onChange={changeEmail}
       />
       <button
-        disabled={isLoading}
-        onClick={(e) => submitSignIn(e, signInEmail)}>
-        {isLoading ? "Loading..." : "Submit"}
+        disabled={signInWithEmailLinkMutation.isLoading}
+        onClick={submitSignIn}>
+        {signInWithEmailLinkMutation.isLoading ? "Loading..." : "Submit"}
       </button>
-
     </div >
   )
 }
