@@ -7,17 +7,18 @@ export default function SignUp() {
   
   const request: GetGroupRequest = { id: '6400aa69233f84cc4adbeb4a' }
 
-  const getGroupByIdQuery = useQuery<GetGroupResponse, any, any>({
+  const getGroupByIdQuery = useQuery({
     queryKey: ['group-6400aa69233f84cc4adbeb4a'],
     queryFn: () => api.getGroupById(request),
-    onSuccess: (response: GetGroupResponse) => console.log(response.baseCurrency),
-    onError: (error) => console.log("onError", error.message),
+    onSuccess: (response) => console.log(response.baseCurrency),
+    onError: (error) => console.log("onError", error),
     refetchOnMount: false,
     refetchOnWindowFocus: false,
-    refetchOnReconnect: false
+    refetchOnReconnect: false,
+    retry: false
     // enabled: false,
     // manual: true
   })
 
-  return (<div>{JSON.stringify(getGroupByIdQuery)}</div>)
+  return <div><pre>{JSON.stringify(getGroupByIdQuery, null, 2)}</pre></div>
 }
