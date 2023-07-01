@@ -54,8 +54,7 @@ export type ContinueSignInReponse = {
 }
 
 export type ContinueWithGoogleRequest = {
-  RedirectUrl: string
-
+  RedirectUrlSearchParameters: string
 }
 
 export type SessionData = {

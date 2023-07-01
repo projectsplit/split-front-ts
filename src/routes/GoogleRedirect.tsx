@@ -26,7 +26,8 @@ export default function GoogleRedirect() {
   }
   
   useEffect(() => {
-    getAccessTokenWithGoogle.mutate({ RedirectUrl: window.location.search })
+    console.log()
+    getAccessTokenWithGoogle.mutate({ RedirectUrlSearchParameters: window.location.search })
   }, [])
 
 
