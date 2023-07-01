@@ -6,3 +6,5 @@ export async function getGroupById(groupId: string) {
 
   return response.data;
 }
+
+

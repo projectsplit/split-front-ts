@@ -1,7 +1,7 @@
 import React from 'react'
 
-export default function members() {
+export default function Members() {
   return (
-    <div>members</div>
+    <div>Members</div>
   )
 }
