@@ -1,17 +1,18 @@
 import React, { useEffect, useState } from 'react'
 import { useMutation } from "@tanstack/react-query"
-import { googleAuthApi } from '../apis/googleAuthApi'
+import { authApi } from '../apis/authApi'
 import { useNavigate } from 'react-router-dom'
 import { setAccessToken, setSessionData } from '../util/accessToken'
-import { ContinueSignInReponse, ContinueWithGoogleRequest } from '../types'
+import { ContinueReponse, GoogleContinueRequest } from '../types'
 
-export default function GoogleRedirect() {
+export default function GoogleSuccessRedirect() {
+  
   const [googleErrorMessage, setGoogleErrorMessage] = useState<string>('')
 
   const navigate = useNavigate()
-  const getAccessTokenWithGoogle = useMutation<ContinueSignInReponse, any, ContinueWithGoogleRequest>({
+  const getAccessTokenWithGoogle = useMutation<ContinueReponse, any, GoogleContinueRequest>({
     mutationKey: ["googleRedirect"],
-    mutationFn: googleAuthApi.continueWithGoolge,
+    mutationFn: authApi.googleConnect,
     onError: (error) => {
       setGoogleErrorMessage(error.response.data)
     }
@@ -29,7 +30,6 @@ export default function GoogleRedirect() {
     console.log()
     getAccessTokenWithGoogle.mutate({ RedirectUrlSearchParameters: window.location.search })
   }, [])
-
 
   return (
     <>{googleErrorMessage}</>

@@ -7,7 +7,6 @@ export const signOut = () => {
   window.localStorage.setItem('userId', "")
   window.localStorage.setItem('userEmail', "")
   window.localStorage.setItem('userNickname', "")
-  window.location.href = '/';
-  
-}
+  window.location.href = '/access';
 
+}

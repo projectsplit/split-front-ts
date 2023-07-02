@@ -2,20 +2,26 @@ import axios, { AxiosError } from 'axios'
 import { authApi } from './authApi'
 import jwt_decode, { JwtPayload } from 'jwt-decode'
 import { getAccessToken, setAccessToken } from '../util/accessToken'
-import { GetGroupRequest, GetGroupResponse } from '../types'
+import { GetGroupResponse } from '../types'
+import { signOut } from '../util/signOut'
 
 const apiHttpClient = axios.create({
   baseURL: `${process.env.REACT_APP_APIURL}`
 })
 
-const isAccessTokenValid = (accessToken: string | null | undefined): boolean => {
+const isAccessTokenDecodableAndNotExpired = (accessToken: string | null | undefined): boolean => {
   if (accessToken) {
-    const decodedToken = jwt_decode<JwtPayload>(accessToken)
-    if (decodedToken && decodedToken.exp) {
-      const currentTime = Math.floor(Date.now() / 1000)
-      if (decodedToken.exp > currentTime) {
-        return true
+    try {
+      const decodedToken = jwt_decode<JwtPayload>(accessToken)
+      if (decodedToken && decodedToken.exp) {
+        const currentTime = Math.floor(Date.now() / 1000)
+        if (decodedToken.exp > currentTime) {
+          return true
+        }
       }
+    }
+    catch (e) {
+      return false
     }
   }
   return false
@@ -23,21 +29,25 @@ const isAccessTokenValid = (accessToken: string | null | undefined): boolean => 
 
 apiHttpClient.interceptors.request.use(async (request: any) => {
   const accessToken = getAccessToken()
-  if (isAccessTokenValid(accessToken)) {
+  if (isAccessTokenDecodableAndNotExpired(accessToken)) {
     request.headers.Authorization = `Bearer ${accessToken}`
+    return request
   }
-  else {
-    const newAccessToken = await authApi.refreshAccessToken()
-    setAccessToken(newAccessToken.accessToken)
-    request.headers.Authorization = `Bearer ${newAccessToken.accessToken}`
+  try {
+    const { accessToken } = await authApi.refreshAccessToken()
+    setAccessToken(accessToken)
+    request.headers.Authorization = `Bearer ${accessToken}`
+    return request
   }
-  return request
+  catch (e) {
+    signOut()
+  }
 },
   (error: AxiosError) => Promise.reject(error)
 )
 
-const getGroupById = async (request: GetGroupRequest) => {
-  const response = await apiHttpClient.post<GetGroupResponse>(`/group/get`, request);
+const getGroupById = async (groupId: string) => {
+  const response = await apiHttpClient.get<GetGroupResponse>(`/group/get`, { params: { id: groupId } });
   return response.data;
 }
 

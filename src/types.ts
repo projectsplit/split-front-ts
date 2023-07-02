@@ -1,25 +1,9 @@
 export type OnErrorCallback = (error: any) => void;
 export type OnSuccessCallback = (success: any) => void;
 
-export type RequestSignInRequest = {
+export type EmailInitiateRequest = {
   email: string
 }
-
-export type RequestSignUpRequest = {
-  email: string,
-  nickname: string
-}
-
-export type RequestSignInResponse = {
-  // Define the response data structure here
-}
-
-export type RequestSignUpResponse = {
-  // Define the response data structure here
-}
-
-// export type RefreshAccessTokenRequest = {
-// }
 
 export type RefreshAccessTokenResponse = {
   accessToken: string
@@ -40,20 +24,20 @@ export type GetGroupResponse = {
   lastUpdateTime: Date,
 }
 
-export type VerifyEmailLinkTokenRequest = {
-  token: string | undefined
+export type EmailVerifyLinkRequest = {
+  token: string
 }
 
-export type VerifyEmailLinkTokenResponse = {
-  type: string
+export type EmailVerifyLinkResponse = {
+  userCreated: boolean
 }
 
-export type ContinueSignInReponse = {
+export type ContinueReponse = {
   accessToken: string,
   sessionData: SessionData
 }
 
-export type ContinueWithGoogleRequest = {
+export type GoogleContinueRequest = {
   RedirectUrlSearchParameters: string
 }
 

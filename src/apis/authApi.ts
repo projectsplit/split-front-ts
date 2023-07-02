@@ -1,52 +1,16 @@
-import axios from 'axios'
+import axios, { AxiosResponse } from 'axios'
 import {
   RefreshAccessTokenResponse,
-  RequestSignInRequest,
-  RequestSignInResponse,
-  VerifyEmailLinkTokenRequest,
-  VerifyEmailLinkTokenResponse,
-  ContinueSignInReponse,
-  RequestSignUpRequest,
-  RequestSignUpResponse
+  ContinueReponse,
+  EmailInitiateRequest,
+  EmailVerifyLinkResponse,
+  GoogleContinueRequest
 } from '../types'
 
 const authApiHttpClient = axios.create({
   baseURL: `${process.env.REACT_APP_APIURL}/auth`,
   withCredentials: true
 })
-
-const continueSignIn = async (): Promise<ContinueSignInReponse> => {
-  const response = await authApiHttpClient.post<ContinueSignInReponse>(
-    `/sign-in`
-  )
-  return response.data
-}
-
-const requestSignIn = async (request: RequestSignInRequest): Promise<RequestSignInResponse> => {
-  const response = await authApiHttpClient.post<RequestSignInResponse>(
-    `/request-sign-in`,
-    request
-  )
-  return response.data
-}
-
-const requestSignUp = async (request: RequestSignUpRequest): Promise<RequestSignUpResponse> => {
-
-  const response = await authApiHttpClient.post<RequestSignUpResponse>(
-    `/request-sign-up`,
-    request
-  )
-  return response.data
-}
-
-const verifyEmailLinkToken = async (request: VerifyEmailLinkTokenRequest): Promise<VerifyEmailLinkTokenResponse> => {
-
-  const response = await authApiHttpClient.post<VerifyEmailLinkTokenResponse>(
-    `/verify-token`,
-    request
-  )
-  return response.data
-}
 
 const refreshAccessToken = async (): Promise<RefreshAccessTokenResponse> => {
   const response = await authApiHttpClient.post<RefreshAccessTokenResponse>(
@@ -55,11 +19,49 @@ const refreshAccessToken = async (): Promise<RefreshAccessTokenResponse> => {
   return response.data
 }
 
+const emailSendLink = async (request: EmailInitiateRequest): Promise<AxiosResponse<any>> => {
+  const response = await authApiHttpClient.post(
+    `email/send-link`,
+    request
+  )
+  return response.data
+}
+
+const emailVerifyLinkToken = async (token: string): Promise<EmailVerifyLinkResponse> => {
+  const response = await authApiHttpClient.get<EmailVerifyLinkResponse>(
+    `email/verify-link-token`,
+    { params: { token } }
+  )
+  return response.data
+}
+
+const emailContinue = async (): Promise<ContinueReponse> => {
+  const response = await authApiHttpClient.get<ContinueReponse>(
+    `email/connect`
+  )
+  return response.data
+}
+
+const getGoogleUrl = async (): Promise<string> => {
+  const response = await authApiHttpClient.get<string>(
+    `/google/url`
+  )
+  return response.data;
+}
+
+const googleConnect = async (request: GoogleContinueRequest): Promise<ContinueReponse> => {
+  const response = await authApiHttpClient.post<ContinueReponse>(
+    `/google/connect`,
+    request
+  )
+  return response.data;
+}
 
 export const authApi = {
-  requestSignIn,
-  requestSignUp,
   refreshAccessToken,
-  verifyEmailLinkToken,
-  continueSignIn
+  emailSendLink,
+  emailVerifyLinkToken,
+  emailContinue,
+  getGoogleUrl,
+  googleConnect
 }
