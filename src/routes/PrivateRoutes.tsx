@@ -6,6 +6,6 @@ export default function PrivateRoutes() {
   const accessToken = getAccessToken()
   
   return (
-    accessToken ? <Outlet /> : <Navigate to='/signin' />
+    accessToken ? <Outlet /> : <Navigate to='/access' />
   )
 }
