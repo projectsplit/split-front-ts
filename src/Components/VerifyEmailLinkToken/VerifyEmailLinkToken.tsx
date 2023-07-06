@@ -11,7 +11,6 @@ import {
   StyledErrorMark,
 } from "./VerifyEmailLinkToken.styled";
 import WelcomeHeader from "../WelcomeHeader/WelcomeHeader";
-import IonIcon from "@reacticons/ionicons";
 import { LoadingSpinner } from "../styles/loadingSpinner";
 
 export default function EmailVerifyLinkToken() {
@@ -71,14 +70,5 @@ export default function EmailVerifyLinkToken() {
       </div>
     </StyledVerifyToken>
 
-    // <div>
-    //   {isLoading && <div>Loading</div>}
-
-    //   {!isLoading && !error && !userCreated &&
-    //     <div>
-    //       <div>You have successfully signed in.</div>
-    //       <div>You can close this tab</div>
-    //     </div>
-    //   }
   );
 }

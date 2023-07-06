@@ -8,6 +8,7 @@ import SubmitButton from "../SubmitButton/SubmitButton";
 import WelcomeHeader from "../WelcomeHeader/WelcomeHeader";
 import { LoadingSpinner } from "../styles/loadingSpinner";
 
+
 export default function ContinueWithEmailLink() {
   const navigate = useNavigate();
 
