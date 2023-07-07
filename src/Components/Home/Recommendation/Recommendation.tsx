@@ -1,8 +1,9 @@
 import React from "react";
 import { StyledRecommendation } from "./Recommendation.styled";
 import IonIcon from "@reacticons/ionicons";
+import { RecommendationProps } from "../../../interfaces";
 
-export default function Recommendation() {
+export default function Recommendation({ onClick }: RecommendationProps) {
   return (
     <StyledRecommendation>
       <div className="main">
@@ -22,7 +23,7 @@ export default function Recommendation() {
             </div>
           </div>
         </div>
-        <div className="closeButton">
+        <div className="closeButton" onClick={onClick}>
           <IonIcon name="close-outline" className="close" />
         </div>
       </div>

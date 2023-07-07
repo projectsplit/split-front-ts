@@ -19,7 +19,7 @@ export const StyledRecommendation = styled.div`
         margin-right: 10px;
       }
       .paragraphs {
-        font-size: 13px;
+        font-size: 15px;
         display: flex;
         flex-direction: column;
         gap: 10px;

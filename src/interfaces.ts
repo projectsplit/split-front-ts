@@ -28,3 +28,11 @@ export interface OptionsContainerProps {
   onClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
   children: any;
 }
+
+export interface RecommendationProps {
+  onClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
+}
+
+export interface TreeProps {
+  items: string[];
+}

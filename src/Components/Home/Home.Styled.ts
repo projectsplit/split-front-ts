@@ -31,9 +31,20 @@ export const StyledHomepage = styled.div`
     display: flex;
     flex-direction: column;
     gap: 5px;
+    .a{
+      padding-bottom: 0px;
+      padding-top: 5px;
+      border-bottom-width: 0px;
+    }
+
     .mostRecentMsg {
       font-size: 12px;
       margin-left: 5px;
+    }
+    .groupName {
+      font-size: 20px;
+      font-weight: bold;
+      height: 15px; /*can move element closer to tree*/
     }
   }
 `;
