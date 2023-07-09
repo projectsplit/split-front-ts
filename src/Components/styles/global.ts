@@ -6,14 +6,14 @@ const GlobalStyles = createGlobalStyle`
 
   }
 
-  body{
+  body {
     background:${({ theme }) => theme.colors.body};
-    font-family: 'Inter', sans-serif;
+    font-family: 'Open Sans';
     margin: 0;
-    
+    padding: 0;
   }
   
-  div{
+  div {
     /* color:${({ theme }) => theme.colors.whiteText}; */
   }
 `

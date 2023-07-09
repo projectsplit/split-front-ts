@@ -15,6 +15,8 @@ import { Main } from "./layouts";
 import ContinueWithEmailLink from "./components/ContinueWithEmailLink/ContinueWithEmailLink";
 import { ThemeProvider } from "styled-components";
 import GlobalStyles from "./components/styles/global";
+import Expenses from "./components/Expenses/Expenses";
+import ExpenseForm from "./components/ExpenseForm/ExpenseForm";
 
 function App() {
   const theme = {
@@ -41,6 +43,8 @@ function App() {
           <Route path="/access" element={<AccessScreen />} />
           <Route path="/redirect" element={<GoogleSuccessRedirect />} />
           <Route path="/v/:token" element={<VerifyEmailLinkToken />} />
+          <Route path="/expenses" element={<Expenses />} />
+          <Route path="/create" element={<ExpenseForm />} />
           <Route element={<PrivateRoutes />}>
             <Route path="/" element={<Home />} />
             <Route path="/home" element={<Home />} />

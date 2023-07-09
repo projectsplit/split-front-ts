@@ -24,6 +24,32 @@ export type GetGroupResponse = {
   lastUpdateTime: Date,
 }
 
+export type Participant = {
+  memberId: string,
+  participationAmount: string
+}
+
+export type Payer = {
+  memberId: string,
+  paymentAmount: string
+}
+
+export type Expense = {
+  id: string,
+  groupId: string,
+  description: string,
+  amount: number,
+  currency: string,
+  payers: Payer[],
+  participants: Participant[],
+  expenseTime: Date,
+  labels: Label[],
+  creationTime: Date,
+  lastUpdateTime: Date,
+}
+
+export type GetGroupExpensesResponse = Expense[]
+
 export type EmailVerifyLinkRequest = {
   token: string
 }
@@ -48,7 +74,7 @@ export type SessionData = {
   userNickname: string
 }
 
-export type Label = {
+export interface Label {
   id: string,
   text: string,
   color: string,
@@ -57,4 +83,26 @@ export type Label = {
 export type Member = {
   memberId: string,
   permissions: number,
+}
+
+export type GetExpenseResponse = {
+  id: string,
+  groupId: string,
+  description: string,
+  amount: string,
+  currency: string,
+  labels: Label[],
+  participants: {
+    memberId: string,
+    name: string,
+    amount: string
+  }[],
+  payers: {
+    memberId: string,
+    name: string,
+    amount: string
+  }[],
+  expenseTime: Date,
+  creationTime: Date,
+  lastUpdateTime: Date
 }
