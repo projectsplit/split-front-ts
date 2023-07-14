@@ -3,7 +3,7 @@ import { UserOptionsButtonProps } from "../../interfaces";
 
 export const StyledUserOptionsButton = styled.div<UserOptionsButtonProps>`
   box-shadow: rgba(0, 0, 0, 0.5) 0px 4px 4px;
-  border-radius: 4px;
+  border-radius: 8px;
   user-select: none;
   padding-top: 0.5rem;
   padding-bottom: 0.5rem;

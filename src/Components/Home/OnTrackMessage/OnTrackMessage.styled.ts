@@ -1,17 +1,12 @@
 import styled from "styled-components";
 
-export const StyledRecommendation = styled.div`
+export const StyledOnTrackMessage = styled.div`
   .main {
     position: relative;
     display: flex;
     flex-direction: column;
     gap: 20px;
     
-    .header {
-      display: flex;
-      justify-content: center;
-      font-weight: bold;
-    }
     .signParagraphWrap {
       display: flex;
       flex-direction: row;
@@ -26,12 +21,12 @@ export const StyledRecommendation = styled.div`
         gap: 10px;
         font-size: 15px;
         .amount{
-          color:${({theme})=>theme.colors.redish}
+          color:${({theme})=>theme.colors.green}
         }
       }
-      .warning {
+      .information {
         font-size: 40px;
-        color:${({theme})=>theme.colors.redish};
+        color:${({theme})=>theme.colors.green};
       }
     }
 
@@ -44,4 +39,5 @@ export const StyledRecommendation = styled.div`
       color: #6f6f6f;
     }
   }
+ 
 `;

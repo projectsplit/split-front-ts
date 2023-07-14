@@ -2,12 +2,19 @@ import React from "react";
 import { StyledHomepage, HomeWrapper } from "./Home.Styled";
 import LogoStripe from "./LogoStripe/LogoStripe";
 import OptionsContainer from "../OptionsContainer/OptionsContainer";
-import MostRecentContainer from "./MostRecentContainer/MostRecentContainer";
+import TreeAdjustedContainer from "./TreeAdjustedContainer/TreeAdjustedContainer";
 import Recommendation from "./Recommendation/Recommendation";
+import OnTrackMessage from "./OnTrackMessage/OnTrackMessage";
 import Tree from "../Tree/Tree";
-import IonIcon from "@reacticons/ionicons";
+import { BsBarChartFill } from "react-icons/bs";
+import { BsFillPiggyBankFill } from "react-icons/bs";
+import { BsFillPersonFill } from "react-icons/bs";
+import OptionButton from "./SelectionButton/SelectionButton";
+import { useNavigate } from "react-router-dom";
 
 export default function Home() {
+  const navigate = useNavigate();
+
   return (
     <HomeWrapper>
       <StyledHomepage>
@@ -16,8 +23,9 @@ export default function Home() {
           Welcome {"sessionData.userNickname"}
         </div>
         <div className="optionsStripe">
-          <OptionsContainer>
-            <Recommendation
+          <OptionsContainer hasArrow={false}>
+            <OnTrackMessage
+              amount="£21.5"
               onClick={() =>
                 console.log("function to close recommendation box")
               }
@@ -25,18 +33,71 @@ export default function Home() {
           </OptionsContainer>
           <div className="mostRecent">
             <div className="mostRecentMsg">Most recent</div>
-            <MostRecentContainer onClick={() => console.log("goto group")}>
-            
-                <div className="groupName">Italy</div>
-                <Tree items={["You are owed £56.00", "You owe $5.65"]} />
-                <IonIcon name="chevron-forward-outline" className="arrow" />
-           
-            </MostRecentContainer>
+            <TreeAdjustedContainer
+              onClick={() => console.log("goto group")}
+              hasArrow={true}
+            >
+              <div className="groupName">Kythnos</div>
+              <Tree
+                items={[
+                  <div className="groupsInfo">
+                    <strong>You</strong> are owed{" "}
+                    <span className="owed">£56.00</span>
+                  </div>,
+                  <div className="groupsInfo">
+                    <strong>You</strong> owe <span className="owe">$5.65</span>
+                  </div>,
+                ]}
+              />
+            </TreeAdjustedContainer>
           </div>
+          <TreeAdjustedContainer
+            hasArrow={true}
+            onClick={() => navigate("/groups")}
+          >
+            <div className="groups">
+              <i className="group icon">
+                <span className="groupCount">3</span>
+              </i>
+              <div className="groupName">Groups</div>
+            </div>
+            <Tree
+              items={[
+                <div className="groupsInfo">
+                  <strong>You</strong> are owed{" "}
+                  <span className="owed">£56.00</span>
+                </div>,
+                <div className="groupsInfo">
+                  <strong>You</strong> owe <span className="owe">$5.65</span>
+                </div>,
+              ]}
+            />
+          </TreeAdjustedContainer>
 
-          <OptionsContainer>groups</OptionsContainer>
-          <OptionsContainer>analytics</OptionsContainer>
-          <OptionsContainer>set budget</OptionsContainer>
+          {/* <OptionButton name="Groups" description="Track your shared finances ">
+            <i className="group icon"/>
+          </OptionButton> */}
+
+          <OptionButton
+            name="Personal"
+            description="Your personal expense tracker"
+          >
+            <BsFillPersonFill className="personalIcon" />
+          </OptionButton>
+
+          <OptionButton
+            name="Analytics"
+            description="View your spending trends"
+          >
+            <BsBarChartFill className="analyticsIcon" />
+          </OptionButton>
+
+          <OptionButton
+            name="Budget"
+            description="Set up a spending cap or goal"
+          >
+            <BsFillPiggyBankFill className="budgetIcon" />
+          </OptionButton>
         </div>
       </StyledHomepage>
     </HomeWrapper>

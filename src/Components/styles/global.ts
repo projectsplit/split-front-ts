@@ -3,12 +3,12 @@ import { createGlobalStyle } from "styled-components";
 const GlobalStyles = createGlobalStyle`
 
   * {
-
+font-family: 'Inter', sans-serif;
   }
 
   body{
     background:${({ theme }) => theme.colors.body};
-    font-family: 'Inter', sans-serif;
+    
     margin: 0;
     
   }
@@ -16,6 +16,8 @@ const GlobalStyles = createGlobalStyle`
   div{
     color:${({ theme }) => theme.colors.whiteText};
   }
+
+  
 `;
 
 export default GlobalStyles;

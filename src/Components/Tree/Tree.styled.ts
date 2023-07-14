@@ -13,8 +13,8 @@ li{
 
  ul {
   list-style: none;
-  padding-left: 15px;
-  margin-top: 0px;/*moved whole element up*/
+  padding-left: 20px;/*moved whole element right/left*/
+  margin-top: 0px;/*moved whole element up/down*/
 
 }
  li{

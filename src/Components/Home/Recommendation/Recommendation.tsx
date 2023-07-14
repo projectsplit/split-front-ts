@@ -1,9 +1,9 @@
 import React from "react";
 import { StyledRecommendation } from "./Recommendation.styled";
 import IonIcon from "@reacticons/ionicons";
-import { RecommendationProps } from "../../../interfaces";
+import { ReccomendationMessageProps  } from "../../../interfaces";
 
-export default function Recommendation({ onClick }: RecommendationProps) {
+export default function Recommendation({ onClick,days,offBudgetAmount,reduceAmount }: ReccomendationMessageProps ) {
   return (
     <StyledRecommendation>
       <div className="main">
@@ -14,12 +14,13 @@ export default function Recommendation({ onClick }: RecommendationProps) {
           </div>
           <div className="paragraphs">
             <div className="firstParagraph">
-              Reduce your spending by £2.18 per day to not exceed your monthly
-              cap.
+              Reduce your spending by <span className="amount">{reduceAmount}</span> per day to not exceed
+              your monthly cap.
             </div>
             <div className="secondParagraph">
-              At this rate you will reach your cap in 9 days and you will be off
-              budget by £21.8 at the end of the month.
+              At this rate you will reach your cap in <strong>{days}</strong> days
+              and you will be off budget by <span className="amount">{offBudgetAmount}</span> at the end of the
+              month.
             </div>
           </div>
         </div>

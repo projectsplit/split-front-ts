@@ -27,12 +27,31 @@ export interface UserOptionsButtonProps {
 export interface OptionsContainerProps {
   onClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
   children: any;
+  hasArrow: boolean;
 }
 
-export interface RecommendationProps {
+export interface ReccomendationMessageProps {
   onClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
+  days: number;
+  reduceAmount: string;
+  offBudgetAmount: string;
+}
+
+export interface OnTrackMessageProps {
+  onClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
+  amount: string;
 }
 
 export interface TreeProps {
-  items: string[];
+  items: (string | JSX.Element)[];
+}
+
+export interface SelectionButtonProps {
+  children: any;
+  name: string;
+  description: string;
+}
+
+export interface NewButtonProps {
+  onClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
 }
