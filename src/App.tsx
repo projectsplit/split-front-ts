@@ -31,6 +31,7 @@ function App() {
       layer2: "#18181B",
       layer6: "#a3a3a3",
       labelColor6: "#8594E0",
+      color10: "#3B3B3D",
     },
   };
 

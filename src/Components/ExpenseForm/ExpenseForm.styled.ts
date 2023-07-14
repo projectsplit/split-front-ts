@@ -16,7 +16,7 @@ export const StyledExpenseForm = styled.div`
     border-style: solid;
     border-width: 1px;
     border-color: #333333;
-    font-size: 22px;
+    font-size: 20px;
     outline: none;
     color: #cecece;
     padding: 8px 14px
