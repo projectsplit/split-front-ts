@@ -30,6 +30,13 @@ export interface OptionsContainerProps {
   hasArrow: boolean;
 }
 
+export interface TreeAdjustedContainerProps {
+  onClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
+  children: any;
+  hasArrow: boolean;
+  items: (string | JSX.Element)[];
+}
+
 export interface ReccomendationMessageProps {
   onClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
   days: number;
@@ -54,4 +61,10 @@ export interface SelectionButtonProps {
 
 export interface NewButtonProps {
   onClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
+}
+
+export interface CategoryButtonProps {
+ 
+  children: any;
+  to:string;
 }

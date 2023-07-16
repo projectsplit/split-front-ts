@@ -33,35 +33,10 @@ export default function Home() {
           </OptionsContainer>
           <div className="mostRecent">
             <div className="mostRecentMsg">Most recent</div>
+
             <TreeAdjustedContainer
               onClick={() => console.log("goto group")}
               hasArrow={true}
-            >
-              <div className="groupName">Kythnos</div>
-              <Tree
-                items={[
-                  <div className="groupsInfo">
-                    <strong>You</strong> are owed{" "}
-                    <span className="owed">£56.00</span>
-                  </div>,
-                  <div className="groupsInfo">
-                    <strong>You</strong> owe <span className="owe">$5.65</span>
-                  </div>,
-                ]}
-              />
-            </TreeAdjustedContainer>
-          </div>
-          <TreeAdjustedContainer
-            hasArrow={true}
-            onClick={() => navigate("/groups")}
-          >
-            <div className="groups">
-              <i className="group icon">
-                <span className="groupCount">3</span>
-              </i>
-              <div className="groupName">Groups</div>
-            </div>
-            <Tree
               items={[
                 <div className="groupsInfo">
                   <strong>You</strong> are owed{" "}
@@ -71,7 +46,30 @@ export default function Home() {
                   <strong>You</strong> owe <span className="owe">$5.65</span>
                 </div>,
               ]}
-            />
+            >
+              <div className="groupName">Kythnos</div>
+            </TreeAdjustedContainer>
+          </div>
+
+          <TreeAdjustedContainer
+            hasArrow={true}
+            onClick={() => navigate("/groups/active")}
+            items={[
+              <div className="groupsInfo">
+                <strong>You</strong> are owed{" "}
+                <span className="owed">£56.00</span>
+              </div>,
+              <div className="groupsInfo">
+                <strong>You</strong> owe <span className="owe">$5.65</span>
+              </div>,
+            ]}
+          >
+            <div className="groups">
+              <i className="group icon">
+                <span className="groupCount">3</span>
+              </i>
+              <div className="groupName">Groups</div>
+            </div>
           </TreeAdjustedContainer>
 
           {/* <OptionButton name="Groups" description="Track your shared finances ">
