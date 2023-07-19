@@ -8,16 +8,16 @@ import IonIcon from "@reacticons/ionicons";
 export default function TreeAdjustedContainer({
   children,
   onClick,
-  hasArrow,
+  hasarrow,
   items,
 }: TreeAdjustedContainerProps) {
   const hasTreeComponent = items.length > 1 ? true : false;
 
   if (!hasTreeComponent) {
     return (
-      <OptionsContainer onClick={onClick} hasArrow={hasArrow}>
+      <OptionsContainer onClick={onClick} hasarrow={hasarrow.toString()}>
         {children}
-        {hasArrow && (
+        {hasarrow && (
           <IonIcon name="chevron-forward-outline" className="arrow" />
         )}
         {items}
@@ -25,9 +25,9 @@ export default function TreeAdjustedContainer({
     );
   }
   return (
-    <StyledTreeAdjustedContainer onClick={onClick} hasArrow={hasArrow}>
+    <StyledTreeAdjustedContainer onClick={onClick} hasarrow={hasarrow.toString()}>
       {children}
-      {hasArrow && <IonIcon name="chevron-forward-outline" className="arrow" />}
+      {hasarrow && <IonIcon name="chevron-forward-outline" className="arrow" />}
       <Tree items={items} />
     </StyledTreeAdjustedContainer>
   );

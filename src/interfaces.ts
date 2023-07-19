@@ -27,13 +27,13 @@ export interface UserOptionsButtonProps {
 export interface OptionsContainerProps {
   onClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
   children: any;
-  hasArrow: boolean;
+  hasarrow: boolean| string;
 }
 
 export interface TreeAdjustedContainerProps {
   onClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
   children: any;
-  hasArrow: boolean;
+  hasarrow: boolean| string;
   items: (string | JSX.Element)[];
 }
 

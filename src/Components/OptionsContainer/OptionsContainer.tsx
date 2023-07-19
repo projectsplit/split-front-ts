@@ -6,12 +6,12 @@ import IonIcon from "@reacticons/ionicons";
 export default function OptionsContainer({
   children,
   onClick,
-  hasArrow
+ hasarrow
 }: OptionsContainerProps) {
   return (
-    <StyledOptionsContainer onClick={onClick} hasArrow={hasArrow}>
+    <StyledOptionsContainer onClick={onClick}hasarrow={hasarrow.toString()}>
       {children}
-      {hasArrow && <IonIcon name="chevron-forward-outline" className="arrow" />}
+      {hasarrow && <IonIcon name="chevron-forward-outline" className="arrow" />}
     </StyledOptionsContainer>
   );
 }

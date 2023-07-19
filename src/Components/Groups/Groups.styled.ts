@@ -9,11 +9,13 @@ export const StyledGroups = styled.div`
   width: 100%;
   padding: 14px;
   gap: 30px;
-  .groupCategories{
+  /* position: fixed; */
+
+  .groupCategories {
     display: flex;
     flex-direction: row;
-    justify-content:flex-start;
-    gap:4px;
+    justify-content: flex-start;
+    gap: 4px;
   }
   .groupsLogoStripe {
     display: flex;
@@ -37,8 +39,6 @@ export const StyledGroups = styled.div`
     font-size: 25px;
     position: relative;
   }
-
- 
 
   .groupsInfo {
     font-size: 15px;

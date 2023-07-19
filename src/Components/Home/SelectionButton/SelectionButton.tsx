@@ -10,7 +10,7 @@ export default function SelectionButton({
 }: SelectionButtonProps) {
   return (
     <StyledSelectionButton>
-      <OptionsContainer hasArrow={true}>
+      <OptionsContainer hasarrow={true}>
         <div className="main">
           {children}
           <div className="confing">

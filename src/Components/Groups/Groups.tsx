@@ -8,7 +8,6 @@ import { Outlet } from "react-router-dom";
 
 export default function Groups() {
 
-
   return (
     <StyledGroups>
       <LogoStripe />
@@ -24,7 +23,7 @@ export default function Groups() {
         <CategoryButton to="archived">Archived</CategoryButton>
         <CategoryButton to="deleted">Deleted</CategoryButton>
       </div>
-        {<Outlet />}
+        <Outlet />
     </StyledGroups>
   );
 }

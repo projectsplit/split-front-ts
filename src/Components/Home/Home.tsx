@@ -23,7 +23,7 @@ export default function Home() {
           Welcome {"sessionData.userNickname"}
         </div>
         <div className="optionsStripe">
-          <OptionsContainer hasArrow={false}>
+          <OptionsContainer hasarrow={false}>
             <OnTrackMessage
               amount="£21.5"
               onClick={() =>
@@ -36,7 +36,7 @@ export default function Home() {
 
             <TreeAdjustedContainer
               onClick={() => console.log("goto group")}
-              hasArrow={true}
+              hasarrow={true}
               items={[
                 <div className="groupsInfo">
                   <strong>You</strong> are owed{" "}
@@ -52,7 +52,7 @@ export default function Home() {
           </div>
 
           <TreeAdjustedContainer
-            hasArrow={true}
+            hasarrow={true}
             onClick={() => navigate("/groups/active")}
             items={[
               <div className="groupsInfo">
