@@ -54,9 +54,13 @@ const getGroupById = async (groupId: string) => {
   return response.data;
 };
 
-const getUserGroups = async ({ pageParam = new Date().toISOString() }) => {
+const getUserGroups = async (
+  limit: number,
+  { pageParam = new Date().toISOString() }
+) => {
+  
   const response = await apiHttpClient.get<any>(
-    `/group/getusergroups?last=${pageParam}&limit=6`
+    `/group/getusergroups?last=${pageParam}&limit=${limit}`
   );
   return response.data;
 };

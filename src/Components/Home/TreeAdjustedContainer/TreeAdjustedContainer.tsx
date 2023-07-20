@@ -10,12 +10,13 @@ export default function TreeAdjustedContainer({
   onClick,
   hasarrow,
   items,
+
 }: TreeAdjustedContainerProps) {
   const hasTreeComponent = items.length > 1 ? true : false;
 
   if (!hasTreeComponent) {
     return (
-      <OptionsContainer onClick={onClick} hasarrow={hasarrow.toString()}>
+      <OptionsContainer onClick={onClick} hasarrow={hasarrow.toString()} >
         {children}
         {hasarrow && (
           <IonIcon name="chevron-forward-outline" className="arrow" />
@@ -25,7 +26,7 @@ export default function TreeAdjustedContainer({
     );
   }
   return (
-    <StyledTreeAdjustedContainer onClick={onClick} hasarrow={hasarrow.toString()}>
+    <StyledTreeAdjustedContainer onClick={onClick} hasarrow={hasarrow.toString()} >
       {children}
       {hasarrow && <IonIcon name="chevron-forward-outline" className="arrow" />}
       <Tree items={items} />

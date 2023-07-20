@@ -1,39 +1,38 @@
-import React from "react";
+import React, { useLayoutEffect } from "react";
 import TreeAdjustedContainer from "../../Home/TreeAdjustedContainer/TreeAdjustedContainer";
 import { StyledActiveGroups } from "./ActiveGroups.styled";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { api } from "../../../apis/api";
 import { useEffect } from "react";
 import { CgSpinner } from "react-icons/cg";
+import { ItemBuilder } from "../helpers/ItemBuilder";
 
 export default function ActiveGroups() {
-  const items = [
-    <div className="groupsInfo">
-      <strong>You</strong> are owed <span className="owed">£56.00</span>
-    </div>,
-    <div className="groupsInfo">
-      <strong>You</strong> owe <span className="owe">$5.65</span>
-    </div>,
-  ];
+  const heightFromTop = window.innerHeight - (58 + 36 + 18 + 4 + 30);
+  const fittingItems = Math.round(heightFromTop / 81);
 
   const {
-    isLoading,
-    isError,
-    error,
+    // isLoading,
+    // isError,
+    // error,
     data,
     hasNextPage,
     fetchNextPage,
     isFetching,
     isFetchingNextPage,
-  } = useInfiniteQuery(["activeGroups"], api.getUserGroups, {
-    getNextPageParam: (lastPage, _pages) => {
-      if (lastPage.length > 0) {
-        const lastGroup = lastPage[lastPage.length - 1];
-        const { creationTime } = lastGroup;
-        return creationTime;
-      } else return undefined;
-    },
-  });
+  } = useInfiniteQuery(
+    ["activeGroups"],
+    ({ pageParam }) => api.getUserGroups(fittingItems, { pageParam }),
+    {
+      getNextPageParam: (lastPage, _pages) => {
+        if (lastPage.length > 0) {
+          const lastGroupAndPendingTransactions = lastPage[lastPage.length - 1];
+          const { creationTime } = lastGroupAndPendingTransactions.group;
+          return creationTime;
+        } else return undefined;
+      },
+    }
+  );
 
   useEffect(() => {
     let fetching = false;
@@ -54,6 +53,7 @@ export default function ActiveGroups() {
     };
   }, [fetchNextPage, hasNextPage]);
 
+
   return (
     <StyledActiveGroups>
       <div className="groupList">
@@ -61,15 +61,15 @@ export default function ActiveGroups() {
           <CgSpinner className="spinner" />
         ) : null}
         {data?.pages.flatMap((page) =>
-          page.map((group: any) => {
+          page.map((element: any) => {
             return (
-              <div key={group.id}>
+              <div key={element.group.id}>
                 <TreeAdjustedContainer
                   onClick={() => console.log("goto group")}
                   hasarrow={true}
-                  items={items}
+                  items={ItemBuilder(element)}
                 >
-                  <div className="groupName">{group.title}</div>
+                  <div className="groupName">{element.group.title}</div>
                 </TreeAdjustedContainer>
               </div>
             );
