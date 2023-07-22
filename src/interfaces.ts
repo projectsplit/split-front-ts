@@ -28,6 +28,7 @@ export interface OptionsContainerProps {
   onClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
   children: any;
   hasarrow: boolean| string;
+  
 }
 
 export interface TreeAdjustedContainerProps {

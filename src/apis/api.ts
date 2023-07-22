@@ -2,7 +2,7 @@ import axios, { AxiosError } from "axios";
 import { authApi } from "./authApi";
 import jwt_decode, { JwtPayload } from "jwt-decode";
 import { getAccessToken, setAccessToken } from "../util/accessToken";
-import { GetGroupResponse } from "../types";
+import { GetGroupResponse, GroupsTotalAmountsResponse } from "../types";
 import { signOut } from "../util/signOut";
 
 const apiHttpClient = axios.create({
@@ -58,9 +58,15 @@ const getUserGroups = async (
   limit: number,
   { pageParam = new Date().toISOString() }
 ) => {
-  
-  const response = await apiHttpClient.get<any>(
+  const response = await apiHttpClient.get<any>( //create type for this Fn
     `/group/getusergroups?last=${pageParam}&limit=${limit}`
+  );
+  return response.data;
+};
+
+const getGroupsTotalAmounts = async () => {
+  const response = await apiHttpClient.get<GroupsTotalAmountsResponse>(
+    `/group/aggregate-summary`
   );
   return response.data;
 };
@@ -68,4 +74,5 @@ const getUserGroups = async (
 export const api = {
   getGroupById,
   getUserGroups,
+  getGroupsTotalAmounts,
 };
