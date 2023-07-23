@@ -24,5 +24,9 @@ export const StyledCategoryButton = styled.div`
     color: ${({ theme }) => theme.colors.whiteText};
     font-weight: bold;
     text-decoration: none;
+    transition: background-color 0.2s ease-in-out;
+    &:hover {
+      background-color: ${({ theme }) => theme.colors.layer1};
+    }
   }
 `;

@@ -8,7 +8,7 @@ export const StyledGroups = styled.div`
   height: 100%;
   width: 100%;
   padding: 14px;
-  gap: 30px;
+  gap: 20px;
   /* position: fixed; */
 
   .groupCategories {

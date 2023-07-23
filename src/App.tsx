@@ -14,6 +14,7 @@ import {
   ArchivedGroups,
   DeletedGroups,
   Groups,
+  Budget,
 } from "./components";
 
 import {
@@ -63,6 +64,7 @@ function App() {
               <Route path="archived" element={<ArchivedGroups />} />
               <Route path="deleted" element={<DeletedGroups />} />
             </Route>
+            <Route path="/budget" element={<Budget />} />
             <Route path="i/:invitationCode" element={<VerifyInvitation />} />
             <Route path=":groupid" element={<Main />}>
               <Route index element={<RedirectToTransactions />} />
@@ -79,8 +81,7 @@ function App() {
 
 export default App;
 
-
-// Hook the LogoStripe and let the page slide up until the Groups 
+// Hook the LogoStripe and let the page slide up until the Groups
 // Backend to return the total from all groups in all currencies for the autheduser in homepage.
 // Member since at info of group?
 

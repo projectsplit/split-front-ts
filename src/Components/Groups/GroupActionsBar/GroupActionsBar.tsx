@@ -4,6 +4,8 @@ import QRscanner from "../../QRscanner/QRscanner";
 import { BiArrowBack } from "react-icons/bi";
 import { IoMdPersonAdd } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
+
+
 export default function GroupActionsBar() {
   const navigate = useNavigate();
   return (

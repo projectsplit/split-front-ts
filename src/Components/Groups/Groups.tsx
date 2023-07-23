@@ -1,16 +1,15 @@
 import React from "react";
 import { StyledGroups } from "./Groups.styled";
-import LogoStripe from "../Home/LogoStripe/LogoStripe";
 import NewButton from "./NewButton/NewButton";
-import TreeAdjustedContainer from "../Home/TreeAdjustedContainer/TreeAdjustedContainer";
 import CategoryButton from "./CategoryButton/CategoryButton";
 import { Outlet } from "react-router-dom";
+import GroupActionsBar from "./GroupActionsBar/GroupActionsBar";
 
 export default function Groups() {
 
   return (
     <StyledGroups>
-      <LogoStripe />
+      <GroupActionsBar />
       <div className="groupsLogoStripe">
         <div className="groupStripe">
           <i className="group icon" />

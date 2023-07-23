@@ -13,13 +13,13 @@ export const StyledTreeAdjustedContainer = styled.div<OptionsContainerProps>`
   background-color: ${({ theme }) => theme.colors.layer2};
   border-color: ${({ theme }) => theme.colors.layer2};
   border-style: solid;
-  cursor: ${({ hasarrow }) => (hasarrow ? "pointer" : "default")};
+  cursor: ${({ hasarrow }) => (hasarrow === "true" ? "pointer" : "default")};
   transition: background-color 0.2s ease-in-out; /* Add transition for background-color */
   border: none;
 
   &:hover {
     background-color: ${({ theme, hasarrow }) =>
-      hasarrow
+      hasarrow === "true"
         ? theme.colors.layer1
         : theme.colors.layer2}; /* Change background-color on hover */
   }

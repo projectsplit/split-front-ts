@@ -1,5 +1,5 @@
 import React from "react";
-import { StyledQRscanner } from "./QRscanner.styled.";
+import { StyledQRscanner } from "./QRscanner.styled";
 import { QRscannerProps } from "../../interfaces";
 
 export default function QRscanner({ onClick }: QRscannerProps) {

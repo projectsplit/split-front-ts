@@ -4,6 +4,12 @@ export interface InputProps
   error?: boolean;
 }
 
+export interface InputMonetaryProps extends InputProps {
+  value?: string;
+  onFocus?:React.FocusEventHandler<HTMLInputElement>;
+  onBlur?:React.FocusEventHandler<HTMLInputElement>; 
+}
+
 export interface SubmitButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
@@ -27,14 +33,13 @@ export interface UserOptionsButtonProps {
 export interface OptionsContainerProps {
   onClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
   children: any;
-  hasarrow: boolean| string;
-  
+  hasarrow: boolean | string;
 }
 
 export interface TreeAdjustedContainerProps {
   onClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
   children: any;
-  hasarrow: boolean| string;
+  hasarrow: boolean | string;
   items: (string | JSX.Element)[];
 }
 
@@ -58,6 +63,7 @@ export interface SelectionButtonProps {
   children: any;
   name: string;
   description: string;
+  onClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
 }
 
 export interface NewButtonProps {
@@ -65,7 +71,6 @@ export interface NewButtonProps {
 }
 
 export interface CategoryButtonProps {
- 
   children: any;
-  to:string;
+  to: string;
 }

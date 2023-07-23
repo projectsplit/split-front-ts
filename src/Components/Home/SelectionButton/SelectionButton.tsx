@@ -7,9 +7,10 @@ export default function SelectionButton({
   children,
   name,
   description,
+  onClick
 }: SelectionButtonProps) {
   return (
-    <StyledSelectionButton>
+    <StyledSelectionButton onClick={onClick}>
       <OptionsContainer hasarrow={true}>
         <div className="main">
           {children}

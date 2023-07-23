@@ -16,7 +16,7 @@ export default function OnTrackMessage({ onClick, amount }: OnTrackMessageProps)
             You are on target to meeting your spending goal.
             </div>
             <div className="secondParagraph">
-              At this rate you will save <span className="amount">{amount}</span> by the end of the
+              Spending at this rate you will save you <span className="amount">{amount}</span> at the end of the
               month.
             </div>
           </div>

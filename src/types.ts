@@ -25,6 +25,7 @@ export type GetGroupResponse = {
 };
 
 export type GroupsTotalAmountsResponse = {
+  numberOfGroups: number;
   userIsOwedAmounts: { [currency: string]: number };
   userOwesAmounts: { [currency: string]: number };
 };

@@ -11,9 +11,11 @@ export const StyledInput = styled.input<InputProps>`
   font-size: 18px;
   border: ${({ error, theme }) => (error ? `1px solid ${theme.colors.pink}` : 'none')};
 
+
+`
+
+
 /* &:focus {
   outline: none;
   box-shadow: 0 0 0 1px ${({ theme }) => theme.colors.pink};
 } */
- 
-`

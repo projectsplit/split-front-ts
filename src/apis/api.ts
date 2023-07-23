@@ -66,7 +66,7 @@ const getUserGroups = async (
 
 const getGroupsTotalAmounts = async () => {
   const response = await apiHttpClient.get<GroupsTotalAmountsResponse>(
-    `/group/aggregate-summary`
+    `/group/total-amounts`
   );
   return response.data;
 };

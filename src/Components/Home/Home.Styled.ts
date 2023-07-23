@@ -101,4 +101,21 @@ export const StyledHomepage = styled.div`
       font-weight: bold;
     }
   }
+
+  @keyframes spin-animation {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  .spinner {
+      align-self: center;
+      animation: spin-animation 0.8s linear infinite;
+      font-size: 25px;
+      color: ${({ theme }) => theme.colors.labelColor6};
+      margin-top: 10px;
+      margin-bottom: 10px;
+    }
 `;

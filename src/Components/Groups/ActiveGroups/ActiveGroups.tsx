@@ -1,11 +1,11 @@
-import React, { useLayoutEffect } from "react";
-import TreeAdjustedContainer from "../../Home/TreeAdjustedContainer/TreeAdjustedContainer";
+import React from "react";
+import TreeAdjustedContainer from "../../TreeAdjustedContainer/TreeAdjustedContainer";
 import { StyledActiveGroups } from "./ActiveGroups.styled";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { api } from "../../../apis/api";
 import { useEffect } from "react";
-import { CgSpinner } from "react-icons/cg";
-import { ItemBuilder } from "../helpers/ItemBuilder";
+import { ItemBuilder } from "../../../helpers/ItemBuilder";
+import Spinner from "../../Spinner/Spinner";
 
 export default function ActiveGroups() {
   const heightFromTop = window.innerHeight - (58 + 36 + 18 + 4 + 30);
@@ -19,9 +19,9 @@ export default function ActiveGroups() {
     hasNextPage,
     fetchNextPage,
     isFetching,
-    isFetchingNextPage,
+    isFetchingNextPage
   } = useInfiniteQuery(
-    ["activeGroups"],
+    ["groups","active"],
     ({ pageParam }) => api.getUserGroups(fittingItems, { pageParam }),
     {
       getNextPageParam: (lastPage, _pages) => {
@@ -58,7 +58,7 @@ export default function ActiveGroups() {
     <StyledActiveGroups>
       <div className="groupList">
         {isFetching && data === undefined ? (
-          <CgSpinner className="spinner" />
+          <Spinner />
         ) : null}
         {data?.pages.flatMap((page) =>
           page.map((element: any) => {
@@ -67,7 +67,7 @@ export default function ActiveGroups() {
                 <TreeAdjustedContainer
                   onClick={() => console.log("goto group")}
                   hasarrow={true}
-                  items={ItemBuilder(element)}
+                  items={ItemBuilder(element.pendingTransactions)}
                 >
                   <div className="groupName">{element.group.title}</div>
                 </TreeAdjustedContainer>
@@ -75,7 +75,7 @@ export default function ActiveGroups() {
             );
           })
         )}
-        {isFetchingNextPage ? <CgSpinner className="spinner" /> : null}
+        {isFetchingNextPage ? <Spinner/> : null}
       </div>
     </StyledActiveGroups>
   );
