@@ -1,9 +1,22 @@
-import React from 'react'
-import { InputProps } from '../../interfaces'
-import { StyledInput } from './StyledInput.styled'
+import React from "react";
+import { InputProps } from "../../interfaces";
+import { StyledInput } from "./StyledInput.styled";
 
-export default function Input({ onChange, placeholder, value, className, type, step, spellCheck, autoFocus, error }: InputProps) {
-
+export default React.forwardRef(function Input(
+  {
+    onChange,
+    placeholder,
+    value,
+    className,
+    type,
+    step,
+    spellCheck,
+    autoFocus,
+    error,
+    width
+  }: InputProps,
+  ref: React.Ref<HTMLInputElement>
+) {
   return (
     <StyledInput
       onChange={onChange}
@@ -14,6 +27,8 @@ export default function Input({ onChange, placeholder, value, className, type, s
       step={step}
       spellCheck={spellCheck}
       autoFocus={autoFocus}
-      error={error} />
-  )
-}
+      error={error}
+      width={width}
+    />
+  );
+});

@@ -2,12 +2,16 @@ export interface InputProps
   extends React.InputHTMLAttributes<HTMLInputElement> {
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
   error?: boolean;
+  width?: number;
 }
 
 export interface InputMonetaryProps extends InputProps {
   value?: string;
-  onFocus?:React.FocusEventHandler<HTMLInputElement>;
-  onBlur?:React.FocusEventHandler<HTMLInputElement>; 
+  onFocus?: React.FocusEventHandler<HTMLInputElement>;
+  onBlur?: React.FocusEventHandler<HTMLInputElement>;
+  currency: string;
+  currencysymbolmargin?: number;
+  width: number;
 }
 
 export interface SubmitButtonProps

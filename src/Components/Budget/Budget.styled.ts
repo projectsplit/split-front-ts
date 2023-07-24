@@ -11,7 +11,6 @@ export const StyledBudget = styled.div`
   padding: 14px;
   gap: 40px;
 
-
   .backButtonContainer {
     position: relative;
     cursor: pointer;
@@ -47,17 +46,24 @@ export const StyledBudget = styled.div`
   }
   .descr {
     flex: 1;
-    text-align: center; 
+    text-align: center;
   }
 
-  .promptSpendingCap,.promptSpendingCycle{
+  .promptSpendingCap,
+  .promptSpendingCycle {
     display: flex;
     flex-direction: column;
-    gap:10px;
+    gap: 10px;
   }
 
-  .spentInfo{
+  .spentInfo {
     font-size: 12px;
-    color:${({theme})=>theme.colors.layer6}
+    color: ${({ theme }) => theme.colors.layer6};
+  }
+  .dummySpan {
+    position: absolute;
+    opacity: 0;
+    z-index: -100;
+    white-space: pre;
   }
 `;
