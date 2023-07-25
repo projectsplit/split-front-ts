@@ -3,6 +3,7 @@ export interface InputProps
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
   error?: boolean;
   width?: number;
+  inputWidth?:number;
 }
 
 export interface InputMonetaryProps extends InputProps {
