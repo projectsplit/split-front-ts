@@ -3,30 +3,37 @@ import { StyledBudget } from "./Budget.styled";
 import { BiArrowBack } from "react-icons/bi";
 import { useNavigate } from "react-router-dom";
 import InputMonetary from "../InputMonetary/InputMonetary";
-import getSymbolFromCurrency from "currency-symbol-map";
+import { currencyMask } from "../../helpers/currencyMask";
 
 export default function Budget() {
   const [amount, setAmount] = useState<string>("");
   const navigate = useNavigate();
-  const [currencySymbolMargin, setCurrencySymbolMargin] = useState(10);
+  const [currencySymbolMargin, setCurrencySymbolMargin] = useState<number>(0);
+
   const [width, setWidth] = useState<number>(0);
   const [content, setContent] = useState<string>("");
   const dummySpan = useRef<HTMLSpanElement>(null);
-
+  const dummyInput = useRef<HTMLInputElement>(null);
+  //https://www.youtube.com/watch?v=ydQEZ6qn9Y4
   const handleInputChange = (e: any) => {
     const amount = e.target.value;
     setAmount(amount);
+    setContent(amount);
     const characterWidth = 10;
-    console.log(amount.length);
     const margin = characterWidth * amount.length;
+
     setCurrencySymbolMargin(margin);
+
   };
 
   useEffect(() => {
-    if (dummySpan.current) {
+    if (dummySpan.current && dummyInput.current) {
       setWidth(dummySpan.current.offsetWidth);
+
     }
-  }, [content]);
+  }, [amount]);
+
+  
 
   return (
     <StyledBudget>
@@ -42,12 +49,15 @@ export default function Budget() {
         <span className="dummySpan" ref={dummySpan}>
           {content}
         </span>
+
         <InputMonetary
           value={amount}
-          onChange={(e) => handleInputChange(e)}
+          onChange={(e) => handleInputChange(currencyMask(e))}
           currency="USD"
           currencysymbolmargin={currencySymbolMargin}
           width={width}
+          inputWidth={dummyInput.current?.offsetWidth}
+          ref={dummyInput}
         />
       </div>
 

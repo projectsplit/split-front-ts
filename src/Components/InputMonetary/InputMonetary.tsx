@@ -12,22 +12,24 @@ export default React.forwardRef(function InputMonetary(
     currency,
     onMouseDown,
     currencysymbolmargin,
-    width
+    width,
+    inputWidth,
   }: InputMonetaryProps,
   ref: React.Ref<HTMLInputElement>
 ) {
+  
   return (
     <StyledInputMonetary
-    currencysymbolmargin={currencysymbolmargin}
+      currencysymbolmargin={currencysymbolmargin}
       value={value}
       currency={currency}
       width={width}
+      ref={ref}
     >
       <div className="currencyOption">
         <i className="angle down icon"></i>
         <div>{currency}</div>
       </div>
-
       <StyledInput
         type="text"
         inputMode="decimal"
@@ -40,10 +42,14 @@ export default React.forwardRef(function InputMonetary(
         value={value}
         onMouseDown={onMouseDown}
         width={width}
+        inputWidth={inputWidth}
       />
-      {value !== undefined && value.length > 0 && (
-        <div className="currencySymbol">{getSymbolFromCurrency(currency)}</div>
-      )}
+      {/* {value !== undefined && value.length > 0 && (
+        <div className="currencySymbol">
+          <span>{getSymbolFromCurrency(currency)}</span>
+        </div>
+      )} */}
     </StyledInputMonetary>
   );
+ 
 });
