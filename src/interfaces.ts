@@ -3,7 +3,7 @@ export interface InputProps
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
   error?: boolean;
   width?: number;
-  inputWidth?:number;
+  inputWidth?: number;
 }
 
 export interface InputMonetaryProps extends InputProps {
@@ -21,6 +21,12 @@ export interface SubmitButtonProps
   children: any;
 }
 
+export interface SpendingCycleSelectorProps
+  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
+  error?: boolean;
+}
+
 export interface LoadingSpinnerProps {
   name: string;
   fontSize: number;
@@ -33,6 +39,10 @@ export interface QRscannerProps {
 export interface UserOptionsButtonProps {
   onClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
   children: any;
+}
+
+export interface CalendarProps {
+  children:any;
 }
 
 export interface OptionsContainerProps {

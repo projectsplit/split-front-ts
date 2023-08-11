@@ -51,5 +51,4 @@ export default React.forwardRef(function InputMonetary(
       )} */}
     </StyledInputMonetary>
   );
- 
 });

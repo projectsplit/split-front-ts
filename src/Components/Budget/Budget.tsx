@@ -3,10 +3,13 @@ import { StyledBudget } from "./Budget.styled";
 import { BiArrowBack } from "react-icons/bi";
 import { useNavigate } from "react-router-dom";
 import InputMonetary from "../InputMonetary/InputMonetary";
+import SpendingCycleSelector from "./SpeningCycleSelector/SpendingCycleSelector";
+import Calendar from "./Calendar/Calendar";
 import { currencyMask } from "../../helpers/currencyMask";
 
 export default function Budget() {
   const [amount, setAmount] = useState<string>("");
+  const [openCalendar, setOpenCalendar] = useState<boolean>(false);
   const navigate = useNavigate();
   const [currencySymbolMargin, setCurrencySymbolMargin] = useState<number>(0);
 
@@ -14,7 +17,10 @@ export default function Budget() {
   const [content, setContent] = useState<string>("");
   const dummySpan = useRef<HTMLSpanElement>(null);
   const dummyInput = useRef<HTMLInputElement>(null);
+
+  const calendarOption = "monthly";
   //https://www.youtube.com/watch?v=ydQEZ6qn9Y4
+
   const handleInputChange = (e: any) => {
     const amount = e.target.value;
     setAmount(amount);
@@ -23,17 +29,19 @@ export default function Budget() {
     const margin = characterWidth * amount.length;
 
     setCurrencySymbolMargin(margin);
-
   };
 
   useEffect(() => {
     if (dummySpan.current && dummyInput.current) {
       setWidth(dummySpan.current.offsetWidth);
-
     }
   }, [amount]);
 
-  
+  const monthDaysArray = Array.from({ length: 5 }, (_, weekIndex) =>
+    weekIndex < 4
+      ? Array.from({ length: 7 }, (_, dayIndex) => weekIndex * 7 + dayIndex + 1)
+      : [29, 30, 31, "", "", "", ""]
+  );
 
   return (
     <StyledBudget>
@@ -63,7 +71,10 @@ export default function Budget() {
 
       <div className="promptSpendingCycle">
         <div className="prompt">Select your spending cycle</div>
-        <div>options field</div>
+        <SpendingCycleSelector
+          onClick={() => setOpenCalendar((prev) => !prev)}
+        />
+        {openCalendar && <Calendar>{monthDaysArray}</Calendar>}
       </div>
 
       <div className="spentInfo">You have spent $156.36 this month</div>
