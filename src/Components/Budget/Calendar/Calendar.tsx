@@ -3,10 +3,10 @@ import { StyledCalendar } from "./Calendar.styled";
 import { CalendarProps } from "../../../interfaces";
 
 export default function Calendar({ children }: CalendarProps) {
-  const [selectedDayIndex, setSelectedDayIndex] = useState<any>(null);
+  const [selectedElementIndex, setSelectedElementIndex] = useState<string>('');
 
-  const handleDayClick = (day: any, index: any) => {
-    setSelectedDayIndex(day);
+  const handleElementClick = (day: string) => {
+    setSelectedElementIndex(day);
 
   };
 
@@ -14,14 +14,14 @@ export default function Calendar({ children }: CalendarProps) {
     <StyledCalendar>
       {children.map((row: any, rowIndex: any) => (
         <div key={rowIndex} className="calendar-row">
-          {row.map((day: any, dayIndex: any) => (
+          {row.map((day: string, dayIndex: number) => (
             <div
               key={day + dayIndex}
               className={`calendar-day ${
-                selectedDayIndex === day && day != "" ? "selected" : ""
+                selectedElementIndex === day && day != "" ? "selected" : ""
               }`}
               style={{ cursor: day !== "" ? "pointer" : "default" }}
-              onClick={() => handleDayClick(day, dayIndex)}
+              onClick={() => handleElementClick(day)}
             >
               {day}
             </div>
