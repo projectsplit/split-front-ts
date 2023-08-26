@@ -13,7 +13,9 @@ export const StyledSubmitButton = styled.button<SubmitButtonProps>`
   font-size: 16px;
   display: flex;
   justify-content: center;
-  position: relative;
+  position: relative;  
+  font-size: 18px;
+ 
 
   &:hover {
     opacity: 0.75;

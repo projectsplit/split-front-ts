@@ -17,7 +17,6 @@ export default function AccessScreen() {
   const [signInEmail, setSignInEmail] = useState<string>("");
   const [signInError, setSigninError] = useState<string>("");
   const [networkError, setNetworkError] = useState<string>("");
-  const [googleUrl, setGoogleUrl] = useState<string>("");
 
   const navigate = useNavigate();
 

@@ -1,7 +1,7 @@
 import getSymbolFromCurrency from "currency-symbol-map";
 import { UserPendingTransaction } from "../types";
 
-export const ItemBuilder = (pendingTransactions: UserPendingTransaction[]): JSX.Element[] => {
+export const treeItemBuilder = (pendingTransactions: UserPendingTransaction[]): JSX.Element[] => {
   return pendingTransactions.map((transaction: UserPendingTransaction, index: number) => {
     const { userIsSender, userIsReceiver, amount, currency } = transaction;
     

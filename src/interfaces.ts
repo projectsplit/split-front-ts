@@ -1,3 +1,5 @@
+import { BudgetType } from "./types";
+
 export interface InputProps
   extends React.InputHTMLAttributes<HTMLInputElement> {
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
@@ -12,7 +14,7 @@ export interface InputMonetaryProps extends InputProps {
   onBlur?: React.FocusEventHandler<HTMLInputElement>;
   currency: string;
   currencysymbolmargin?: number;
-  width: number;
+  width?: number;
 }
 
 export interface SubmitButtonProps
@@ -25,6 +27,7 @@ export interface SpendingCycleSelectorProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
   error?: boolean;
+  children: any;
 }
 
 export interface LoadingSpinnerProps {
@@ -36,13 +39,15 @@ export interface QRscannerProps {
   onClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
 }
 
-export interface UserOptionsButtonProps {
+export interface OptionsButtonProps {
   onClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
   children: any;
 }
 
 export interface CalendarProps {
-  children:any;
+  children: any;
+  setCalendarDay: React.Dispatch<React.SetStateAction<string>>;
+  budgettype: BudgetType;
 }
 
 export interface OptionsContainerProps {
@@ -87,5 +92,8 @@ export interface NewButtonProps {
 
 export interface CategoryButtonProps {
   children: any;
-  to: string;
+}
+
+export interface CalendarOptionsButtonProps {
+  isActive: boolean;
 }

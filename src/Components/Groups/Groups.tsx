@@ -1,12 +1,11 @@
 import React from "react";
 import { StyledGroups } from "./Groups.styled";
 import NewButton from "./NewButton/NewButton";
-import CategoryButton from "./CategoryButton/CategoryButton";
+import CategoryButton from "../CategoryButton/CategoryButton";
 import { Outlet } from "react-router-dom";
 import GroupActionsBar from "./GroupActionsBar/GroupActionsBar";
 
 export default function Groups() {
-
   return (
     <StyledGroups>
       <GroupActionsBar />
@@ -18,11 +17,11 @@ export default function Groups() {
         <NewButton />
       </div>
       <div className="groupCategories">
-        <CategoryButton to="active">Active</CategoryButton>
-        <CategoryButton to="archived">Archived</CategoryButton>
-        <CategoryButton to="deleted">Deleted</CategoryButton>
+        <CategoryButton>Active</CategoryButton>
+        <CategoryButton>Archived</CategoryButton>
+        <CategoryButton>Deleted</CategoryButton>
       </div>
-        <Outlet />
+      <Outlet />
     </StyledGroups>
   );
 }

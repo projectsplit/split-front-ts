@@ -1,11 +1,11 @@
 import React from "react";
-import { UserOptionsButtonProps } from "../../interfaces";
+import { OptionsButtonProps } from "../../interfaces";
 import { StyledUserOptionsButton } from "./UserOptionsButton.styled";
 
 export default function UserOptionsButton({
   onClick,
   children,
-}: UserOptionsButtonProps) {
+}: OptionsButtonProps) {
   return (
     <StyledUserOptionsButton onClick={onClick}>
       {children}

@@ -2,7 +2,7 @@ import axios, { AxiosError } from "axios";
 import { authApi } from "./authApi";
 import jwt_decode, { JwtPayload } from "jwt-decode";
 import { getAccessToken, setAccessToken } from "../util/accessToken";
-import { GetGroupResponse, GroupsTotalAmountsResponse } from "../types";
+import { GetGroupResponse, GroupsTotalAmountsResponse,CreateBudgetRequest } from "../types";
 import { signOut } from "../util/signOut";
 
 const apiHttpClient = axios.create({
@@ -71,8 +71,17 @@ const getGroupsTotalAmounts = async () => {
   return response.data;
 };
 
+const createBudget = async (request: CreateBudgetRequest): Promise<any> => {
+  
+  const response = await apiHttpClient.post<any>(
+    `/budget/create`,
+    request
+  )
+  return response.data;
+}
 export const api = {
   getGroupById,
   getUserGroups,
   getGroupsTotalAmounts,
+  createBudget
 };

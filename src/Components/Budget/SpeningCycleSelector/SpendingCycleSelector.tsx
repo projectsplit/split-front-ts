@@ -5,6 +5,7 @@ import { SpendingCycleSelectorProps } from "../../../interfaces";
 export default function SpendingCycleSelector({
   onClick,
   error,
+  children
 }: SpendingCycleSelectorProps) {
   return (
 
@@ -12,7 +13,7 @@ export default function SpendingCycleSelector({
         <div className="currencyOption">
           <i className="angle down icon"></i>
         </div>
-        Monthly
+        {children}
       </StyledSpendingCycleSelector>
     
   

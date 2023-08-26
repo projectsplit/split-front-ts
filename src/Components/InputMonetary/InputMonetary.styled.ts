@@ -19,21 +19,20 @@ export const StyledInputMonetary = styled.div<InputMonetaryProps>`
   .icon {
     font-size: 25px;
   }
-  
+
   .currencySymbol {
     position: absolute;
     /* right: ${(props) => props.currencysymbolmargin}px;  */
     /* margin-right: ${(props) => props.currencysymbolmargin}px; */
     /* width: ${(props) => props.width}px; */
     /* margin-right:${(props) => props.width}px; */
-    margin-right:  ${(props) => props.currencysymbolmargin}px;
+    margin-right: ${(props) => props.currencysymbolmargin}px;
     right: 0px;
   }
-  
 `;
 
 export const StyledInput = styled(Input)`
   text-align: right;
-  background-color: #2d2d2d;
+  background-color: ${({ theme }) => theme.colors.inputGrey};
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
 `;

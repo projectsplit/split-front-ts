@@ -71,3 +71,15 @@ export type UserPendingTransaction = {
   amount: number;
   currency: string;
 };
+
+export enum BudgetType {
+  Weekly,
+  Monthly,
+}
+
+export type CreateBudgetRequest = {
+  amount: string;
+  currency: string;
+  budgetType: BudgetType;
+  day: string | null;
+};

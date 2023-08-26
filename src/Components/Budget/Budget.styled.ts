@@ -9,7 +9,8 @@ export const StyledBudget = styled.div`
   height: 100vh;
   width: 100%;
   padding: 14px;
-  gap: 40px;
+  gap: 20px;
+  position: relative;
 
   .backButtonContainer {
     position: relative;
@@ -65,5 +66,16 @@ export const StyledBudget = styled.div`
     opacity: 0;
     z-index: -100;
     white-space: pre;
+  }
+  .categoryButtons {
+    gap: 10px;
+    display: flex;
+    flex-direction: row;
+  }
+
+  .submitButton {
+    margin-top: auto;
+    display: flex;
+    flex-direction: column;
   }
 `;

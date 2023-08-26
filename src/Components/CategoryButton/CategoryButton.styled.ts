@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 export const StyledCategoryButton = styled.div`
-  .navlink-active {
+  .active {
     padding-top: 0.5rem;
     padding-bottom: 0.5rem;
     padding-left: 0.8rem;
@@ -13,7 +13,7 @@ export const StyledCategoryButton = styled.div`
     font-weight: bold;
     text-decoration: none;
   }
-  .navlink-inactive {
+  .inactive {
     padding-top: 0.5rem;
     padding-bottom: 0.5rem;
     padding-left: 0.8rem;
