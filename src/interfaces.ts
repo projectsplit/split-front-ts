@@ -97,3 +97,7 @@ export interface CategoryButtonProps {
 export interface CalendarOptionsButtonProps {
   isActive: boolean;
 }
+
+export interface ProgressBarProps {
+  budgettype: BudgetType;
+}

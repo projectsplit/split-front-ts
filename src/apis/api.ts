@@ -2,7 +2,13 @@ import axios, { AxiosError } from "axios";
 import { authApi } from "./authApi";
 import jwt_decode, { JwtPayload } from "jwt-decode";
 import { getAccessToken, setAccessToken } from "../util/accessToken";
-import { GetGroupResponse, GroupsTotalAmountsResponse,CreateBudgetRequest } from "../types";
+import {
+  GetGroupResponse,
+  GroupsTotalAmountsResponse,
+  CreateBudgetRequest,
+  BudgetType,
+  BudgetInfoResponse,
+} from "../types";
 import { signOut } from "../util/signOut";
 
 const apiHttpClient = axios.create({
@@ -64,6 +70,13 @@ const getUserGroups = async (
   return response.data;
 };
 
+const getBudgetInfo = async (budgetType: BudgetType): Promise<any> => {
+  const response = await apiHttpClient.get<any>(
+    `/budget/budgetinfo?budgettype=${budgetType}`
+  );
+  return response.data;
+};
+
 const getGroupsTotalAmounts = async () => {
   const response = await apiHttpClient.get<GroupsTotalAmountsResponse>(
     `/group/total-amounts`
@@ -71,17 +84,14 @@ const getGroupsTotalAmounts = async () => {
   return response.data;
 };
 
-const createBudget = async (request: CreateBudgetRequest): Promise<any> => {
-  
-  const response = await apiHttpClient.post<any>(
-    `/budget/create`,
-    request
-  )
+const createBudget = async (request: CreateBudgetRequest) => {
+  const response = await apiHttpClient.post<any>(`/budget/create`, request);
   return response.data;
-}
+};
 export const api = {
   getGroupById,
   getUserGroups,
   getGroupsTotalAmounts,
-  createBudget
+  getBudgetInfo,
+  createBudget,
 };

@@ -164,7 +164,7 @@ export default function Budget() {
       </div>
 
       <div className="spentInfo">You have spent $156.36 this month</div>
-      <ProgressBar/>
+      <ProgressBar budgettype={budgettype}/>
       <div className="submitButton">
         <SubmitButton onClick={submitBudget}>Submit Budget</SubmitButton>
       </div>

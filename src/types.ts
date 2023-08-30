@@ -83,3 +83,7 @@ export type CreateBudgetRequest = {
   budgetType: BudgetType;
   day: string | null;
 };
+
+export type BudgetInfoResponse = {
+  a:string
+}

@@ -13,25 +13,47 @@ export const StyledProgressBar = styled.div`
   .budgetTitle {
     display: flex;
     justify-content: center;
-    margin-top: 10px;
+    font-weight: 600;
+  }
+  .miscInfo {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    margin-top: 15px;
+  }
+  .monetaryProgress {
+    display: flex;
+    justify-content: center;
+    margin-top: 5px;
   }
   .progressBar {
     display: flex;
     flex-direction: row;
-    justify-content: center;
-    align-items: center;
-
+    margin-top: 10px;
+    margin-bottom: 5px;
+    .wrapper {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      align-items: center;
+    }
     .targetIcon {
       color: ${({ theme }) => theme.colors.deepPurple};
-      font-size: 30px;
+      font-size: 40px;
+      align-self: center;
+      margin-top: -20px;
     }
-    .wrapper {
+    .amount {
+      font-weight: bold;
+    }
+    .barWrapper {
       position: relative;
-      width: 100%;
-      background-color: green;
-      border-radius: 1rem;
+      width: 97%;
+      background-color: black;
+      border-radius: 20px;
       display: grid;
-      height: 1.5rem;
+      height: 1rem;
+      border-color: grey;
       .wrapper > * {
         grid-column: 1 / -1;
         grid-row: 1 / -1;
@@ -42,17 +64,15 @@ export const StyledProgressBar = styled.div`
         height: 100%;
         display: flex;
         overflow: hidden;
-        border-radius: 6px;
+        border-radius: inherit;
       }
       .bar:after {
         content: "";
         width: 100%;
         height: 100%;
-        background-color: blue;
-        transform: translateX(calc(-100% + 65 * 1%));
+        background-color: #0a7800;
+        transform: translateX(calc(-100% + 60.2 * 1%));
         transition: transform 300ms cubic-bezier(0.4, 0, 0.2, 1);
-
-        /* width: calc(var(--progress) * 1%); */
       }
     }
   }
