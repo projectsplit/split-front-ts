@@ -78,4 +78,12 @@ export const StyledBudget = styled.div`
     display: flex;
     flex-direction: column;
   }
+
+  .monthlyPropmt {
+    display: flex;
+    flex-direction: row;
+    .sup {
+      margin-top: -3px;
+    }
+  }
 `;

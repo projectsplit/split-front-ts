@@ -1,4 +1,6 @@
-import { BudgetType } from "./types";
+import { CSSProperties } from "react";
+import { BudgetInfoResponse, BudgetType } from "./types";
+import { inflateRaw } from "zlib";
 
 export interface InputProps
   extends React.InputHTMLAttributes<HTMLInputElement> {
@@ -63,16 +65,20 @@ export interface TreeAdjustedContainerProps {
   items: (string | JSX.Element)[];
 }
 
-export interface ReccomendationMessageProps {
+export interface RecommendationMessageProps {
   onClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
-  days: number;
+  currency:string;
+  days: string;
   reduceAmount: string;
   offBudgetAmount: string;
+  style?: CSSProperties;
 }
 
 export interface OnTrackMessageProps {
   onClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
+  currency:string;
   amount: string;
+  style?: CSSProperties;
 }
 
 export interface TreeProps {
@@ -99,5 +105,10 @@ export interface CalendarOptionsButtonProps {
 }
 
 export interface ProgressBarProps {
-  budgettype: BudgetType;
+  data: BudgetInfoResponse | undefined;
+  isFetching:boolean;
+}
+
+export interface BudgetTitleProps{
+  children:any;
 }

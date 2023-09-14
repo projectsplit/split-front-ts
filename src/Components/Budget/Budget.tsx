@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useState } from "react";
 import { api } from "../../apis/api";
 import { StyledBudget } from "./Budget.styled";
 import { BiArrowBack } from "react-icons/bi";
@@ -8,55 +8,34 @@ import SpendingCycleSelector from "./SpeningCycleSelector/SpendingCycleSelector"
 import Calendar from "./Calendar/Calendar";
 import { currencyMask } from "../../helpers/currencyMask";
 import { removeCommas } from "../../helpers/removeCommas";
-import { useMutation } from "@tanstack/react-query";
-import { BudgetType, CreateBudgetRequest } from "../../types";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import {
+  BudgetInfoResponse,
+  BudgetType,
+  CreateBudgetRequest,
+} from "../../types";
 import CalendarOptionsButton from "./CalendarOptionButton/CalendarOptionsButton";
 import SubmitButton from "../SubmitButton/SubmitButton";
 import ProgressBar from "./ProgressBar/ProgressBar";
-//const converter = require("currency-exchanger-js");
+import Recommendation from "../Recommendation/Recommendation";
+import OnTrackMessage from "../OnTrackMessage/OnTrackMessage";
+import { useTheme } from "styled-components";
+import { getOrdinalSuffix } from "../../helpers/getOrdinalSuffix";
+import { getWeekday } from "../../helpers/getWeekDay";
 
 export default function Budget() {
   const [amount, setAmount] = useState<string>("");
   const [displayedAmount, setDisplayedAmount] = useState<string>("");
   const [openCalendar, setOpenCalendar] = useState<boolean>(false);
   const navigate = useNavigate();
-  // const [currencySymbolMargin, setCurrencySymbolMargin] = useState<number>(0);
   const [calendarDay, setCalendarDay] = useState<string>("");
   const [budgettype, setBudgetType] = useState<BudgetType>(BudgetType.Monthly);
-
-  // const [width, setWidth] = useState<number>(0);
-  // const [content, setContent] = useState<string>("");
-  // const dummySpan = useRef<HTMLSpanElement>(null);
-  // const dummyInput = useRef<HTMLInputElement>(null);
-
-  // const xchange = async () => {
-  //   const sgdToMyr = await converter.convertOnDate(
-  //     1,
-  //     "gbp",
-  //     "eur",
-  //     new Date("2023-08-17")
-  //   );
-
-  //   console.log(sgdToMyr)
-  // };
-  //https://www.youtube.com/watch?v=ydQEZ6qn9Y4
+  const theme = useTheme();
 
   const handleInputChange = (e: any) => {
     setDisplayedAmount(currencyMask(e).target.value);
     setAmount(removeCommas(e.target.value));
-
-    // const characterWidth = 10;
-    // const margin = characterWidth * amount.length;
-
-    //setCurrencySymbolMargin(margin);
   };
-
-  // useEffect(() => {
-  //   if (dummySpan.current && dummyInput.current) {
-  //     setWidth(dummySpan.current.offsetWidth);
-  //   }
-  //   // xchange();
-  // }, [amount]);
 
   const monthDaysArray = Array.from({ length: 5 }, (_, weekIndex) =>
     weekIndex < 4
@@ -80,6 +59,14 @@ export default function Budget() {
     },
   });
 
+  const { error, data, refetch, isSuccess, isFetching, isLoading } =
+    useQuery<BudgetInfoResponse>({
+      queryKey: ["budget"],
+      queryFn: () => api.getBudgetInfo(budgettype),
+      refetchOnWindowFocus: false,
+      refetchOnMount: false,
+    });
+
   const submitBudget = async () => {
     if (budgettype === BudgetType.Monthly) {
       createBudget.mutate({
@@ -99,8 +86,67 @@ export default function Budget() {
   };
 
   const calendarTypeHandler = (budgetType: BudgetType) => {
-    setBudgetType(budgetType);
-    setCalendarDay("");
+    if (calendarDay !== "" && budgetType === budgettype) {
+      setBudgetType(budgetType);
+    } else {
+      setBudgetType(budgetType);
+      setCalendarDay("");
+    }
+  };
+
+  const budgetInfoMessage = (data: BudgetInfoResponse): JSX.Element => {
+    const totalAmountSpent = parseFloat(data.totalAmountSpent);
+    const remainingDays = parseFloat(data.remainingDays);
+    const averageSpentPerDay = parseFloat(data.averageSpentPerDay);
+    const goal = parseFloat(data.goal);
+    const spendingProjection =
+      totalAmountSpent + remainingDays * averageSpentPerDay;
+
+    const isOnTarget = spendingProjection - goal > 0 ? false : true;
+    if (!isOnTarget) {
+      const offBudgetBy = (spendingProjection - goal).toFixed(2);
+      const reachCapInDays = (
+        (goal - totalAmountSpent) /
+        averageSpentPerDay
+      ).toFixed(0);
+      const reduceByRecommendation = (
+        averageSpentPerDay -
+        (goal - totalAmountSpent) / remainingDays
+      ).toFixed(2);
+
+      return (
+        <Recommendation
+          days={reachCapInDays}
+          offBudgetAmount={offBudgetBy}
+          reduceAmount={reduceByRecommendation}
+          currency={data.currency}
+          style={{
+            backgroundColor: theme?.colors.inputGrey,
+            borderColor: theme?.colors.inputGrey,
+            borderStyle: "solid",
+            boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
+            borderRadius: "6px",
+            padding: "0.8rem",
+          }}
+        />
+      );
+    } else {
+      const onTargetAmount = (goal - spendingProjection).toFixed(2);
+      return (
+        <OnTrackMessage
+          amount={onTargetAmount}
+          currency={data.currency}
+          style={{
+            backgroundColor: theme?.colors.inputGrey,
+            borderColor: theme?.colors.inputGrey,
+            borderStyle: "solid",
+            boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
+            borderRadius: "6px",
+            padding: "0.8rem",
+          }}
+        />
+      );
+    }
   };
 
   return (
@@ -114,31 +160,31 @@ export default function Budget() {
 
       <div className="promptSpendingCap">
         <div className="prompt">Set up your spending cap or goal</div>
-        {/* <span className="dummySpan" ref={dummySpan}>
-          {content}
-        </span> */}
 
         <InputMonetary
           value={displayedAmount}
           onChange={(e) => handleInputChange(e)}
           currency="USD"
-          // currencysymbolmargin={currencySymbolMargin}
-          // width={width}
-          // inputWidth={dummyInput.current?.offsetWidth}
-          // ref={dummyInput}
         />
       </div>
 
       <div className="promptSpendingCycle">
         <div className="prompt">Select your spending cycle</div>
         <SpendingCycleSelector onClick={() => setOpenCalendar((prev) => !prev)}>
-          {calendarDay === ""
-            ? budgettype === BudgetType.Monthly
-              ? "Monthly"
-              : "Weekly"
-            : budgettype === BudgetType.Monthly
-            ? "Monthly on the " + calendarDay + "th"
-            : "Weekly on " + calendarDay}
+          {calendarDay === "" ? (
+            budgettype === BudgetType.Monthly ? (
+              "Monthly"
+            ) : (
+              "Weekly"
+            )
+          ) : budgettype === BudgetType.Monthly ? (
+            <div className="monthlyPropmt">
+              Monthly on the {calendarDay}{" "}
+              <sup className="sup">{getOrdinalSuffix(calendarDay)}</sup>
+            </div>
+          ) : (
+            <>Weekly on {getWeekday(getDayNumber(calendarDay))}</>
+          )}
         </SpendingCycleSelector>
         {openCalendar && (
           <div className="categoryButtons">
@@ -164,7 +210,10 @@ export default function Budget() {
       </div>
 
       <div className="spentInfo">You have spent $156.36 this month</div>
-      <ProgressBar budgettype={budgettype}/>
+      <ProgressBar data={data} isFetching={isFetching} />
+
+      {data !== undefined && budgetInfoMessage(data)}
+
       <div className="submitButton">
         <SubmitButton onClick={submitBudget}>Submit Budget</SubmitButton>
       </div>

@@ -1,6 +1,10 @@
 import styled from "styled-components";
 
-export const StyledProgressBar = styled.div`
+interface StyledProgressBarProps {
+  percentage: string;
+}
+
+export const StyledProgressBar = styled.div<StyledProgressBarProps>`
   display: flex;
   flex-direction: column;
   background-color: ${({ theme }) => theme.colors.inputGrey};
@@ -10,10 +14,14 @@ export const StyledProgressBar = styled.div`
   border: none;
   border-radius: 6px;
   padding: 0.8rem;
+
   .budgetTitle {
     display: flex;
     justify-content: center;
-    font-weight: 600;
+    .sup{
+      margin-top: -3px;
+    }
+   
   }
   .miscInfo {
     display: flex;
@@ -71,7 +79,9 @@ export const StyledProgressBar = styled.div`
         width: 100%;
         height: 100%;
         background-color: #0a7800;
-        transform: translateX(calc(-100% + 60.2 * 1%));
+        transform: translateX(
+          calc(-100% + ${(props) => props.percentage} * 1%)
+        );
         transition: transform 300ms cubic-bezier(0.4, 0, 0.2, 1);
       }
     }

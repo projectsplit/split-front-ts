@@ -1,11 +1,12 @@
 import React from "react";
 import { StyledOnTrackMessage } from "./OnTrackMessage.styled";
-import { OnTrackMessageProps } from "../../../interfaces";
+import { OnTrackMessageProps } from "../../interfaces";
 import IonIcon from "@reacticons/ionicons";
+import { displayCurrencyAndAmount } from "../../helpers/displayCurrencyAndAmount";
 
-export default function OnTrackMessage({ onClick, amount }: OnTrackMessageProps) {
+export default function OnTrackMessage({ onClick, amount,style,currency }: OnTrackMessageProps) {
   return (
-  <StyledOnTrackMessage>
+  <StyledOnTrackMessage style={style}>
      <div className="main">
         <div className="signParagraphWrap">
           <div className="sign">
@@ -16,7 +17,7 @@ export default function OnTrackMessage({ onClick, amount }: OnTrackMessageProps)
             You are on target to meeting your spending goal.
             </div>
             <div className="secondParagraph">
-              Spending at this rate you will save you <span className="amount">{amount}</span> at the end of the
+              Spending at this rate you will save you <span className="amount">{displayCurrencyAndAmount(amount,currency)}</span> at the end of the
               month.
             </div>
           </div>

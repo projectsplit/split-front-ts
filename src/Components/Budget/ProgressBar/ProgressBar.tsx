@@ -1,45 +1,83 @@
 import React from "react";
 import { StyledProgressBar } from "./ProgressBar.styled";
 import { TbTargetArrow } from "react-icons/tb";
-import { useQuery } from "@tanstack/react-query";
-import { api } from "../../../apis/api";
 import { ProgressBarProps } from "../../../interfaces";
-import { BudgetInfoResponse } from "../../../types";
+import { displayCurrencyAndAmount } from "../../../helpers/displayCurrencyAndAmount";
+import Spinner from "../../Spinner/Spinner";
+import { getOrdinalSuffix } from "../../../helpers/getOrdinalSuffix";
+import { getWeekday } from "../../../helpers/getWeekDay";
 
-export default function ProgressBar({ budgettype }: ProgressBarProps) {
-  
-  const { error, data, refetch, isSuccess, isFetching, isLoading } =
-    useQuery<any>({
-      queryKey: ["budget"],
-      queryFn: () => api.getBudgetInfo(budgettype),
-      refetchOnWindowFocus: false,
-      refetchOnMount: false,
-    });
+export default function ProgressBar({ data, isFetching }: ProgressBarProps) {
+  let percentage = "";
+  if (data?.totalAmountSpent !== undefined && data?.goal !== undefined) {
+    const totalAmountSpent = parseFloat(data.totalAmountSpent);
+    const goal = parseFloat(data.goal);
+    if (!isNaN(totalAmountSpent) && !isNaN(goal)) {
+      percentage = ((totalAmountSpent / goal) * 100).toFixed(1);
+    }
+  }
 
   console.log(data);
   return (
-    <StyledProgressBar>
-      <div className="budgetTitle">This month</div>
-      <div className="progressBar">
-        <TbTargetArrow className="targetIcon" />
-        <div className="wrapper">
-          <div className="barWrapper">
-            <div className="bar" />
+    <StyledProgressBar percentage={percentage}>
+      {data === undefined && isFetching ? (
+        <Spinner />
+      ) : (
+        <div className="budgetInfo">
+          <div className="thisPeriod">
+            <div className="budgetTitle">
+              
+              {data?.budgetType === 1 ? <strong>Monthly&nbsp;</strong>: <strong>Weekly&nbsp;</strong>}
+              on {data?.budgetType === 1 ? "the" : ""}&nbsp;
+
+              {data?.budgetType === 1 ? 
+              <><strong>{data?.day}</strong>
+              <sup className="sup"><strong>{getOrdinalSuffix(data?.day)}</strong></sup></>
+              :<>
+              <strong>{getWeekday(data?.day)}</strong>
+              </>}
+            </div>
+            <div className="progressBar">
+              <TbTargetArrow className="targetIcon" />
+              <div className="wrapper">
+                <div className="barWrapper">
+                  <div className="bar" />
+                </div>
+                <div className="monetaryProgress">
+                  {data?.currency !== undefined ? (
+                    <strong>
+                      {displayCurrencyAndAmount(
+                        data.totalAmountSpent,
+                        data.currency
+                      )}{" "}
+                      / {displayCurrencyAndAmount(data.goal, data.currency)}
+                    </strong>
+                  ) : (
+                    ""
+                  )}
+                </div>
+              </div>
+              <div className="amount">{percentage}%</div>
+            </div>
+            <div className="miscInfo">
+              <div className="remainingDays">
+                Remaining Days: <strong>{data?.remainingDays}</strong>
+              </div>
+              <div className="averageSpending">
+                Avg Spent Per Day:&nbsp;
+                <strong>
+                  {data?.currency !== undefined
+                    ? displayCurrencyAndAmount(
+                        data.averageSpentPerDay,
+                        data.currency
+                      )
+                    : ""}
+                </strong>
+              </div>
+            </div>
           </div>
-          <div className="monetaryProgress">
-            <strong>£902.6 / £1,500</strong> &nbsp; (60.2%)
-          </div>
         </div>
-        <div className="amount">$1.5K</div>
-      </div>
-      <div className="miscInfo">
-        <div className="remainingDays">
-          Remaining Days: <strong>10</strong>
-        </div>
-        <div className="averageSpending">
-          Avg Spending Per Day:<strong> $22.97</strong>
-        </div>
-      </div>
+      )}
     </StyledProgressBar>
   );
 }

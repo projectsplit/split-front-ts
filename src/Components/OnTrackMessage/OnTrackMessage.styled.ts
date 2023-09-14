@@ -1,6 +1,9 @@
 import styled from "styled-components";
 
-export const StyledOnTrackMessage = styled.div`
+interface StyledOnTrackMessageProps {
+  style?: React.CSSProperties;
+}
+export const StyledOnTrackMessage = styled.div<StyledOnTrackMessageProps>`
   .main {
     position: relative;
     display: flex;
@@ -46,5 +49,9 @@ export const StyledOnTrackMessage = styled.div`
       cursor: pointer;
       display: block;
     }
+
+    ${(props) => `
+    ${props.style}
+  `}
   }
 `;

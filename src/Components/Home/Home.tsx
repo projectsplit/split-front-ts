@@ -3,8 +3,8 @@ import { StyledHomepage, HomeWrapper } from "./Home.Styled";
 import LogoStripe from "./LogoStripe/LogoStripe";
 import OptionsContainer from "../OptionsContainer/OptionsContainer";
 import TreeAdjustedContainer from "../TreeAdjustedContainer/TreeAdjustedContainer";
-import Recommendation from "./Recommendation/Recommendation";
-import OnTrackMessage from "./OnTrackMessage/OnTrackMessage";
+import Recommendation from "../Recommendation/Recommendation";
+import OnTrackMessage from "../OnTrackMessage/OnTrackMessage";
 import { BsBarChartFill } from "react-icons/bs";
 import { BsFillPiggyBankFill } from "react-icons/bs";
 import { BsFillPersonFill } from "react-icons/bs";
@@ -43,6 +43,7 @@ export default function Home() {
             {showAdvice && (
               <OptionsContainer hasarrow={false}>
                 <OnTrackMessage
+                  currency="USD"
                   amount="£21.5"
                   onClick={() => setShowAdvice(false)}
                 />

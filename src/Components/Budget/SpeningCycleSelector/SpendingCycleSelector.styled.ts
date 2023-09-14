@@ -31,4 +31,5 @@ export const StyledSpendingCycleSelector = styled.button<SpendingCycleSelectorPr
   .icon {
     font-size: 25px;
   }
+
 `;

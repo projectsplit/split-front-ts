@@ -1,6 +1,12 @@
 import styled from "styled-components";
 
-export const StyledRecommendation = styled.div`
+interface StyledRecommendationProps {
+  style?: React.CSSProperties;
+}
+
+export const StyledRecommendation = styled.div<StyledRecommendationProps>`
+
+
   .main {
     position: relative;
     display: flex;
@@ -15,7 +21,7 @@ export const StyledRecommendation = styled.div`
     .signParagraphWrap {
       display: flex;
       flex-direction: row;
-      /* align-items: center; */
+
       .sign {
         margin-right: 10px;
       }
@@ -50,5 +56,9 @@ export const StyledRecommendation = styled.div`
       cursor: pointer;
       display: block;
     }
+    
+    ${(props) => `
+    ${props.style}
+  `}
   }
 `;
