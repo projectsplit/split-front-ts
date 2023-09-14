@@ -67,16 +67,25 @@ export interface TreeAdjustedContainerProps {
 
 export interface RecommendationMessageProps {
   onClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
-  currency:string;
+  currency: string;
   days: string;
   reduceAmount: string;
   offBudgetAmount: string;
   style?: CSSProperties;
 }
 
+export interface OverspentMessageProps {
+  onClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
+  currency: string;
+  offBudgetAmount: string;
+  overspentBy: string;
+  days: string;
+  style?: CSSProperties;
+}
+
 export interface OnTrackMessageProps {
   onClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
-  currency:string;
+  currency: string;
   amount: string;
   style?: CSSProperties;
 }
@@ -106,9 +115,9 @@ export interface CalendarOptionsButtonProps {
 
 export interface ProgressBarProps {
   data: BudgetInfoResponse | undefined;
-  isFetching:boolean;
+  isFetching: boolean;
 }
 
-export interface BudgetTitleProps{
-  children:any;
+export interface BudgetTitleProps {
+  children: any;
 }

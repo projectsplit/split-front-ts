@@ -17,11 +17,10 @@ import {
 import CalendarOptionsButton from "./CalendarOptionButton/CalendarOptionsButton";
 import SubmitButton from "../SubmitButton/SubmitButton";
 import ProgressBar from "./ProgressBar/ProgressBar";
-import Recommendation from "../Recommendation/Recommendation";
-import OnTrackMessage from "../OnTrackMessage/OnTrackMessage";
-import { useTheme } from "styled-components";
 import { getOrdinalSuffix } from "../../helpers/getOrdinalSuffix";
 import { getWeekday } from "../../helpers/getWeekDay";
+import { BudgetInfoMessage } from "../../helpers/BudgetInfoMessage";
+import { displayCurrencyAndAmount } from "../../helpers/displayCurrencyAndAmount";
 
 export default function Budget() {
   const [amount, setAmount] = useState<string>("");
@@ -30,7 +29,6 @@ export default function Budget() {
   const navigate = useNavigate();
   const [calendarDay, setCalendarDay] = useState<string>("");
   const [budgettype, setBudgetType] = useState<BudgetType>(BudgetType.Monthly);
-  const theme = useTheme();
 
   const handleInputChange = (e: any) => {
     setDisplayedAmount(currencyMask(e).target.value);
@@ -94,61 +92,6 @@ export default function Budget() {
     }
   };
 
-  const budgetInfoMessage = (data: BudgetInfoResponse): JSX.Element => {
-    const totalAmountSpent = parseFloat(data.totalAmountSpent);
-    const remainingDays = parseFloat(data.remainingDays);
-    const averageSpentPerDay = parseFloat(data.averageSpentPerDay);
-    const goal = parseFloat(data.goal);
-    const spendingProjection =
-      totalAmountSpent + remainingDays * averageSpentPerDay;
-
-    const isOnTarget = spendingProjection - goal > 0 ? false : true;
-    if (!isOnTarget) {
-      const offBudgetBy = (spendingProjection - goal).toFixed(2);
-      const reachCapInDays = (
-        (goal - totalAmountSpent) /
-        averageSpentPerDay
-      ).toFixed(0);
-      const reduceByRecommendation = (
-        averageSpentPerDay -
-        (goal - totalAmountSpent) / remainingDays
-      ).toFixed(2);
-
-      return (
-        <Recommendation
-          days={reachCapInDays}
-          offBudgetAmount={offBudgetBy}
-          reduceAmount={reduceByRecommendation}
-          currency={data.currency}
-          style={{
-            backgroundColor: theme?.colors.inputGrey,
-            borderColor: theme?.colors.inputGrey,
-            borderStyle: "solid",
-            boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
-            borderRadius: "6px",
-            padding: "0.8rem",
-          }}
-        />
-      );
-    } else {
-      const onTargetAmount = (goal - spendingProjection).toFixed(2);
-      return (
-        <OnTrackMessage
-          amount={onTargetAmount}
-          currency={data.currency}
-          style={{
-            backgroundColor: theme?.colors.inputGrey,
-            borderColor: theme?.colors.inputGrey,
-            borderStyle: "solid",
-            boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
-            borderRadius: "6px",
-            padding: "0.8rem",
-          }}
-        />
-      );
-    }
-  };
-
   return (
     <StyledBudget>
       <div className="topBar">
@@ -209,10 +152,16 @@ export default function Budget() {
         )}
       </div>
 
-      <div className="spentInfo">You have spent $156.36 this month</div>
+      {data !== undefined && (
+        <div className="spentInfo">
+          You have spent{" "}
+          {displayCurrencyAndAmount(data?.totalAmountSpent, data?.currency)}{" "}
+          this {data?.budgetType === 1 ? "month" : "week"}
+        </div>
+      )}
       <ProgressBar data={data} isFetching={isFetching} />
 
-      {data !== undefined && budgetInfoMessage(data)}
+      {data !== undefined && BudgetInfoMessage(data)}
 
       <div className="submitButton">
         <SubmitButton onClick={submitBudget}>Submit Budget</SubmitButton>

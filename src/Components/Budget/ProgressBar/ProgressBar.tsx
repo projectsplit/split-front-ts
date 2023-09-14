@@ -8,12 +8,12 @@ import { getOrdinalSuffix } from "../../../helpers/getOrdinalSuffix";
 import { getWeekday } from "../../../helpers/getWeekDay";
 
 export default function ProgressBar({ data, isFetching }: ProgressBarProps) {
-  let percentage = "";
+  let percentage: number = 0;
   if (data?.totalAmountSpent !== undefined && data?.goal !== undefined) {
     const totalAmountSpent = parseFloat(data.totalAmountSpent);
     const goal = parseFloat(data.goal);
     if (!isNaN(totalAmountSpent) && !isNaN(goal)) {
-      percentage = ((totalAmountSpent / goal) * 100).toFixed(1);
+      percentage = parseFloat(((totalAmountSpent / goal) * 100).toFixed(1));
     }
   }
 
@@ -26,16 +26,24 @@ export default function ProgressBar({ data, isFetching }: ProgressBarProps) {
         <div className="budgetInfo">
           <div className="thisPeriod">
             <div className="budgetTitle">
-              
-              {data?.budgetType === 1 ? <strong>Monthly&nbsp;</strong>: <strong>Weekly&nbsp;</strong>}
+              {data?.budgetType === 1 ? (
+                <strong>Monthly&nbsp;</strong>
+              ) : (
+                <strong>Weekly&nbsp;</strong>
+              )}
               on {data?.budgetType === 1 ? "the" : ""}&nbsp;
-
-              {data?.budgetType === 1 ? 
-              <><strong>{data?.day}</strong>
-              <sup className="sup"><strong>{getOrdinalSuffix(data?.day)}</strong></sup></>
-              :<>
-              <strong>{getWeekday(data?.day)}</strong>
-              </>}
+              {data?.budgetType === 1 ? (
+                <>
+                  <strong>{data?.day}</strong>
+                  <sup className="sup">
+                    <strong>{getOrdinalSuffix(data?.day)}</strong>
+                  </sup>
+                </>
+              ) : (
+                <>
+                  <strong>{getWeekday(data?.day)}</strong>
+                </>
+              )}
             </div>
             <div className="progressBar">
               <TbTargetArrow className="targetIcon" />

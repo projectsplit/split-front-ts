@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 interface StyledProgressBarProps {
-  percentage: string;
+  percentage: number;
 }
 
 export const StyledProgressBar = styled.div<StyledProgressBarProps>`
@@ -80,7 +80,7 @@ export const StyledProgressBar = styled.div<StyledProgressBarProps>`
         height: 100%;
         background-color: #0a7800;
         transform: translateX(
-          calc(-100% + ${(props) => props.percentage} * 1%)
+          calc(-100% + ${(props) => Math.min(props.percentage, 100)} * 1%)
         );
         transition: transform 300ms cubic-bezier(0.4, 0, 0.2, 1);
       }

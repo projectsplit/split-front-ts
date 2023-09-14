@@ -1,13 +1,13 @@
 import React from "react";
-import { StyledRecommendation } from "./Recommendation.styled";
+import { StyledOverspentMessage } from "./OverspentMessage.styled";
 import IonIcon from "@reacticons/ionicons";
-import { RecommendationMessageProps  } from "../../interfaces";
+import { OverspentMessageProps  } from "../../interfaces";
 import { displayCurrencyAndAmount } from "../../helpers/displayCurrencyAndAmount";
 
-export default function Recommendation({ onClick,days,offBudgetAmount,reduceAmount, style,currency}: RecommendationMessageProps ) {
+export default function OverspentMessage({ onClick,offBudgetAmount, style,currency,overspentBy,days}: OverspentMessageProps ) {
   
   return (
-    <StyledRecommendation style={style} >
+    <StyledOverspentMessage style={style} >
       <div className="main">
         {/* <div className="header">Recommendation</div> */}
         <div className="signParagraphWrap">
@@ -16,13 +16,10 @@ export default function Recommendation({ onClick,days,offBudgetAmount,reduceAmou
           </div>
           <div className="paragraphs">
             <div className="firstParagraph">
-              Reduce your spending by <strong className="amount">{displayCurrencyAndAmount(reduceAmount,currency)}</strong> per day to not exceed
-              your monthly cap.
+             You have overspent by <strong className="amount">{displayCurrencyAndAmount(overspentBy,currency)}</strong>. 
             </div>
             <div className="secondParagraph">
-              At this rate you will reach your cap in <strong>{days}</strong> days
-              and you will be off budget by <strong className="amount">{displayCurrencyAndAmount(offBudgetAmount,currency)}</strong> at the end of the
-              month.
+              By spending at this rate you will be off budget by <strong className="amount">{displayCurrencyAndAmount(offBudgetAmount,currency)}</strong> in <strong>{days}</strong> days
             </div>
           </div>
         </div>
@@ -30,6 +27,6 @@ export default function Recommendation({ onClick,days,offBudgetAmount,reduceAmou
           <IonIcon name="close-outline" className="close" />
         </div>
       </div>
-    </StyledRecommendation>
+    </StyledOverspentMessage>
   );
 }

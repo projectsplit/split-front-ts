@@ -17,7 +17,7 @@ export default function OnTrackMessage({ onClick, amount,style,currency }: OnTra
             You are on target to meeting your spending goal.
             </div>
             <div className="secondParagraph">
-              Spending at this rate you will save you <span className="amount">{displayCurrencyAndAmount(amount,currency)}</span> at the end of the
+              Spending at this rate will save you <strong className="amount">{displayCurrencyAndAmount(amount,currency)}</strong> at the end of the
               month.
             </div>
           </div>
