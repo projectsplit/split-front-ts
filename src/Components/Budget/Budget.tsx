@@ -62,11 +62,10 @@ export default function Budget() {
     onSuccess: () => {
       console.log("invalidated")
       queryClient.invalidateQueries(queryKey);
-     
     },
   });
 
-  const { error, data, refetch, isSuccess, isInitialLoading, isFetching } =
+  const { error, data, refetch, isSuccess, isInitialLoading, isFetching,isStale } =
     useQuery<BudgetInfoResponse>({
       queryKey: queryKey,
       queryFn: () => api.getBudgetInfo(budgettype, "USD"),
@@ -149,7 +148,7 @@ export default function Budget() {
             <CalendarOptionsButton
               onClick={() => {
                 calendarTypeHandler(BudgetType.Monthly);
-                if (!queryClient.getQueryData(queryKey)) {
+                if (!querydata || isStale) {
                   // Manually trigger the query refetch only if the data is stale
                   queryClient.invalidateQueries(queryKey);
                 }
@@ -161,7 +160,7 @@ export default function Budget() {
             <CalendarOptionsButton
               onClick={() => {
                 calendarTypeHandler(BudgetType.Weekly);
-                if (!queryClient.getQueryData(queryKey)) {
+                if (!querydata || isStale) {
                   // Manually trigger the query refetch only if the data is stale
                 
                   queryClient.invalidateQueries(queryKey);
