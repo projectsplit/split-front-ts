@@ -70,9 +70,9 @@ const getUserGroups = async (
   return response.data;
 };
 
-const getBudgetInfo = async (budgetType: BudgetType): Promise<any> => {
+const getBudgetInfo = async (budgetType: BudgetType, currency:String): Promise<BudgetInfoResponse> => {
   const response = await apiHttpClient.get<BudgetInfoResponse>(
-    `/budget/budgetinfo?budgettype=${budgetType}`
+    `/budget/budgetinfo?budgettype=${budgetType}&currency=${currency}`
   );
   return response.data;
 };
@@ -88,6 +88,7 @@ const createBudget = async (request: CreateBudgetRequest) => {
   const response = await apiHttpClient.post<any>(`/budget/create`, request);
   return response.data;
 };
+
 export const api = {
   getGroupById,
   getUserGroups,

@@ -6,7 +6,7 @@ export const StyledBudget = styled.div`
   color: ${({ theme }) => theme.colors.lightColor};
   background-color: ${({ theme }) => theme.colors.layer2};
   box-sizing: border-box;
-  height: 100vh;
+  min-height: 100vh;
   width: 100%;
   padding: 14px;
   gap: 20px;
@@ -58,8 +58,16 @@ export const StyledBudget = styled.div`
   }
 
   .spentInfo {
-    font-size: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 15px;
+
     color: ${({ theme }) => theme.colors.layer6};
+    .currentBudgetTitle {
+      align-self: center;
+      height:10px;
+    }
   }
   .dummySpan {
     position: absolute;

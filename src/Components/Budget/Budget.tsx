@@ -8,7 +8,7 @@ import SpendingCycleSelector from "./SpeningCycleSelector/SpendingCycleSelector"
 import Calendar from "./Calendar/Calendar";
 import { currencyMask } from "../../helpers/currencyMask";
 import { removeCommas } from "../../helpers/removeCommas";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   BudgetInfoResponse,
   BudgetType,
@@ -20,6 +20,7 @@ import ProgressBar from "./ProgressBar/ProgressBar";
 import { getOrdinalSuffix } from "../../helpers/getOrdinalSuffix";
 import { getWeekday } from "../../helpers/getWeekDay";
 import { BudgetInfoMessage } from "../../helpers/BudgetInfoMessage";
+import Spinner from "../Spinner/Spinner";
 import { displayCurrencyAndAmount } from "../../helpers/displayCurrencyAndAmount";
 
 export default function Budget() {
@@ -49,20 +50,30 @@ export default function Budget() {
     return null;
   };
 
+  const queryClient = useQueryClient();
+  const queryKey = ["budget", budgettype];
+
   const createBudget = useMutation<any, any, CreateBudgetRequest>({
     mutationKey: ["budget", "create"],
     mutationFn: api.createBudget,
     onError: (error) => {
       console.log(error.response.data);
     },
+    onSuccess: () => {
+      console.log("invalidated")
+      queryClient.invalidateQueries(queryKey);
+     
+    },
   });
 
-  const { error, data, refetch, isSuccess, isFetching, isLoading } =
+  const { error, data, refetch, isSuccess, isInitialLoading, isFetching } =
     useQuery<BudgetInfoResponse>({
-      queryKey: ["budget"],
-      queryFn: () => api.getBudgetInfo(budgettype),
+      queryKey: queryKey,
+      queryFn: () => api.getBudgetInfo(budgettype, "USD"),
       refetchOnWindowFocus: false,
-      refetchOnMount: false,
+      refetchOnMount: true,
+      staleTime: 60000,
+      enabled: true,
     });
 
   const submitBudget = async () => {
@@ -81,6 +92,7 @@ export default function Budget() {
         day: getDayNumber(calendarDay),
       });
     }
+    setOpenCalendar(false);
   };
 
   const calendarTypeHandler = (budgetType: BudgetType) => {
@@ -91,6 +103,9 @@ export default function Budget() {
       setCalendarDay("");
     }
   };
+
+  const querydata = queryClient.getQueryData(queryKey) as BudgetInfoResponse;
+  console.log(querydata);
 
   return (
     <StyledBudget>
@@ -132,13 +147,26 @@ export default function Budget() {
         {openCalendar && (
           <div className="categoryButtons">
             <CalendarOptionsButton
-              onClick={() => calendarTypeHandler(BudgetType.Monthly)}
+              onClick={() => {
+                calendarTypeHandler(BudgetType.Monthly);
+                if (!queryClient.getQueryData(queryKey)) {
+                  // Manually trigger the query refetch only if the data is stale
+                  queryClient.invalidateQueries(queryKey);
+                }
+              }}
               isActive={budgettype === BudgetType.Monthly}
             >
               Monthly
             </CalendarOptionsButton>
             <CalendarOptionsButton
-              onClick={() => calendarTypeHandler(BudgetType.Weekly)}
+              onClick={() => {
+                calendarTypeHandler(BudgetType.Weekly);
+                if (!queryClient.getQueryData(queryKey)) {
+                  // Manually trigger the query refetch only if the data is stale
+                
+                  queryClient.invalidateQueries(queryKey);
+                }
+              }}
               isActive={budgettype === BudgetType.Weekly}
             >
               Weekly
@@ -152,19 +180,35 @@ export default function Budget() {
         )}
       </div>
 
-      {data !== undefined && (
-        <div className="spentInfo">
-          You have spent{" "}
-          {displayCurrencyAndAmount(data?.totalAmountSpent, data?.currency)}{" "}
-          this {data?.budgetType === 1 ? "month" : "week"}
-        </div>
+      {isFetching ? (
+        <Spinner />
+      ) : (
+        querydata && (
+          <div className="spentInfo">
+            {!querydata.budgetSubmitted ? (
+              <div>
+                You have spent{" "}
+                {displayCurrencyAndAmount(
+                  data?.totalAmountSpent,
+                  querydata?.currency
+                )}{" "}
+                this {budgettype === 1 ? "month" : "week"}
+              </div>
+            ) : (
+              <>
+                <span className="currentBudgetTitle">Current budget</span>{" "}
+                <ProgressBar data={querydata} isFetching={isFetching} />
+                {BudgetInfoMessage(querydata)}
+              </>
+            )}
+          </div>
+        )
       )}
-      <ProgressBar data={data} isFetching={isFetching} />
-
-      {data !== undefined && BudgetInfoMessage(data)}
 
       <div className="submitButton">
-        <SubmitButton onClick={submitBudget}>Submit Budget</SubmitButton>
+        {!isFetching && (
+          <SubmitButton onClick={submitBudget}>Submit Budget</SubmitButton>
+        )}
       </div>
     </StyledBudget>
   );

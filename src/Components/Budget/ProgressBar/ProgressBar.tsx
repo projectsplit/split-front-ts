@@ -3,7 +3,6 @@ import { StyledProgressBar } from "./ProgressBar.styled";
 import { TbTargetArrow } from "react-icons/tb";
 import { ProgressBarProps } from "../../../interfaces";
 import { displayCurrencyAndAmount } from "../../../helpers/displayCurrencyAndAmount";
-import Spinner from "../../Spinner/Spinner";
 import { getOrdinalSuffix } from "../../../helpers/getOrdinalSuffix";
 import { getWeekday } from "../../../helpers/getWeekDay";
 
@@ -17,12 +16,8 @@ export default function ProgressBar({ data, isFetching }: ProgressBarProps) {
     }
   }
 
-  console.log(data);
   return (
     <StyledProgressBar percentage={percentage}>
-      {data === undefined && isFetching ? (
-        <Spinner />
-      ) : (
         <div className="budgetInfo">
           <div className="thisPeriod">
             <div className="budgetTitle">
@@ -85,7 +80,6 @@ export default function ProgressBar({ data, isFetching }: ProgressBarProps) {
             </div>
           </div>
         </div>
-      )}
     </StyledProgressBar>
   );
 }
