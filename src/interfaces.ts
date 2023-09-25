@@ -74,6 +74,7 @@ export interface RecommendationMessageProps {
   offBudgetAmount: string;
   style?: CSSProperties;
   closeButton:boolean;
+  budgetType?:BudgetType;
 }
 
 export interface OverspentMessageProps {
@@ -82,9 +83,9 @@ export interface OverspentMessageProps {
   currency: string;
   offBudgetAmount: string;
   overspentBy: string;
-  days: string;
   style?: CSSProperties;
   closeButton:boolean;
+  budgetType?:BudgetType;
 }
 
 export interface OnTrackMessageProps {
@@ -93,6 +94,7 @@ export interface OnTrackMessageProps {
   amount: string;
   style?: CSSProperties;
   closeButton:boolean;
+  budgetType?:BudgetType;
 }
 
 export interface TreeProps {

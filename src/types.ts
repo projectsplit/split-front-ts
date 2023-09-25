@@ -85,12 +85,12 @@ export type CreateBudgetRequest = {
 };
 
 export type BudgetInfoResponse = {
-  budgetSubmitted:boolean;
+  budgetSubmitted: boolean;
   averageSpentPerDay?: string;
   remainingDays?: string;
   totalAmountSpent: string;
   goal?: string;
   currency: string;
-  budgetType?:BudgetType;
-  day?:string;
+  budgetType?: BudgetType;
+  day?: string;
 };

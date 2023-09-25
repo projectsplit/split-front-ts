@@ -12,7 +12,8 @@ export const BudgetInfoMessage = (data: BudgetInfoResponse): JSX.Element => {
   if (
     data.remainingDays !== undefined &&
     data.goal !== undefined &&
-    data.averageSpentPerDay !== undefined
+    data.averageSpentPerDay !== undefined &&
+    data.budgetType !== undefined
   ) {
     const remainingDays = parseFloat(data.remainingDays);
     const averageSpentPerDay = parseFloat(data.averageSpentPerDay);
@@ -25,12 +26,12 @@ export const BudgetInfoMessage = (data: BudgetInfoResponse): JSX.Element => {
       const offBudgetAmount = (spendingProjection - goal).toFixed(2);
       return (
         <OverspentMessage
-          overspent={totalAmountSpent>goal}
+          overspent={totalAmountSpent > goal}
           offBudgetAmount={offBudgetAmount}
           overspentBy={overspentBy}
-          days={data.remainingDays}
           currency={data.currency}
           closeButton={false}
+          budgetType={data.budgetType}
           style={{
             backgroundColor: theme?.colors.inputGrey,
             borderColor: theme?.colors.inputGrey,
@@ -62,6 +63,7 @@ export const BudgetInfoMessage = (data: BudgetInfoResponse): JSX.Element => {
             reduceAmount={reduceByRecommendation}
             currency={data.currency}
             closeButton={false}
+            budgetType={data.budgetType}
             style={{
               backgroundColor: theme?.colors.inputGrey,
               borderColor: theme?.colors.inputGrey,
@@ -79,6 +81,7 @@ export const BudgetInfoMessage = (data: BudgetInfoResponse): JSX.Element => {
             amount={onTargetAmount}
             currency={data.currency}
             closeButton={false}
+            budgetType={data.budgetType}
             style={{
               backgroundColor: theme?.colors.inputGrey,
               borderColor: theme?.colors.inputGrey,

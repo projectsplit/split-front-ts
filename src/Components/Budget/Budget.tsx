@@ -23,7 +23,6 @@ import { BudgetInfoMessage } from "../../helpers/BudgetInfoMessage";
 import Spinner from "../Spinner/Spinner";
 import { displayCurrencyAndAmount } from "../../helpers/displayCurrencyAndAmount";
 
-
 export default function Budget() {
   const [amount, setAmount] = useState<string>("");
   const [displayedAmount, setDisplayedAmount] = useState<string>("");
@@ -31,14 +30,15 @@ export default function Budget() {
   const [calendarDay, setCalendarDay] = useState<string>("");
   const [budgettype, setBudgetType] = useState<BudgetType>(BudgetType.Monthly);
   const [hasSwitchedBudgetType, setHasSwitchedBudgetType] = useState(false);
+  const [submitBudgetErrors, setSubmitBudgetErrors] = useState<any[]>([]);
 
+  console.log(submitBudgetErrors)
   const navigate = useNavigate();
 
   const handleInputChange = (e: any) => {
     setDisplayedAmount(currencyMask(e).target.value);
     setAmount(removeCommas(e.target.value));
   };
-
 
   const monthDaysArray = Array.from({ length: 5 }, (_, weekIndex) =>
     weekIndex < 4
@@ -61,7 +61,8 @@ export default function Budget() {
     mutationKey: ["budget", "create"],
     mutationFn: api.createBudget,
     onError: (error) => {
-      console.log(error.response.data);
+    
+      setSubmitBudgetErrors(error.response.data);
     },
     onSuccess: () => {
       queryClient.invalidateQueries(queryKey);
@@ -93,6 +94,7 @@ export default function Budget() {
         day: getDayNumber(calendarDay),
       });
     }
+    setSubmitBudgetErrors([]);
     setOpenCalendar(false);
     queryClient.invalidateQueries(queryKey);
     setHasSwitchedBudgetType(false);
@@ -100,17 +102,18 @@ export default function Budget() {
   };
 
   const calendarTypeHandler = (budgetType: BudgetType) => {
-    setBudgetType(budgetType);
-  
-    if (calendarDay !== "") {
+    if (calendarDay !== "" && budgetType === budgettype) {
+      setBudgetType(budgetType);
+    } else {
+      setBudgetType(budgetType);
       setCalendarDay("");
     }
-  
+
     if (!hasSwitchedBudgetType || isStale) {
       console.log("Invalidating queries");
       queryClient.invalidateQueries(queryKey);
     }
-  
+
     if (!hasSwitchedBudgetType) {
       setHasSwitchedBudgetType(true);
     }
@@ -163,7 +166,6 @@ export default function Budget() {
             <CalendarOptionsButton
               onClick={() => {
                 calendarTypeHandler(BudgetType.Monthly);
-              
               }}
               isactive={budgettype === BudgetType.Monthly}
             >
@@ -172,7 +174,6 @@ export default function Budget() {
             <CalendarOptionsButton
               onClick={() => {
                 calendarTypeHandler(BudgetType.Weekly);
-                
               }}
               isactive={budgettype === BudgetType.Weekly}
             >
@@ -220,3 +221,7 @@ export default function Budget() {
     </StyledBudget>
   );
 }
+
+//remaining days can be made decimal
+//change color of bar based on whether on target or not
+//when 0 is spent change message to simply you are on target to meeting your spending goal.

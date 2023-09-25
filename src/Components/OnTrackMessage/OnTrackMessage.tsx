@@ -10,6 +10,7 @@ export default function OnTrackMessage({
   style,
   currency,
   closeButton,
+  budgetType
 }: OnTrackMessageProps) {
   return (
     <StyledOnTrackMessage style={style}>
@@ -23,14 +24,14 @@ export default function OnTrackMessage({
           </div>
           <div className="paragraphs">
             <div className="firstParagraph">
-              You are on target to meeting your spending goal.
+              You are on track to meeting your spending goal.
             </div>
             <div className="secondParagraph">
               Spending at this rate will save you{" "}
               <strong className="amount">
                 {displayCurrencyAndAmount(amount, currency)}
               </strong>{" "}
-              at the end of the month.
+              at the end of the {budgetType === 1 ? "month" : "week"}.
             </div>
           </div>
         </div>

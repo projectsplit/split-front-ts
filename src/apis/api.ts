@@ -71,6 +71,7 @@ const getUserGroups = async (
 };
 
 const getBudgetInfo = async (budgetType: BudgetType, currency:String): Promise<BudgetInfoResponse> => {
+ 
   const response = await apiHttpClient.get<BudgetInfoResponse>(
     `/budget/budgetinfo?budgettype=${budgetType}&currency=${currency}`
   );

@@ -2,6 +2,7 @@ import styled from "styled-components";
 
 interface StyledProgressBarProps {
   percentage: number;
+  color: string;
 }
 
 export const StyledProgressBar = styled.div<StyledProgressBarProps>`
@@ -14,45 +15,55 @@ export const StyledProgressBar = styled.div<StyledProgressBarProps>`
   border: none;
   border-radius: 6px;
   padding: 0.8rem;
+  font-size: 15px;
 
   .budgetTitle {
     display: flex;
     justify-content: center;
-    .sup{
+    .sup {
       margin-top: -3px;
     }
-   
   }
   .miscInfo {
     display: flex;
     flex-direction: column;
     gap: 5px;
-    margin-top: 15px;
+    margin-top: 25px;
+   
+    
   }
   .monetaryProgress {
     display: flex;
     justify-content: center;
     margin-top: 5px;
+    font-size: 14px;
   }
   .progressBar {
     display: flex;
     flex-direction: row;
     margin-top: 10px;
     margin-bottom: 5px;
+    
     .wrapper {
       display: flex;
       flex-direction: column;
       flex: 1;
       align-items: center;
+      justify-content: end;
     }
     .targetIcon {
-      color: ${({ theme }) => theme.colors.deepPurple};
-      font-size: 40px;
+      color: #bebebe;
+      
+      font-size: 25px;
       align-self: center;
       margin-top: -20px;
     }
     .amount {
       font-weight: bold;
+      height: 33px;
+      font-size: 14px;
+      margin-top: -5px;
+      margin-right: -3px;
     }
     .barWrapper {
       position: relative;
@@ -60,11 +71,14 @@ export const StyledProgressBar = styled.div<StyledProgressBarProps>`
       background-color: black;
       border-radius: 20px;
       display: grid;
-      height: 1rem;
+      height: 0.3rem;
       border-color: grey;
+  
       .wrapper > * {
+        
         grid-column: 1 / -1;
         grid-row: 1 / -1;
+        
       }
       .bar {
         position: absolute;
@@ -78,7 +92,7 @@ export const StyledProgressBar = styled.div<StyledProgressBarProps>`
         content: "";
         width: 100%;
         height: 100%;
-        background-color: #0a7800;
+        background-color: ${(props) => props.color};
         transform: translateX(
           calc(-100% + ${(props) => Math.min(props.percentage, 100)} * 1%)
         );

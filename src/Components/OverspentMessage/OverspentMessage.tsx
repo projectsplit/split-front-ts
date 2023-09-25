@@ -10,9 +10,9 @@ export default function OverspentMessage({
   style,
   currency,
   overspentBy,
-  days,
   overspent,
   closeButton,
+  budgetType
 }: OverspentMessageProps) {
   return (
     <StyledOverspentMessage style={style}>
@@ -41,7 +41,7 @@ export default function OverspentMessage({
               <strong className="amount">
                 {displayCurrencyAndAmount(offBudgetAmount, currency)}
               </strong>{" "}
-              in <strong>{days}</strong> days
+              by the end of the {budgetType === 1 ? "month" : "week"}
             </div>
           </div>
         </div>
