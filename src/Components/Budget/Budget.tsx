@@ -23,18 +23,22 @@ import { BudgetInfoMessage } from "../../helpers/BudgetInfoMessage";
 import Spinner from "../Spinner/Spinner";
 import { displayCurrencyAndAmount } from "../../helpers/displayCurrencyAndAmount";
 
+
 export default function Budget() {
   const [amount, setAmount] = useState<string>("");
   const [displayedAmount, setDisplayedAmount] = useState<string>("");
   const [openCalendar, setOpenCalendar] = useState<boolean>(false);
-  const navigate = useNavigate();
   const [calendarDay, setCalendarDay] = useState<string>("");
   const [budgettype, setBudgetType] = useState<BudgetType>(BudgetType.Monthly);
+  const [hasSwitchedBudgetType, setHasSwitchedBudgetType] = useState(false);
+
+  const navigate = useNavigate();
 
   const handleInputChange = (e: any) => {
     setDisplayedAmount(currencyMask(e).target.value);
     setAmount(removeCommas(e.target.value));
   };
+
 
   const monthDaysArray = Array.from({ length: 5 }, (_, weekIndex) =>
     weekIndex < 4
@@ -60,20 +64,18 @@ export default function Budget() {
       console.log(error.response.data);
     },
     onSuccess: () => {
-      console.log("invalidated")
       queryClient.invalidateQueries(queryKey);
     },
   });
 
-  const { error, data, refetch, isSuccess, isInitialLoading, isFetching,isStale } =
-    useQuery<BudgetInfoResponse>({
-      queryKey: queryKey,
-      queryFn: () => api.getBudgetInfo(budgettype, "USD"),
-      refetchOnWindowFocus: false,
-      refetchOnMount: true,
-      staleTime: 60000,
-      enabled: true,
-    });
+  const { data, isFetching, isStale } = useQuery<BudgetInfoResponse>({
+    queryKey: queryKey,
+    queryFn: () => api.getBudgetInfo(budgettype, "USD"),
+    refetchOnWindowFocus: false,
+    refetchOnMount: true,
+    staleTime: 9000,
+    enabled: true,
+  });
 
   const submitBudget = async () => {
     if (budgettype === BudgetType.Monthly) {
@@ -92,19 +94,29 @@ export default function Budget() {
       });
     }
     setOpenCalendar(false);
+    queryClient.invalidateQueries(queryKey);
+    setHasSwitchedBudgetType(false);
+    setDisplayedAmount("");
   };
 
   const calendarTypeHandler = (budgetType: BudgetType) => {
-    if (calendarDay !== "" && budgetType === budgettype) {
-      setBudgetType(budgetType);
-    } else {
-      setBudgetType(budgetType);
+    setBudgetType(budgetType);
+  
+    if (calendarDay !== "") {
       setCalendarDay("");
+    }
+  
+    if (!hasSwitchedBudgetType || isStale) {
+      console.log("Invalidating queries");
+      queryClient.invalidateQueries(queryKey);
+    }
+  
+    if (!hasSwitchedBudgetType) {
+      setHasSwitchedBudgetType(true);
     }
   };
 
   const querydata = queryClient.getQueryData(queryKey) as BudgetInfoResponse;
-  console.log(querydata);
 
   return (
     <StyledBudget>
@@ -127,7 +139,10 @@ export default function Budget() {
 
       <div className="promptSpendingCycle">
         <div className="prompt">Select your spending cycle</div>
-        <SpendingCycleSelector onClick={() => setOpenCalendar((prev) => !prev)}>
+        <SpendingCycleSelector
+          onClick={() => setOpenCalendar((prev) => !prev)}
+          open={openCalendar}
+        >
           {calendarDay === "" ? (
             budgettype === BudgetType.Monthly ? (
               "Monthly"
@@ -148,25 +163,18 @@ export default function Budget() {
             <CalendarOptionsButton
               onClick={() => {
                 calendarTypeHandler(BudgetType.Monthly);
-                if (!querydata || isStale) {
-                  // Manually trigger the query refetch only if the data is stale
-                  queryClient.invalidateQueries(queryKey);
-                }
+              
               }}
-              isActive={budgettype === BudgetType.Monthly}
+              isactive={budgettype === BudgetType.Monthly}
             >
               Monthly
             </CalendarOptionsButton>
             <CalendarOptionsButton
               onClick={() => {
                 calendarTypeHandler(BudgetType.Weekly);
-                if (!querydata || isStale) {
-                  // Manually trigger the query refetch only if the data is stale
                 
-                  queryClient.invalidateQueries(queryKey);
-                }
               }}
-              isActive={budgettype === BudgetType.Weekly}
+              isactive={budgettype === BudgetType.Weekly}
             >
               Weekly
             </CalendarOptionsButton>
@@ -196,7 +204,7 @@ export default function Budget() {
             ) : (
               <>
                 <span className="currentBudgetTitle">Current budget</span>{" "}
-                <ProgressBar data={querydata} isFetching={isFetching} />
+                <ProgressBar data={querydata} />
                 {BudgetInfoMessage(querydata)}
               </>
             )}

@@ -8,10 +8,10 @@ import {
 export default function CalendarOptionsButton({
   children,
   onClick,
-  isActive,
+  isactive,
 }: OptionsButtonProps & CalendarOptionsButtonProps) {
   return (
-    <StyledCalendarOptionsButton onClick={onClick} isActive={isActive}>
+    <StyledCalendarOptionsButton onClick={onClick} isactive={isactive}>
       {children}
     </StyledCalendarOptionsButton>
   );

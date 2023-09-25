@@ -43,8 +43,9 @@ export default function Home() {
             {showAdvice && (
               <OptionsContainer hasarrow={false}>
                 <OnTrackMessage
+                  closeButton={true}
                   currency="USD"
-                  amount="£21.5"
+                  amount="21.5"
                   onClick={() => setShowAdvice(false)}
                 />
                 {/* <Recommendation days={2} offBudgetAmount="$3" reduceAmount="$2"/> */}

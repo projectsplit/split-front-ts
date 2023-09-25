@@ -5,17 +5,19 @@ import { SpendingCycleSelectorProps } from "../../../interfaces";
 export default function SpendingCycleSelector({
   onClick,
   error,
-  children
+  children,
+  open,
 }: SpendingCycleSelectorProps) {
   return (
-
-      <StyledSpendingCycleSelector error={error} onClick={onClick}>
-        <div className="currencyOption">
+    <StyledSpendingCycleSelector error={error} onClick={onClick} open={open}>
+      <div className="currencyOption">
+        {open ? (
+          <i className="angle up icon"></i>
+        ) : (
           <i className="angle down icon"></i>
-        </div>
-        {children}
-      </StyledSpendingCycleSelector>
-    
-  
+        )}
+      </div>
+      {children}
+    </StyledSpendingCycleSelector>
   );
 }

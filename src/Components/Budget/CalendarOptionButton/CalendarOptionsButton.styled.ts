@@ -9,7 +9,7 @@ export const StyledCalendarOptionsButton = styled(StyledOptionsButton)<
   OptionsButtonProps & CalendarOptionsButtonProps
 >`
   background-color: ${(props) =>
-    props.isActive ? props.theme.colors.whiteText : props.theme.colors.layer2};
+    props.isactive ? props.theme.colors.whiteText : props.theme.colors.layer2};
   color: ${(props) =>
-    props.isActive ? props.theme.colors.body : props.theme.colors.whiteText};
+    props.isactive ? props.theme.colors.body : props.theme.colors.whiteText};
 `;

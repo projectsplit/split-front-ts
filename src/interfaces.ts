@@ -30,6 +30,7 @@ export interface SpendingCycleSelectorProps
   onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
   error?: boolean;
   children: any;
+  open:boolean;
 }
 
 export interface LoadingSpinnerProps {
@@ -72,15 +73,18 @@ export interface RecommendationMessageProps {
   reduceAmount: string;
   offBudgetAmount: string;
   style?: CSSProperties;
+  closeButton:boolean;
 }
 
 export interface OverspentMessageProps {
   onClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
+  overspent:boolean;
   currency: string;
   offBudgetAmount: string;
   overspentBy: string;
   days: string;
   style?: CSSProperties;
+  closeButton:boolean;
 }
 
 export interface OnTrackMessageProps {
@@ -88,6 +92,7 @@ export interface OnTrackMessageProps {
   currency: string;
   amount: string;
   style?: CSSProperties;
+  closeButton:boolean;
 }
 
 export interface TreeProps {
@@ -110,12 +115,12 @@ export interface CategoryButtonProps {
 }
 
 export interface CalendarOptionsButtonProps {
-  isActive: boolean;
+  isactive: boolean;
 }
 
 export interface ProgressBarProps {
   data: BudgetInfoResponse | undefined;
-  isFetching: boolean;
+
 }
 
 export interface BudgetTitleProps {

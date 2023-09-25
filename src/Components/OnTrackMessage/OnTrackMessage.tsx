@@ -4,28 +4,42 @@ import { OnTrackMessageProps } from "../../interfaces";
 import IonIcon from "@reacticons/ionicons";
 import { displayCurrencyAndAmount } from "../../helpers/displayCurrencyAndAmount";
 
-export default function OnTrackMessage({ onClick, amount,style,currency }: OnTrackMessageProps) {
+export default function OnTrackMessage({
+  onClick,
+  amount,
+  style,
+  currency,
+  closeButton,
+}: OnTrackMessageProps) {
   return (
-  <StyledOnTrackMessage style={style}>
-     <div className="main">
+    <StyledOnTrackMessage style={style}>
+      <div className="main">
         <div className="signParagraphWrap">
           <div className="sign">
-            <IonIcon name="information-circle-outline" className="information" />
+            <IonIcon
+              name="information-circle-outline"
+              className="information"
+            />
           </div>
           <div className="paragraphs">
             <div className="firstParagraph">
-            You are on target to meeting your spending goal.
+              You are on target to meeting your spending goal.
             </div>
             <div className="secondParagraph">
-              Spending at this rate will save you <strong className="amount">{displayCurrencyAndAmount(amount,currency)}</strong> at the end of the
-              month.
+              Spending at this rate will save you{" "}
+              <strong className="amount">
+                {displayCurrencyAndAmount(amount, currency)}
+              </strong>{" "}
+              at the end of the month.
             </div>
           </div>
         </div>
-        <div className="closeButton" onClick={onClick}>
-          <IonIcon name="close-outline" className="close" />
-        </div>
+        {closeButton && (
+          <div className="closeButton" onClick={onClick}>
+            <IonIcon name="close-outline" className="close" />
+          </div>
+        )}
       </div>
-  </StyledOnTrackMessage>
+    </StyledOnTrackMessage>
   );
 }

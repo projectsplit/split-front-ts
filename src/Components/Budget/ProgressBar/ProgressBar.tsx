@@ -6,7 +6,7 @@ import { displayCurrencyAndAmount } from "../../../helpers/displayCurrencyAndAmo
 import { getOrdinalSuffix } from "../../../helpers/getOrdinalSuffix";
 import { getWeekday } from "../../../helpers/getWeekDay";
 
-export default function ProgressBar({ data, isFetching }: ProgressBarProps) {
+export default function ProgressBar({ data }: ProgressBarProps) {
   let percentage: number = 0;
   if (data?.totalAmountSpent !== undefined && data?.goal !== undefined) {
     const totalAmountSpent = parseFloat(data.totalAmountSpent);
