@@ -7,9 +7,10 @@ export default function SpendingCycleSelector({
   error,
   children,
   open,
+  inputError
 }: SpendingCycleSelectorProps) {
   return (
-    <StyledSpendingCycleSelector error={error} onClick={onClick} open={open}>
+    <StyledSpendingCycleSelector error={error} onClick={onClick} open={open} inputError={inputError}>
       <div className="currencyOption">
         {open ? (
           <i className="angle up icon"></i>

@@ -20,7 +20,7 @@ export const BudgetInfoMessage = (data: BudgetInfoResponse): JSX.Element => {
     const goal = parseFloat(data.goal);
     const spendingProjection =
       totalAmountSpent + remainingDays * averageSpentPerDay;
-
+    if(totalAmountSpent===0) return <></>
     if (totalAmountSpent >= goal) {
       const overspentBy = (totalAmountSpent - goal).toFixed(2);
       const offBudgetAmount = (spendingProjection - goal).toFixed(2);

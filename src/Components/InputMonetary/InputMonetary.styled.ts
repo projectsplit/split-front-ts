@@ -7,6 +7,10 @@ export const StyledInputMonetary = styled.div<InputMonetaryProps>`
   flex-direction: column;
   position: relative;
   justify-content: space-evenly;
+  border-style: ${({ inputError }) => (inputError ? 'solid' : 'none')};
+  border-radius: ${({ inputError }) => (inputError ? '4px' : '0')};
+  border-width: ${({ inputError }) => (inputError ? '1px' : '0')};
+  border-color: ${({ theme, inputError }) => (inputError ? theme.colors.pink : 'transparent')};
 
   .currencyOption {
     position: absolute;
@@ -22,11 +26,6 @@ export const StyledInputMonetary = styled.div<InputMonetaryProps>`
 
   .currencySymbol {
     position: absolute;
-    /* right: ${(props) => props.currencysymbolmargin}px;  */
-    /* margin-right: ${(props) => props.currencysymbolmargin}px; */
-    /* width: ${(props) => props.width}px; */
-    /* margin-right:${(props) => props.width}px; */
-    margin-right: ${(props) => props.currencysymbolmargin}px;
     right: 0px;
   }
 `;

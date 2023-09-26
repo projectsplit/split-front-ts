@@ -7,6 +7,8 @@ import { getOrdinalSuffix } from "../../../helpers/getOrdinalSuffix";
 import { getWeekday } from "../../../helpers/getWeekDay";
 import { BudgetInfoResponse } from "../../../types";
 import { useTheme } from "styled-components";
+import { getIsoDateInfo } from "../../../helpers/getIsoDateInfo";
+import { time } from "console";
 
 export default function ProgressBar({ data }: ProgressBarProps) {
   const theme = useTheme();
@@ -41,29 +43,16 @@ export default function ProgressBar({ data }: ProgressBarProps) {
     }
   };
 
+  const startDateDecomposed = getIsoDateInfo(data?.startDate);
+  const endDateDecomposed = getIsoDateInfo(data?.endDate);
+  
   return (
     <StyledProgressBar percentage={percentage} color={progressBarColor(data)}>
       <div className="budgetInfo">
         <div className="thisPeriod">
           <div className="budgetTitle">
-            {data?.budgetType === 1 ? (
-              <strong>Monthly&nbsp;</strong>
-            ) : (
-              <strong>Weekly&nbsp;</strong>
-            )}
-            on {data?.budgetType === 1 ? "the" : ""}&nbsp;
-            {data?.budgetType === 1 ? (
-              <>
-                <strong>{data?.day}</strong>
-                <sup className="sup">
-                  <strong>{getOrdinalSuffix(data?.day)}</strong>
-                </sup>
-              </>
-            ) : (
-              <>
-                <strong>{getWeekday(data?.day)}</strong>
-              </>
-            )}
+            {startDateDecomposed.dateNumber} {startDateDecomposed.month} -{" "}
+            {endDateDecomposed.dateNumber} {endDateDecomposed.month}
           </div>
           <div className="progressBar">
             <TbTargetArrow className="targetIcon" />

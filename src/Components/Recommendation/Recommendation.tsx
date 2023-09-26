@@ -16,7 +16,7 @@ export default function Recommendation({
 }: RecommendationMessageProps) {
   const displayedDays = (days: string) => {
     const days2number = parseFloat(days);
-    if (days2number < 1) return days;
+    if (days2number < 1) return days2number.toFixed(1).toString();
     else return days2number.toFixed(0).toString();
   };
 
@@ -38,7 +38,8 @@ export default function Recommendation({
             </div>
             <div className="secondParagraph">
               At this rate you will reach your cap in{" "}
-              <strong>{displayedDays(days)}</strong> {days} and you will be off
+              <strong>{displayedDays(days)}</strong>{" "}
+              {displayedDays(days) === "1" ? "day" : "days"} and you will be off
               budget by{" "}
               <strong className="amount">
                 {displayCurrencyAndAmount(offBudgetAmount, currency)}

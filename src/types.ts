@@ -92,5 +92,6 @@ export type BudgetInfoResponse = {
   goal?: string;
   currency: string;
   budgetType?: BudgetType;
-  day?: string;
+  startDate:any;
+  endDate:any;
 };

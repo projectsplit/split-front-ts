@@ -6,19 +6,19 @@ export const StyledSpendingCycleSelector = styled.button<SpendingCycleSelectorPr
   flex-direction: column;
   position: relative;
   justify-content: space-evenly;
+  border-style: ${({ inputError }) => (inputError ? 'solid' : 'none')};
+  border-width: ${({ inputError }) => (inputError ? '1px' : '0')};
+  border-color: ${({ theme, inputError }) => (inputError ? theme.colors.pink : 'transparent')};
 
   border-radius: 4px;
   padding: 0.8rem;
   outline: none;
-  color: white;
+  color: ${({ theme }) => theme.colors.whiteText};
   background-color: ${({ theme }) => theme.colors.inputGrey};
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-  border-style: none;
   font-size: 18px;
   cursor: pointer;
   text-align: left;
-  border: ${({ error, theme }) =>
-    error ? `1px solid ${theme.colors.pink}` : "none"};
 
   .currencyOption {
     position: absolute;

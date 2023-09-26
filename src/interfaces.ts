@@ -15,8 +15,7 @@ export interface InputMonetaryProps extends InputProps {
   onFocus?: React.FocusEventHandler<HTMLInputElement>;
   onBlur?: React.FocusEventHandler<HTMLInputElement>;
   currency: string;
-  currencysymbolmargin?: number;
-  width?: number;
+  inputError?: boolean;
 }
 
 export interface SubmitButtonProps
@@ -30,7 +29,8 @@ export interface SpendingCycleSelectorProps
   onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
   error?: boolean;
   children: any;
-  open:boolean;
+  open: boolean;
+  inputError?: boolean;
 }
 
 export interface LoadingSpinnerProps {
@@ -73,19 +73,19 @@ export interface RecommendationMessageProps {
   reduceAmount: string;
   offBudgetAmount: string;
   style?: CSSProperties;
-  closeButton:boolean;
-  budgetType?:BudgetType;
+  closeButton: boolean;
+  budgetType?: BudgetType;
 }
 
 export interface OverspentMessageProps {
   onClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
-  overspent:boolean;
+  overspent: boolean;
   currency: string;
   offBudgetAmount: string;
   overspentBy: string;
   style?: CSSProperties;
-  closeButton:boolean;
-  budgetType?:BudgetType;
+  closeButton: boolean;
+  budgetType?: BudgetType;
 }
 
 export interface OnTrackMessageProps {
@@ -93,8 +93,8 @@ export interface OnTrackMessageProps {
   currency: string;
   amount: string;
   style?: CSSProperties;
-  closeButton:boolean;
-  budgetType?:BudgetType;
+  closeButton: boolean;
+  budgetType?: BudgetType;
 }
 
 export interface TreeProps {
@@ -122,7 +122,6 @@ export interface CalendarOptionsButtonProps {
 
 export interface ProgressBarProps {
   data: BudgetInfoResponse | undefined;
-
 }
 
 export interface BudgetTitleProps {

@@ -23,6 +23,7 @@ import { BudgetInfoMessage } from "../../helpers/BudgetInfoMessage";
 import Spinner from "../Spinner/Spinner";
 import { displayCurrencyAndAmount } from "../../helpers/displayCurrencyAndAmount";
 
+
 export default function Budget() {
   const [amount, setAmount] = useState<string>("");
   const [displayedAmount, setDisplayedAmount] = useState<string>("");
@@ -32,7 +33,6 @@ export default function Budget() {
   const [hasSwitchedBudgetType, setHasSwitchedBudgetType] = useState(false);
   const [submitBudgetErrors, setSubmitBudgetErrors] = useState<any[]>([]);
 
-  console.log(submitBudgetErrors)
   const navigate = useNavigate();
 
   const handleInputChange = (e: any) => {
@@ -50,7 +50,7 @@ export default function Budget() {
 
   const getDayNumber = (day: string): string | null => {
     const index = ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"].indexOf(day);
-    if (index != -1) return (index + 1).toString();
+    if (index !== -1) return (index + 1).toString();
     return null;
   };
 
@@ -61,7 +61,6 @@ export default function Budget() {
     mutationKey: ["budget", "create"],
     mutationFn: api.createBudget,
     onError: (error) => {
-    
       setSubmitBudgetErrors(error.response.data);
     },
     onSuccess: () => {
@@ -120,6 +119,7 @@ export default function Budget() {
   };
 
   const querydata = queryClient.getQueryData(queryKey) as BudgetInfoResponse;
+  console.log(querydata)
 
   return (
     <StyledBudget>
@@ -133,34 +133,66 @@ export default function Budget() {
       <div className="promptSpendingCap">
         <div className="prompt">Set up your spending cap or goal</div>
 
-        <InputMonetary
-          value={displayedAmount}
-          onChange={(e) => handleInputChange(e)}
-          currency="USD"
-        />
+        <div className="inputAndErrorsWrapper">
+          <InputMonetary
+            value={displayedAmount}
+            onChange={(e) => handleInputChange(e)}
+            currency="USD"
+            inputError={submitBudgetErrors.find(
+              (item) => item.field === "Amount" || item.field === "Currency"
+            )}
+          />
+          {submitBudgetErrors.find(
+            (item) => item.field === "Amount" || item.field === "Currency"
+          ) && (
+            <span className="errorMsg">
+              {
+                submitBudgetErrors.find(
+                  (item) => item.field === "Amount" || item.field === "Currency"
+                ).errorMessage
+              }
+            </span>
+          )}
+        </div>
       </div>
 
       <div className="promptSpendingCycle">
         <div className="prompt">Select your spending cycle</div>
-        <SpendingCycleSelector
-          onClick={() => setOpenCalendar((prev) => !prev)}
-          open={openCalendar}
-        >
-          {calendarDay === "" ? (
-            budgettype === BudgetType.Monthly ? (
-              "Monthly"
+        <div className="calendarAndErrorsWrapper">
+          <SpendingCycleSelector
+            onClick={() => setOpenCalendar((prev) => !prev)}
+            open={openCalendar}
+            inputError={submitBudgetErrors.find(
+              (item) => item.field === "Day" || item.field === "BudgetType"
+            )}
+          >
+            {calendarDay === "" ? (
+              budgettype === BudgetType.Monthly ? (
+                "Monthly"
+              ) : (
+                "Weekly"
+              )
+            ) : budgettype === BudgetType.Monthly ? (
+              <div className="monthlyPropmt">
+                Monthly on the {calendarDay}{" "}
+                <sup className="sup">{getOrdinalSuffix(calendarDay)}</sup>
+              </div>
             ) : (
-              "Weekly"
-            )
-          ) : budgettype === BudgetType.Monthly ? (
-            <div className="monthlyPropmt">
-              Monthly on the {calendarDay}{" "}
-              <sup className="sup">{getOrdinalSuffix(calendarDay)}</sup>
-            </div>
-          ) : (
-            <>Weekly on {getWeekday(getDayNumber(calendarDay))}</>
+              <>Weekly on {getWeekday(getDayNumber(calendarDay))}</>
+            )}
+          </SpendingCycleSelector>
+          {submitBudgetErrors.find(
+            (item) => item.field === "Day" || item.field === "BudgetType"
+          ) && (
+            <span className="errorMsg">
+              {
+                submitBudgetErrors.find(
+                  (item) => item.field === "Day" || item.field === "BudgetType"
+                ).errorMessage
+              }
+            </span>
           )}
-        </SpendingCycleSelector>
+        </div>
         {openCalendar && (
           <div className="categoryButtons">
             <CalendarOptionsButton

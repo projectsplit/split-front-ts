@@ -55,6 +55,16 @@ export const StyledBudget = styled.div`
     display: flex;
     flex-direction: column;
     gap: 10px;
+    .errorMsg {
+      font-size: 12px;
+      color: ${({ theme }) => theme.colors.pink};
+    }
+    .calendarAndErrorsWrapper,
+    .inputAndErrorsWrapper{
+      display: flex;
+      flex-direction: column;
+      
+    }
   }
 
   .spentInfo {
@@ -66,7 +76,7 @@ export const StyledBudget = styled.div`
     color: ${({ theme }) => theme.colors.layer6};
     .currentBudgetTitle {
       align-self: center;
-      height:10px;
+      height: 10px;
     }
   }
   .dummySpan {

@@ -11,16 +11,15 @@ export default React.forwardRef(function InputMonetary(
     value,
     currency,
     onMouseDown,
-    currencysymbolmargin,
     width,
     inputWidth,
+    inputError,
   }: InputMonetaryProps,
   ref: React.Ref<HTMLInputElement>
 ) {
-  
   return (
     <StyledInputMonetary
-      currencysymbolmargin={currencysymbolmargin}
+      inputError={inputError}
       value={value}
       currency={currency}
       width={width}
