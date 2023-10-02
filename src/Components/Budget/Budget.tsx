@@ -22,6 +22,7 @@ import { getWeekday } from "../../helpers/getWeekDay";
 import { BudgetInfoMessage } from "../../helpers/BudgetInfoMessage";
 import Spinner from "../Spinner/Spinner";
 import { displayCurrencyAndAmount } from "../../helpers/displayCurrencyAndAmount";
+import { useTheme } from "styled-components";
 
 
 export default function Budget() {
@@ -34,6 +35,30 @@ export default function Budget() {
   const [submitBudgetErrors, setSubmitBudgetErrors] = useState<any[]>([]);
 
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
+  const queryKey = ["budget", budgettype];
+  const theme = useTheme();
+
+  const createBudget = useMutation<any, any, CreateBudgetRequest>({
+    mutationKey: ["budget", "create"],
+    mutationFn: api.createBudget,
+    onError: (error) => {
+      setSubmitBudgetErrors(error.response.data);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(queryKey);
+    },
+  });
+
+    const { data, isFetching, isStale } = useQuery<BudgetInfoResponse>({
+    queryKey: queryKey,
+    queryFn: () => api.getBudgetInfo(budgettype, "USD"),
+    refetchOnWindowFocus: false,
+    refetchOnMount: true,
+    staleTime: 9000,
+    enabled: true,
+  });
+
 
   const handleInputChange = (e: any) => {
     setDisplayedAmount(currencyMask(e).target.value);
@@ -53,29 +78,6 @@ export default function Budget() {
     if (index !== -1) return (index + 1).toString();
     return null;
   };
-
-  const queryClient = useQueryClient();
-  const queryKey = ["budget", budgettype];
-
-  const createBudget = useMutation<any, any, CreateBudgetRequest>({
-    mutationKey: ["budget", "create"],
-    mutationFn: api.createBudget,
-    onError: (error) => {
-      setSubmitBudgetErrors(error.response.data);
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries(queryKey);
-    },
-  });
-
-  const { data, isFetching, isStale } = useQuery<BudgetInfoResponse>({
-    queryKey: queryKey,
-    queryFn: () => api.getBudgetInfo(budgettype, "USD"),
-    refetchOnWindowFocus: false,
-    refetchOnMount: true,
-    staleTime: 9000,
-    enabled: true,
-  });
 
   const submitBudget = async () => {
     if (budgettype === BudgetType.Monthly) {
@@ -238,7 +240,7 @@ export default function Budget() {
               <>
                 <span className="currentBudgetTitle">Current budget</span>{" "}
                 <ProgressBar data={querydata} />
-                {BudgetInfoMessage(querydata)}
+                {BudgetInfoMessage(querydata,theme)}
               </>
             )}
           </div>

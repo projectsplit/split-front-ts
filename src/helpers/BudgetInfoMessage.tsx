@@ -2,10 +2,13 @@ import OnTrackMessage from "../components/OnTrackMessage/OnTrackMessage";
 import OverspentMessage from "../components/OverspentMessage/OverspentMessage";
 import Recommendation from "../components/Recommendation/Recommendation";
 import { BudgetInfoResponse } from "../types";
-import { useTheme } from "styled-components";
+import { DefaultTheme} from "styled-components";
 
-export const BudgetInfoMessage = (data: BudgetInfoResponse): JSX.Element => {
-  const theme = useTheme();
+export const BudgetInfoMessage = (
+  data: BudgetInfoResponse,
+  theme: DefaultTheme | undefined
+): JSX.Element => {
+  // const theme = useTheme();
   const totalAmountSpent = parseFloat(data.totalAmountSpent);
 
   // Check if remainingDays, goal, and averageSpentPerDay are provided
@@ -20,7 +23,7 @@ export const BudgetInfoMessage = (data: BudgetInfoResponse): JSX.Element => {
     const goal = parseFloat(data.goal);
     const spendingProjection =
       totalAmountSpent + remainingDays * averageSpentPerDay;
-    if(totalAmountSpent===0) return <></>
+    if (totalAmountSpent === 0) return <></>;
     if (totalAmountSpent >= goal) {
       const overspentBy = (totalAmountSpent - goal).toFixed(2);
       const offBudgetAmount = (spendingProjection - goal).toFixed(2);

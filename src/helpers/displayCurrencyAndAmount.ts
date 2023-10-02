@@ -5,6 +5,12 @@ export const displayCurrencyAndAmount = (
   currency: string
 ): string => {
   const amount2decimal = parseFloat(amount ?? "0");
+  if (amount2decimal < 0)
+    return new Intl.NumberFormat(getLocaleFromCurrency(currency), {
+      style: "currency",
+      currency: currency,
+      maximumFractionDigits: 0,
+    }).format(0);
 
   if (amount2decimal % 1 !== 0) {
     return new Intl.NumberFormat(getLocaleFromCurrency(currency), {
@@ -20,7 +26,3 @@ export const displayCurrencyAndAmount = (
     }).format(amount2decimal);
   }
 };
-
-
-
-

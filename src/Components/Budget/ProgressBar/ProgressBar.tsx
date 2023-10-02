@@ -8,10 +8,11 @@ import { getWeekday } from "../../../helpers/getWeekDay";
 import { BudgetInfoResponse } from "../../../types";
 import { useTheme } from "styled-components";
 import { getIsoDateInfo } from "../../../helpers/getIsoDateInfo";
-import { time } from "console";
 
 export default function ProgressBar({ data }: ProgressBarProps) {
   const theme = useTheme();
+  //check if the projection is
+  //done just by day or by whole time. it should be with whole time for accurracy.
 
   let percentage: number = 0;
   if (data?.totalAmountSpent !== undefined && data?.goal !== undefined) {
@@ -43,9 +44,30 @@ export default function ProgressBar({ data }: ProgressBarProps) {
     }
   };
 
+  const convertDaysToDaysHoursAndMinutes = (
+    days: string | undefined
+  ): { days: number; hours: number; minutes: number } => {
+    if (days === undefined) return { days: 0, hours: 0, minutes: 0 };
+    const days2decimal = parseFloat(days);
+    const wholeDays = Math.floor(days2decimal);
+    const remainingHoursDecimal = (days2decimal - wholeDays) * 24;
+    const remainingHours = Math.floor(remainingHoursDecimal);
+    const remainingMinutes = Math.round(
+      (remainingHoursDecimal - remainingHours) * 60
+    );
+    return {
+      days: wholeDays,
+      hours: remainingHours,
+      minutes: remainingMinutes,
+    };
+  };
+  const convertedDaysHoursMinutes = convertDaysToDaysHoursAndMinutes(
+    data?.remainingDays
+  );
+
   const startDateDecomposed = getIsoDateInfo(data?.startDate);
   const endDateDecomposed = getIsoDateInfo(data?.endDate);
-  
+
   return (
     <StyledProgressBar percentage={percentage} color={progressBarColor(data)}>
       <div className="budgetInfo">
@@ -74,11 +96,16 @@ export default function ProgressBar({ data }: ProgressBarProps) {
                 )}
               </div>
             </div>
-            <div className="amount">{percentage}%</div>
+            <div className="amount">{percentage < 0 ? 0 : percentage}%</div>
           </div>
           <div className="miscInfo">
             <div className="remainingDays">
-              Remaining days: <strong>{data?.remainingDays}</strong>
+              Remaining time:{" "}
+              <strong>
+                {convertedDaysHoursMinutes.days}d{" "}
+                {convertedDaysHoursMinutes.hours}h{" "}
+                {convertedDaysHoursMinutes.minutes}m{" "}
+              </strong>
             </div>
             <div className="averageSpending">
               Avg spent per day:&nbsp;

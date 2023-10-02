@@ -66,7 +66,7 @@ function App() {
               <Route path="archived" element={<ArchivedGroups />} />
               <Route path="deleted" element={<DeletedGroups />} />
             </Route>
-            <Route path="/budget" element={<Budget />} />
+            <Route path="/budget" element={<Budget/>} />
             <Route path="i/:invitationCode" element={<VerifyInvitation />} />
             <Route path=":groupid" element={<Main />}>
               <Route index element={<RedirectToTransactions />} />
