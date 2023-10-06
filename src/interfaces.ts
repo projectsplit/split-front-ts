@@ -1,13 +1,11 @@
 import { CSSProperties } from "react";
 import { BudgetInfoResponse, BudgetType } from "./types";
-import { inflateRaw } from "zlib";
+
 
 export interface InputProps
   extends React.InputHTMLAttributes<HTMLInputElement> {
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
   error?: boolean;
-  width?: number;
-  inputWidth?: number;
 }
 
 export interface InputMonetaryProps extends InputProps {
@@ -16,6 +14,7 @@ export interface InputMonetaryProps extends InputProps {
   onBlur?: React.FocusEventHandler<HTMLInputElement>;
   currency: string;
   inputError?: boolean;
+  setMenu: React.Dispatch<React.SetStateAction<string | null>>;
 }
 
 export interface SubmitButtonProps
@@ -97,6 +96,9 @@ export interface OnTrackMessageProps {
   budgetType?: BudgetType;
 }
 
+export interface ReceivedMoreThanSpentMessageProps
+  extends OnTrackMessageProps {}
+
 export interface TreeProps {
   items: (string | JSX.Element)[];
 }
@@ -122,8 +124,34 @@ export interface CalendarOptionsButtonProps {
 
 export interface ProgressBarProps {
   data: BudgetInfoResponse | undefined;
+  setMenu: React.Dispatch<React.SetStateAction<string | null>>;
 }
 
 export interface BudgetTitleProps {
   children: any;
+}
+
+export interface BottomMenuProps {
+  children: any;
+  height?: string;
+}
+
+export interface MiddleScreenMenuProps extends BottomMenuProps {}
+
+export interface CurrencyOptionProps {
+  setMenu: React.Dispatch<React.SetStateAction<string | null>>;
+}
+
+export interface SpendingCycleInfoProps {
+  setMenu: React.Dispatch<React.SetStateAction<string | null>>;
+}
+
+export interface ConfirmationForBudgetSubmissionProps {
+  submitBudget: () => Promise<void>;
+  setMenu: React.Dispatch<React.SetStateAction<string | null>>;
+}
+
+export interface ConfirmationForBudgetDeletionProps {
+  removeBudget: () => Promise<void>;
+  setMenu: React.Dispatch<React.SetStateAction<string | null>>;
 }

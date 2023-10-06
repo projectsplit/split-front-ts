@@ -3,18 +3,15 @@ import { StyledProgressBar } from "./ProgressBar.styled";
 import { TbTargetArrow } from "react-icons/tb";
 import { ProgressBarProps } from "../../../interfaces";
 import { displayCurrencyAndAmount } from "../../../helpers/displayCurrencyAndAmount";
-import { getOrdinalSuffix } from "../../../helpers/getOrdinalSuffix";
-import { getWeekday } from "../../../helpers/getWeekDay";
 import { BudgetInfoResponse } from "../../../types";
 import { useTheme } from "styled-components";
 import { getIsoDateInfo } from "../../../helpers/getIsoDateInfo";
+import IonIcon from "@reacticons/ionicons";
 
-export default function ProgressBar({ data }: ProgressBarProps) {
+export default function ProgressBar({ data ,setMenu}: ProgressBarProps) {
   const theme = useTheme();
-  //check if the projection is
-  //done just by day or by whole time. it should be with whole time for accurracy.
-
   let percentage: number = 0;
+
   if (data?.totalAmountSpent !== undefined && data?.goal !== undefined) {
     const totalAmountSpent = parseFloat(data.totalAmountSpent);
     const goal = parseFloat(data.goal);
@@ -61,6 +58,7 @@ export default function ProgressBar({ data }: ProgressBarProps) {
       minutes: remainingMinutes,
     };
   };
+
   const convertedDaysHoursMinutes = convertDaysToDaysHoursAndMinutes(
     data?.remainingDays
   );
@@ -70,6 +68,9 @@ export default function ProgressBar({ data }: ProgressBarProps) {
 
   return (
     <StyledProgressBar percentage={percentage} color={progressBarColor(data)}>
+      <div className="closeButton" onClick={()=>setMenu("deleteBudgetConfirmation")}>
+        <IonIcon name="close-outline" className="close" />
+      </div>
       <div className="budgetInfo">
         <div className="thisPeriod">
           <div className="budgetTitle">

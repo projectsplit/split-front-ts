@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { api } from "../../apis/api";
 import { StyledBudget } from "./Budget.styled";
-import { BiArrowBack } from "react-icons/bi";
+import { BiArrowBack, BiFontSize } from "react-icons/bi";
 import { useNavigate } from "react-router-dom";
 import InputMonetary from "../InputMonetary/InputMonetary";
-import SpendingCycleSelector from "./SpeningCycleSelector/SpendingCycleSelector";
+import SpendingCycleSelector from "./SpendingCycleSelector/SpendingCycleSelector";
 import Calendar from "./Calendar/Calendar";
 import { currencyMask } from "../../helpers/currencyMask";
 import { removeCommas } from "../../helpers/removeCommas";
@@ -23,7 +23,14 @@ import { BudgetInfoMessage } from "../../helpers/BudgetInfoMessage";
 import Spinner from "../Spinner/Spinner";
 import { displayCurrencyAndAmount } from "../../helpers/displayCurrencyAndAmount";
 import { useTheme } from "styled-components";
-
+import ConfirmationForBudgetSubmission from "./ConfirmationForBudgetSubmission/ConfirmationForBudgetSubmission";
+import CurrencyOptions from "./CurrencyOptions/CurrencyOptions";
+import { CSSTransition } from "react-transition-group";
+import ConfirmationForBudgetDeletion from "./ConfirmationForBudgetDeletion/ConfirmationForBudgetDeletion";
+import IonIcon from "@reacticons/ionicons";
+import SpendingCycleInfo from "./SpendingCycleInfo/SpendingCycleInfo";
+import "../styles/flags/flag.css";
+import "../styles/freakflags/freakflags.css";
 
 export default function Budget() {
   const [amount, setAmount] = useState<string>("");
@@ -33,11 +40,13 @@ export default function Budget() {
   const [budgettype, setBudgetType] = useState<BudgetType>(BudgetType.Monthly);
   const [hasSwitchedBudgetType, setHasSwitchedBudgetType] = useState(false);
   const [submitBudgetErrors, setSubmitBudgetErrors] = useState<any[]>([]);
+  const [menu, setMenu] = useState<string | null>(null);
 
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const queryKey = ["budget", budgettype];
   const theme = useTheme();
+  const nodeRef = React.useRef(null);
 
   const createBudget = useMutation<any, any, CreateBudgetRequest>({
     mutationKey: ["budget", "create"],
@@ -50,7 +59,19 @@ export default function Budget() {
     },
   });
 
-    const { data, isFetching, isStale } = useQuery<BudgetInfoResponse>({
+  const deleteBudget = useMutation<any, any, any>({
+    mutationKey: ["budget", "delete"],
+    mutationFn: api.deleteBudget,
+    onError: (error) => {
+      // setSubmitBudgetErrors(error.response.data);
+      console.log(error);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(queryKey);
+    },
+  });
+
+  const { data, isFetching, isStale } = useQuery<BudgetInfoResponse>({
     queryKey: queryKey,
     queryFn: () => api.getBudgetInfo(budgettype, "USD"),
     refetchOnWindowFocus: false,
@@ -58,7 +79,6 @@ export default function Budget() {
     staleTime: 9000,
     enabled: true,
   });
-
 
   const handleInputChange = (e: any) => {
     setDisplayedAmount(currencyMask(e).target.value);
@@ -100,6 +120,19 @@ export default function Budget() {
     queryClient.invalidateQueries(queryKey);
     setHasSwitchedBudgetType(false);
     setDisplayedAmount("");
+    setMenu(null);
+    setAmount("");
+  };
+
+  const removeBudget = async () => {
+    deleteBudget.mutate({});
+    setMenu(null);
+    queryClient.invalidateQueries(queryKey);
+    setSubmitBudgetErrors([]);
+    setOpenCalendar(false);
+    setAmount("");
+    setHasSwitchedBudgetType(false);
+    setDisplayedAmount("");
   };
 
   const calendarTypeHandler = (budgetType: BudgetType) => {
@@ -121,7 +154,6 @@ export default function Budget() {
   };
 
   const querydata = queryClient.getQueryData(queryKey) as BudgetInfoResponse;
-  console.log(querydata)
 
   return (
     <StyledBudget>
@@ -137,6 +169,7 @@ export default function Budget() {
 
         <div className="inputAndErrorsWrapper">
           <InputMonetary
+            setMenu={setMenu}
             value={displayedAmount}
             onChange={(e) => handleInputChange(e)}
             currency="USD"
@@ -159,7 +192,14 @@ export default function Budget() {
       </div>
 
       <div className="promptSpendingCycle">
-        <div className="prompt">Select your spending cycle</div>
+        <div className="spendingCycleHeader">
+          <div className="prompt">Select your spending cycle</div>
+          <IonIcon
+            onClick={() => setMenu("infoBox")}
+            name="information-circle-outline"
+            className="information"
+          />
+        </div>
         <div className="calendarAndErrorsWrapper">
           <SpendingCycleSelector
             onClick={() => setOpenCalendar((prev) => !prev)}
@@ -239,8 +279,8 @@ export default function Budget() {
             ) : (
               <>
                 <span className="currentBudgetTitle">Current budget</span>{" "}
-                <ProgressBar data={querydata} />
-                {BudgetInfoMessage(querydata,theme)}
+                <ProgressBar data={querydata} setMenu={setMenu} />
+                {BudgetInfoMessage(querydata, theme)}
               </>
             )}
           </div>
@@ -249,9 +289,80 @@ export default function Budget() {
 
       <div className="submitButton">
         {!isFetching && (
-          <SubmitButton onClick={submitBudget}>Submit Budget</SubmitButton>
+          <SubmitButton
+            onClick={() => {
+              if (querydata.budgetSubmitted) {
+                setMenu("createBudgetConfirmation");
+              } else {
+                submitBudget();
+              }
+            }}
+          >
+            Submit Budget
+          </SubmitButton>
         )}
       </div>
+
+      <CSSTransition
+        nodeRef={nodeRef}
+        onClick={() => setMenu(null)}
+        in={Boolean(menu)}
+        timeout={0}
+        unmountOnExit
+      >
+        <div
+          style={{
+            position: "fixed",
+            left: "0px",
+            top: "0px",
+            height: "100%",
+            width: "100%",
+            backgroundColor: "black",
+            opacity: "0.7",
+          }}
+        />
+      </CSSTransition>
+      <CSSTransition
+        in={menu === "createBudgetConfirmation"}
+        timeout={100}
+        classNames="bottomslide"
+        unmountOnExit
+      >
+        <ConfirmationForBudgetSubmission
+          setMenu={setMenu}
+          submitBudget={submitBudget}
+        />
+      </CSSTransition>
+
+      <CSSTransition
+        in={menu === "deleteBudgetConfirmation"}
+        timeout={100}
+        classNames="bottomslide"
+        unmountOnExit
+      >
+        <ConfirmationForBudgetDeletion
+          setMenu={setMenu}
+          removeBudget={removeBudget}
+        />
+      </CSSTransition>
+
+      <CSSTransition
+        in={menu === "infoBox"}
+        timeout={100}
+        classNames="infoBox"
+        unmountOnExit
+      >
+        <SpendingCycleInfo setMenu={setMenu} />
+      </CSSTransition>
+
+      <CSSTransition
+        in={menu === "currencyOptions"}
+        timeout={100}
+        classNames="bottomslide"
+        unmountOnExit
+      >
+        <CurrencyOptions setMenu={setMenu} />
+      </CSSTransition>
     </StyledBudget>
   );
 }

@@ -1,11 +1,10 @@
 import styled from "styled-components";
-import mixins from "../styles/mixins";
 
 export const StyledAccessScreen = styled.div`
   margin: 0rem 2rem 0rem 2rem;
-  ${mixins.flex}
-  ${mixins.flexDirectionColumn}
-  color:${({ theme }) => theme.colors.lightColor}; //--light-color
+  display: flex;
+  flex-direction: column;
+  color: ${({ theme }) => theme.colors.lightColor}; //--light-color
 
   .loginBox {
     padding: 1rem 0.8rem;

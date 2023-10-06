@@ -1,16 +1,19 @@
 import styled from "styled-components";
 import Input from "../Input/Input";
-import { InputMonetaryProps } from "../../interfaces";
 
-export const StyledInputMonetary = styled.div<InputMonetaryProps>`
+interface StyledInputMonetary {
+  inputError?: boolean;
+}
+export const StyledInputMonetary = styled.div<StyledInputMonetary>`
   display: flex;
   flex-direction: column;
   position: relative;
   justify-content: space-evenly;
-  border-style: ${({ inputError }) => (inputError ? 'solid' : 'none')};
-  border-radius: ${({ inputError }) => (inputError ? '4px' : '0')};
-  border-width: ${({ inputError }) => (inputError ? '1px' : '0')};
-  border-color: ${({ theme, inputError }) => (inputError ? theme.colors.pink : 'transparent')};
+  border-style: ${({ inputError }) => (inputError ? "solid" : "none")};
+  border-radius: ${({ inputError }) => (inputError ? "4px" : "0")};
+  border-width: ${({ inputError }) => (inputError ? "1px" : "0")};
+  border-color: ${({ theme, inputError }) =>
+    inputError ? theme.colors.pink : "transparent"};
 
   .currencyOption {
     position: absolute;
@@ -19,6 +22,7 @@ export const StyledInputMonetary = styled.div<InputMonetaryProps>`
     gap: 10px;
     align-items: center;
     left: 14px;
+    cursor: pointer;
   }
   .icon {
     font-size: 25px;

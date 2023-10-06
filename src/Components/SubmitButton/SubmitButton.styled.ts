@@ -9,8 +9,7 @@ export const StyledSubmitButton = styled.button<SubmitButtonProps>`
   padding: 0.5rem;
   cursor: pointer;
   color: ${({ theme }) => theme.colors.text};
-  background-color: '#f0f0f0';
-  font-size: 16px;
+  background-color: #f0f0f0;
   display: flex;
   justify-content: center;
   position: relative;  

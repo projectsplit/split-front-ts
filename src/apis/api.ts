@@ -86,7 +86,12 @@ const getGroupsTotalAmounts = async () => {
 };
 
 const createBudget = async (request: CreateBudgetRequest) => {
-  const response = await apiHttpClient.post<any>(`/budget/create`, request);
+  const response = await apiHttpClient.post<CreateBudgetRequest>(`/budget/create`, request);
+  return response.data;
+};
+
+const deleteBudget = async () => {
+  const response = await apiHttpClient.post(`/budget/delete`);
   return response.data;
 };
 
@@ -96,4 +101,5 @@ export const api = {
   getGroupsTotalAmounts,
   getBudgetInfo,
   createBudget,
+  deleteBudget
 };

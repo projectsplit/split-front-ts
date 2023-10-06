@@ -12,6 +12,9 @@ export const StyledBudget = styled.div`
   gap: 20px;
   position: relative;
 
+  .flag {
+  
+}
   .backButtonContainer {
     position: relative;
     cursor: pointer;
@@ -60,10 +63,21 @@ export const StyledBudget = styled.div`
       color: ${({ theme }) => theme.colors.pink};
     }
     .calendarAndErrorsWrapper,
-    .inputAndErrorsWrapper{
+    .inputAndErrorsWrapper {
       display: flex;
       flex-direction: column;
-      
+    }
+    .spendingCycleHeader {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 5px;
+      .information {
+        cursor: pointer;
+        font-size: 23px;
+        font-weight: bold;
+        color: ${({ theme }) => theme.colors.yellow};
+      }
     }
   }
 

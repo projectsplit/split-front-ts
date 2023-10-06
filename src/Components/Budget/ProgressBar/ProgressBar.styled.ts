@@ -17,6 +17,23 @@ export const StyledProgressBar = styled.div<StyledProgressBarProps>`
   padding: 0.8rem;
   font-size: 15px;
 
+  .closeButton {
+    display: flex;
+    justify-content: end;
+    font-size: 30px;
+    color: #6f6f6f;
+    height: 17px;
+    margin-top: -5px;
+    margin-right: -8px;
+    &:hover {
+      color: ${({ theme }) => theme.colors.whiteText};
+    }
+    .close {
+      cursor: pointer;
+      display: block;
+    }
+  }
+
   .budgetTitle {
     display: flex;
     justify-content: center;
@@ -29,8 +46,6 @@ export const StyledProgressBar = styled.div<StyledProgressBarProps>`
     flex-direction: column;
     gap: 5px;
     margin-top: 25px;
-   
-    
   }
   .monetaryProgress {
     display: flex;
@@ -43,7 +58,7 @@ export const StyledProgressBar = styled.div<StyledProgressBarProps>`
     flex-direction: row;
     margin-top: 10px;
     margin-bottom: 5px;
-    
+
     .wrapper {
       display: flex;
       flex-direction: column;
@@ -53,7 +68,7 @@ export const StyledProgressBar = styled.div<StyledProgressBarProps>`
     }
     .targetIcon {
       color: #bebebe;
-      
+
       font-size: 25px;
       align-self: center;
       margin-top: -20px;
@@ -73,12 +88,10 @@ export const StyledProgressBar = styled.div<StyledProgressBarProps>`
       display: grid;
       height: 0.3rem;
       border-color: grey;
-  
+
       .wrapper > * {
-        
         grid-column: 1 / -1;
         grid-row: 1 / -1;
-        
       }
       .bar {
         position: absolute;

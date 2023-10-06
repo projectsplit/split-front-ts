@@ -24,16 +24,19 @@ export const StyledCalendar = styled.div<StyledCalendarProps>`
 
   .calendar-day {
     flex: 1;
-    background-color: #2d2d2d;
+    
     border-radius: 6px;
     padding: 0.1rem;
     text-align: center;
     position: relative;
+    
     &.selected {
       color: black;
       font-weight: bold;
+    
     }
     &.selected:before {
+      
       content: ""; /* Empty content for the pseudo-element */
       position: absolute;
       top: 50%; /* Position at the vertical center */
@@ -45,6 +48,7 @@ export const StyledCalendar = styled.div<StyledCalendarProps>`
         theme.colors.whiteText};
       border-radius: 50%; /* Make it a circle */
       z-index: -1; /* Place the circle behind the number */
+      
     }
 
     &.selected {

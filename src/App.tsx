@@ -38,6 +38,7 @@ function App() {
       pink: "#f91880",
       redish: "#fc4c4c",
       yellowish:"#e7e100",
+      yellow:"#fcc504",
       green: "#0d8d01",
       deepPurple: "#8300e7",
       deepPurple2: "#ac5ee7",
