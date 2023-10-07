@@ -78,7 +78,9 @@ export default function ProgressBar({ data ,setMenu}: ProgressBarProps) {
             {endDateDecomposed.dateNumber} {endDateDecomposed.month}
           </div>
           <div className="progressBar">
+           
             <TbTargetArrow className="targetIcon" />
+           
             <div className="wrapper">
               <div className="barWrapper">
                 <div className="bar" />

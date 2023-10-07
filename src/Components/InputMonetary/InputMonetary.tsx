@@ -36,9 +36,7 @@ export default React.forwardRef(function InputMonetary(
         onFocus={onFocus}
         onChange={onChange}
         value={value}
-        
-       
-        
+
       />
       {/* {value !== undefined && value.length > 0 && (
         <div className="currencySymbol">

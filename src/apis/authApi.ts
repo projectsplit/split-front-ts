@@ -20,10 +20,12 @@ const refreshAccessToken = async (): Promise<RefreshAccessTokenResponse> => {
 }
 
 const emailSendLink = async (request: EmailInitiateRequest): Promise<AxiosResponse<any>> => {
+  console.log("Enered")
   const response = await authApiHttpClient.post(
     `email/send-link`,
     request
   )
+ 
   return response.data
 }
 

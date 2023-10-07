@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { api } from "../../apis/api";
 import { StyledBudget } from "./Budget.styled";
 import { BiArrowBack, BiFontSize } from "react-icons/bi";
@@ -41,6 +41,9 @@ export default function Budget() {
   const [hasSwitchedBudgetType, setHasSwitchedBudgetType] = useState(false);
   const [submitBudgetErrors, setSubmitBudgetErrors] = useState<any[]>([]);
   const [menu, setMenu] = useState<string | null>(null);
+  const [currency, setCurrency] = useState<string>(
+    localStorage.getItem("budgetCurrency") || "USD"
+  );
 
   const navigate = useNavigate();
   const queryClient = useQueryClient();
@@ -71,14 +74,23 @@ export default function Budget() {
     },
   });
 
-  const { data, isFetching, isStale } = useQuery<BudgetInfoResponse>({
-    queryKey: queryKey,
-    queryFn: () => api.getBudgetInfo(budgettype, "USD"),
-    refetchOnWindowFocus: false,
-    refetchOnMount: true,
-    staleTime: 9000,
-    enabled: true,
-  });
+  const { data, isFetching, isStale, isSuccess } = useQuery<BudgetInfoResponse>(
+    {
+      queryKey: queryKey,
+      queryFn: () => api.getBudgetInfo(budgettype, "USD"),
+      refetchOnWindowFocus: false,
+      refetchOnMount: true,
+      staleTime: 9000,
+      enabled: true,
+    }
+  );
+
+  useEffect(() => {
+    if (isSuccess) {
+      localStorage.setItem("budgetCurrency", data.currency);
+      setCurrency(data.currency);
+    }
+  }, []);
 
   const handleInputChange = (e: any) => {
     setDisplayedAmount(currencyMask(e).target.value);
@@ -104,14 +116,14 @@ export default function Budget() {
       createBudget.mutate({
         amount: amount,
         budgetType: budgettype,
-        currency: "USD",
+        currency: currency,
         day: calendarDay.toString(),
       });
     } else {
       createBudget.mutate({
         amount: amount,
         budgetType: budgettype,
-        currency: "USD",
+        currency: currency,
         day: getDayNumber(calendarDay),
       });
     }
@@ -172,7 +184,7 @@ export default function Budget() {
             setMenu={setMenu}
             value={displayedAmount}
             onChange={(e) => handleInputChange(e)}
-            currency="USD"
+            currency={currency}
             inputError={submitBudgetErrors.find(
               (item) => item.field === "Amount" || item.field === "Currency"
             )}
@@ -323,6 +335,7 @@ export default function Budget() {
         />
       </CSSTransition>
       <CSSTransition
+        
         in={menu === "createBudgetConfirmation"}
         timeout={100}
         classNames="bottomslide"
@@ -335,6 +348,7 @@ export default function Budget() {
       </CSSTransition>
 
       <CSSTransition
+        
         in={menu === "deleteBudgetConfirmation"}
         timeout={100}
         classNames="bottomslide"
@@ -347,6 +361,7 @@ export default function Budget() {
       </CSSTransition>
 
       <CSSTransition
+      
         in={menu === "infoBox"}
         timeout={100}
         classNames="infoBox"
@@ -356,12 +371,13 @@ export default function Budget() {
       </CSSTransition>
 
       <CSSTransition
+       
         in={menu === "currencyOptions"}
         timeout={100}
         classNames="bottomslide"
         unmountOnExit
       >
-        <CurrencyOptions setMenu={setMenu} />
+        <CurrencyOptions setMenu={setMenu} setCurrency={setCurrency} />
       </CSSTransition>
     </StyledBudget>
   );

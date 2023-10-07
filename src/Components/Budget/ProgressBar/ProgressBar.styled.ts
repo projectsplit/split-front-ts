@@ -66,12 +66,14 @@ export const StyledProgressBar = styled.div<StyledProgressBarProps>`
       align-items: center;
       justify-content: end;
     }
+    
     .targetIcon {
       color: #bebebe;
-
+      box-shadow: 0 0 10px 2px ${(props) => props.color};;
       font-size: 25px;
       align-self: center;
       margin-top: -20px;
+      border-radius: 50px;
     }
     .amount {
       font-weight: bold;

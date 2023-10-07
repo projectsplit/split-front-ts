@@ -10,7 +10,7 @@ export const BudgetInfoMessage = (
   theme: DefaultTheme | undefined
 ): JSX.Element => {
   const totalAmountSpent = parseFloat(data.totalAmountSpent);
-  console.log(data)
+
   // Check if remainingDays, goal, and averageSpentPerDay are provided
   if (
     data.remainingDays !== undefined &&

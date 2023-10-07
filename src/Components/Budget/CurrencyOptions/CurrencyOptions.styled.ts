@@ -1,6 +1,8 @@
 import styled from "styled-components";
 import { StyledBottomMenu } from "../../../layouts/BottomMenu/BottomMenu.styled";
 
+
+
 export const StyledCurrencyOptions = styled(StyledBottomMenu)`
   overflow: auto; /* or overflow: scroll; or overflow: hidden; */
 
@@ -14,6 +16,7 @@ export const StyledCurrencyOptions = styled(StyledBottomMenu)`
    
   }
   .currencyOption {
+    cursor: pointer;
     border-radius: 10px;
     padding: 5px;
     display: flex;
@@ -21,5 +24,9 @@ export const StyledCurrencyOptions = styled(StyledBottomMenu)`
     gap: 10px;
     margin-left: 10px;
     align-items: center;
+    
+  }
+  .currencyOption.clicked {
+    background-color: #464689;
   }
 `;

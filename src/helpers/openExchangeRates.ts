@@ -1,4 +1,10 @@
 const openExchangeCurrencies = [
+  { symbol: "INR", name: "Indian Rupee" },
+  { symbol: "CNY", name: "Chinese Yuan" },
+  { symbol: "USD", name: "United States Dollar" },
+  { symbol: "EUR", name: "Euro" },
+  { symbol: "JPY", name: "Japanese Yen" },
+  { symbol: "GBP", name: "British Pound Sterling" },
   { symbol: "AED", name: "United Arab Emirates Dirham" },
   { symbol: "AFN", name: "Afghan Afghani" },
   { symbol: "ALL", name: "Albanian Lek" },
@@ -32,7 +38,6 @@ const openExchangeCurrencies = [
   { symbol: "CLF", name: "Chilean Unit of Account (UF)" },
   { symbol: "CLP", name: "Chilean Peso" },
   { symbol: "CNH", name: "Chinese Yuan (Offshore)" },
-  { symbol: "CNY", name: "Chinese Yuan" },
   { symbol: "COP", name: "Colombian Peso" },
   { symbol: "CRC", name: "Costa Rican Colón" },
   { symbol: "CUC", name: "Cuban Convertible Peso" },
@@ -47,10 +52,8 @@ const openExchangeCurrencies = [
   { symbol: "EGP", name: "Egyptian Pound" },
   { symbol: "ERN", name: "Eritrean Nakfa" },
   { symbol: "ETB", name: "Ethiopian Birr" },
-  { symbol: "EUR", name: "Euro" },
   { symbol: "FJD", name: "Fijian Dollar" },
   { symbol: "FKP", name: "Falkland Islands Pound" },
-  { symbol: "GBP", name: "British Pound Sterling" },
   { symbol: "GEL", name: "Georgian Lari" },
   { symbol: "GGP", name: "Guernsey Pound" },
   { symbol: "GHS", name: "Ghanaian Cedi" },
@@ -67,14 +70,12 @@ const openExchangeCurrencies = [
   { symbol: "IDR", name: "Indonesian Rupiah" },
   { symbol: "ILS", name: "Israeli New Sheqel" },
   { symbol: "IMP", name: "Manx pound" },
-  { symbol: "INR", name: "Indian Rupee" },
   { symbol: "IQD", name: "Iraqi Dinar" },
   { symbol: "IRR", name: "Iranian Rial" },
   { symbol: "ISK", name: "Icelandic Króna" },
   { symbol: "JEP", name: "Jersey Pound" },
   { symbol: "JMD", name: "Jamaican Dollar" },
   { symbol: "JOD", name: "Jordanian Dinar" },
-  { symbol: "JPY", name: "Japanese Yen" },
   { symbol: "KES", name: "Kenyan Shilling" },
   { symbol: "KGS", name: "Kyrgystani Som" },
   { symbol: "KHR", name: "Cambodian Riel" },
@@ -152,7 +153,6 @@ const openExchangeCurrencies = [
   { symbol: "TZS", name: "Tanzanian Shilling" },
   { symbol: "UAH", name: "Ukrainian Hryvnia" },
   { symbol: "UGX", name: "Ugandan Shilling" },
-  { symbol: "USD", name: "United States Dollar" },
   { symbol: "UYU", name: "Uruguayan Peso" },
   { symbol: "UZS", name: "Uzbekistan Som" },
   { symbol: "VES", name: "Venezuelan Bolívar Soberano" },
@@ -166,9 +166,8 @@ const openExchangeCurrencies = [
   { symbol: "ZWL", name: "Zimbabwean Dollar" },
 ];
 
-export const currencyData = openExchangeCurrencies.map(currency => ({
+export const currencyData = openExchangeCurrencies.map((currency) => ({
   symbol: currency.symbol,
   name: currency.name,
   flagClass: `fflag fflag-${currency.symbol.substring(0, 2)} ff-xl ff-round`,
 }));
-

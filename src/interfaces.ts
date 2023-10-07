@@ -140,6 +140,7 @@ export interface MiddleScreenMenuProps extends BottomMenuProps {}
 
 export interface CurrencyOptionProps {
   setMenu: React.Dispatch<React.SetStateAction<string | null>>;
+  setCurrency: React.Dispatch<React.SetStateAction<string>>
 }
 
 export interface SpendingCycleInfoProps {
