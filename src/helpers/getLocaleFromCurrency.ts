@@ -1,0 +1,41 @@
+export const getLocaleFromCurrency = (currencyCode: string): string => {
+  const currencyLocaleMap: { [key: string]: string } = {
+    SAR: "ar-SA",
+    BDT: "bn-BD",
+    INR: "ta-IN",
+    CZK: "cs-CZ",
+    DKK: "da-DK",
+    EUR: "de-DE",
+    CHF: "de-CH",
+    GBP: "en-GB",
+    AUD: "en-AU",
+    CAD: "en-CA",
+    NZD: "en-NZ",
+    USD: "en-US",
+    ZAR: "en-ZA",
+    ARS: "es-AR",
+    CLP: "es-CL",
+    COP: "es-CO",
+    MXN: "es-MX",
+    ILS: "he-IL",
+    HUF: "hu-HU",
+    IDR: "id-ID",
+    JPY: "ja-JP",
+    KRW: "ko-KR",
+    NOK: "no-NO",
+    PLN: "pl-PL",
+    BRL: "pt-BR",
+    RON: "ro-RO",
+    RUB: "ru-RU",
+    SEK: "sv-SE",
+    LKR: "ta-LK",
+    THB: "th-TH",
+    TRY: "tr-TR",
+    CNY: "zh-CN",
+    HKD: "zh-HK",
+    TWD: "zh-TW",
+  };
+
+  const locale = currencyLocaleMap[currencyCode];
+  return locale || "en-US";
+};
