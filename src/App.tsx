@@ -15,6 +15,7 @@ import {
   DeletedGroups,
   Groups,
   Budget,
+  Budget2,
 } from "./components";
 
 import {
@@ -27,6 +28,13 @@ import { Main } from "./layouts";
 import ContinueWithEmailLink from "./components/ContinueWithEmailLink/ContinueWithEmailLink";
 import { ThemeProvider } from "styled-components";
 import GlobalStyles from "./components/styles/global";
+import CurrentBudget from "./components/Budget/CurrentBudget/CurrentBudget";
+import CreateBudget from "./components/Budget/CreateBudget/CreateBudget";
+import RedirectToBudget from "./routes/RedirectToBudget";
+import { useQuery } from "@tanstack/react-query";
+import { BudgetInfoResponse, BudgetType } from "./types";
+import { api } from "./apis/api";
+import useMonthlyBudgetInfo from "./hooks/useMonthlyBudgetInfo";
 
 function App() {
   const theme = {
@@ -37,8 +45,8 @@ function App() {
       lightColor: "#f5f5f5",
       pink: "#f91880",
       redish: "#fc4c4c",
-      yellowish:"#e7e100",
-      yellow:"#fcc504",
+      yellowish: "#e7e100",
+      yellow: "#fcc504",
       green: "#0d8d01",
       deepPurple: "#8300e7",
       deepPurple2: "#ac5ee7",
@@ -46,10 +54,12 @@ function App() {
       layer2: "#18181B",
       layer6: "#a3a3a3",
       labelColor6: "#8594E0",
-      inputGrey:"#2d2d2d"
+      inputGrey: "#2d2d2d",
     },
   };
-//rgb(49, 162, 76) fb green
+  //rgb(49, 162, 76) fb green
+  const { data, isLoading, isFetching, isFetched } = useMonthlyBudgetInfo(BudgetType.Monthly);
+  console.log(isLoading, isFetching)
   return (
     <ThemeProvider theme={theme}>
       <>
@@ -63,11 +73,21 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/groups" element={<Groups />}>
               <Route index element={<RedirectToActiveGroups />} />
+              {/*when the /groups rout is matched, it will render whatever is in the RedirectToActiveGroups*/}
               <Route path="active" element={<ActiveGroups />} />
               <Route path="archived" element={<ArchivedGroups />} />
               <Route path="deleted" element={<DeletedGroups />} />
+              <Route path="*" element={<RedirectToActiveGroups />} />
+              {/*when it lands on /groups/active/whatever it will again land on active groups*/}
             </Route>
-            <Route path="/budget" element={<Budget/>} />
+
+            <Route path="/budget" element={<Budget2 />}>
+              <Route index element={<RedirectToBudget data={data} isLoading={isLoading}/>} />
+              <Route path="current" element={<CurrentBudget />} />
+              <Route path="create" element={<CreateBudget />} />
+              <Route path="*" element={<RedirectToBudget data={data} isLoading={isLoading}/>} />
+            </Route>
+
             <Route path="i/:invitationCode" element={<VerifyInvitation />} />
             <Route path=":groupid" element={<Main />}>
               <Route index element={<RedirectToTransactions />} />

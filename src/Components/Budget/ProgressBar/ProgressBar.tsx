@@ -8,7 +8,7 @@ import { useTheme } from "styled-components";
 import { getIsoDateInfo } from "../../../helpers/getIsoDateInfo";
 import IonIcon from "@reacticons/ionicons";
 
-export default function ProgressBar({ data ,setMenu}: ProgressBarProps) {
+export default function ProgressBar({ data}: ProgressBarProps) {
   const theme = useTheme();
   let percentage: number = 0;
 
@@ -68,9 +68,9 @@ export default function ProgressBar({ data ,setMenu}: ProgressBarProps) {
 
   return (
     <StyledProgressBar percentage={percentage} color={progressBarColor(data)}>
-      <div className="closeButton" onClick={()=>setMenu("deleteBudgetConfirmation")}>
+      {/* <div className="closeButton" onClick={()=>setMenu("deleteBudgetConfirmation")}>
         <IonIcon name="close-outline" className="close" />
-      </div>
+      </div> */}
       <div className="budgetInfo">
         <div className="thisPeriod">
           <div className="budgetTitle">

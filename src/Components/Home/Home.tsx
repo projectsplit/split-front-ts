@@ -14,21 +14,31 @@ import { useQuery } from "@tanstack/react-query";
 import { api } from "../../apis/api";
 import { treeItemBuilder } from "../../helpers/treeItemBuilder";
 import { createUserPendingTransactionsFromTotals } from "../../helpers/createUserPendingTransactionsFromTotals";
-import { GroupsTotalAmountsResponse } from "../../types";
+import {
+  BudgetInfoResponse,
+  BudgetType,
+  GroupsTotalAmountsResponse,
+} from "../../types";
 import Spinner from "../Spinner/Spinner";
+import { useTheme } from "styled-components";
+import { BudgetInfoMessage } from "../../helpers/BudgetInfoMessage";
+import useMonthlyBudgetInfo from "../../hooks/useMonthlyBudgetInfo";
 
 export default function Home() {
   const navigate = useNavigate();
   const [showAdvice, setShowAdvice] = useState(true);
+  const theme = useTheme();
 
-  const { error, data, refetch, isSuccess, isFetching, isLoading } =
-    useQuery<GroupsTotalAmountsResponse>({
-      queryKey: ["home"],
-      queryFn: api.getGroupsTotalAmounts,
-      refetchOnWindowFocus: false,
-      refetchOnMount: false,
-    });
+  const { data, isFetching, isLoading } = useQuery<GroupsTotalAmountsResponse>({
+    queryKey: ["home"],
+    queryFn: api.getGroupsTotalAmounts,
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+  });
 
+  const { data: budgetData, isFetching: budgetIsFetching } =
+    useMonthlyBudgetInfo(BudgetType.Monthly);
+  console.log(budgetData)
   return (
     <HomeWrapper>
       <StyledHomepage>
@@ -36,21 +46,18 @@ export default function Home() {
         <div className="welcomeStripe">
           Welcome {"sessionData.userNickname"}
         </div>
-        {isFetching ? (
+        {isFetching && budgetIsFetching ? (
           <Spinner />
         ) : (
           <div className="optionsStripe">
-            {showAdvice && (
+            {showAdvice && budgetData?.budgetSubmitted && (
               <OptionsContainer hasarrow={false}>
-                <OnTrackMessage
-                  closeButton={true}
-                  currency="USD"
-                  amount="21.5"
-                  onClick={() => setShowAdvice(false)}
-                />
-                {/* <Recommendation days={2} offBudgetAmount="$3" reduceAmount="$2"/> */}
+                {BudgetInfoMessage(theme, true, budgetData, () =>
+                  setShowAdvice(false)
+                )}
               </OptionsContainer>
             )}
+
             <div className="mostRecent">
               <div className="mostRecentMsg">Most recent</div>
 

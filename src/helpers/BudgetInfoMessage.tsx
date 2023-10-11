@@ -6,8 +6,10 @@ import { BudgetInfoResponse } from "../types";
 import { DefaultTheme } from "styled-components";
 
 export const BudgetInfoMessage = (
+  theme: DefaultTheme | undefined,
+  closeButton: boolean,
   data: BudgetInfoResponse,
-  theme: DefaultTheme | undefined
+  onclick?: (event: React.MouseEvent<HTMLDivElement>) => void
 ): JSX.Element => {
   const totalAmountSpent = parseFloat(data.totalAmountSpent);
 
@@ -27,13 +29,14 @@ export const BudgetInfoMessage = (
     if (totalAmountSpent < 0)
       return (
         <ReceivedMoreThanSpentMessage
+          onClick={onclick}
           amount={totalAmountSpent.toString()}
           currency={data.currency}
-          closeButton={false}
+          closeButton={closeButton}
           budgetType={data.budgetType}
           style={{
-            backgroundColor: theme?.colors.inputGrey,
-            borderColor: theme?.colors.inputGrey,
+            backgroundColor: theme?.colors.layer2,
+            borderColor: theme?.colors.layer2,
             borderStyle: "solid",
             boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
             borderRadius: "6px",
@@ -46,17 +49,18 @@ export const BudgetInfoMessage = (
       const offBudgetAmount = (spendingProjection - goal).toFixed(2);
       return (
         <OverspentMessage
+          onClick={onclick}
           overspent={totalAmountSpent > goal}
           offBudgetAmount={offBudgetAmount}
           overspentBy={overspentBy}
           currency={data.currency}
-          closeButton={false}
+          closeButton={closeButton}
           budgetType={data.budgetType}
           style={{
-            backgroundColor: theme?.colors.inputGrey,
-            borderColor: theme?.colors.inputGrey,
+            backgroundColor: theme?.colors.layer2,
+            borderColor: theme?.colors.layer2,
             borderStyle: "solid",
-            boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
+            // boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
             borderRadius: "6px",
             padding: "0.8rem",
           }}
@@ -78,17 +82,18 @@ export const BudgetInfoMessage = (
 
         return (
           <Recommendation
+            onClick={onclick}
             days={reachCapInDays}
             offBudgetAmount={offBudgetBy}
             reduceAmount={reduceByRecommendation}
             currency={data.currency}
-            closeButton={false}
+            closeButton={closeButton}
             budgetType={data.budgetType}
             style={{
-              backgroundColor: theme?.colors.inputGrey,
-              borderColor: theme?.colors.inputGrey,
+              backgroundColor: theme?.colors.layer2,
+              borderColor: theme?.colors.layer2,
               borderStyle: "solid",
-              boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
+              //boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
               borderRadius: "6px",
               padding: "0.8rem",
             }}
@@ -98,15 +103,16 @@ export const BudgetInfoMessage = (
         const onTargetAmount = (goal - spendingProjection).toFixed(2);
         return (
           <OnTrackMessage
+            onClick={onclick}
             amount={onTargetAmount}
             currency={data.currency}
-            closeButton={false}
+            closeButton={closeButton}
             budgetType={data.budgetType}
             style={{
-              backgroundColor: theme?.colors.inputGrey,
-              borderColor: theme?.colors.inputGrey,
+              backgroundColor: theme?.colors.layer2,
+              borderColor: theme?.colors.layer2,
               borderStyle: "solid",
-              boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
+              //boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
               borderRadius: "6px",
               padding: "0.8rem",
             }}

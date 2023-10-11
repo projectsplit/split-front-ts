@@ -124,7 +124,7 @@ export interface CalendarOptionsButtonProps {
 
 export interface ProgressBarProps {
   data: BudgetInfoResponse | undefined;
-  setMenu: React.Dispatch<React.SetStateAction<string | null>>;
+  
 }
 
 export interface BudgetTitleProps {

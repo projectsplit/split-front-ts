@@ -1,39 +1,35 @@
 import React, { useEffect, useState } from "react";
-import { api } from "../../apis/api";
-import { StyledBudget } from "./Budget.styled";
+import { api } from "../../../apis/api";
+import { StyledBudget } from "../Budget.styled";
 import { BiArrowBack } from "react-icons/bi";
 import { useNavigate } from "react-router-dom";
-import InputMonetary from "../InputMonetary/InputMonetary";
-import SpendingCycleSelector from "./SpendingCycleSelector/SpendingCycleSelector";
-import Calendar from "./Calendar/Calendar";
-import { currencyMask } from "../../helpers/currencyMask";
-import { removeCommas } from "../../helpers/removeCommas";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import InputMonetary from "../../InputMonetary/InputMonetary";
+import SpendingCycleSelector from "../SpendingCycleSelector/SpendingCycleSelector";
+import Calendar from "../Calendar/Calendar";
+import { currencyMask } from "../../../helpers/currencyMask";
+import { removeCommas } from "../../../helpers/removeCommas";
+import { useMutation,useQueryClient } from "@tanstack/react-query";
 import {
   BudgetInfoResponse,
   BudgetType,
   CreateBudgetRequest,
-} from "../../types";
-import CalendarOptionsButton from "./CalendarOptionButton/CalendarOptionsButton";
-import SubmitButton from "../SubmitButton/SubmitButton";
-import ProgressBar from "./ProgressBar/ProgressBar";
-import { getOrdinalSuffix } from "../../helpers/getOrdinalSuffix";
-import { getWeekday } from "../../helpers/getWeekDay";
-import { BudgetInfoMessage } from "../../helpers/BudgetInfoMessage";
-import Spinner from "../Spinner/Spinner";
-import { displayCurrencyAndAmount } from "../../helpers/displayCurrencyAndAmount";
-import { useTheme } from "styled-components";
-import ConfirmationForBudgetSubmission from "./ConfirmationForBudgetSubmission/ConfirmationForBudgetSubmission";
-import CurrencyOptions from "./CurrencyOptions/CurrencyOptions";
+} from "../../../types";
+import CalendarOptionsButton from "../CalendarOptionButton/CalendarOptionsButton";
+import SubmitButton from "../../SubmitButton/SubmitButton";
+import { getOrdinalSuffix } from "../../../helpers/getOrdinalSuffix";
+import { getWeekday } from "../../../helpers/getWeekDay";
+import Spinner from "../../Spinner/Spinner";
+import { displayCurrencyAndAmount } from "../../../helpers/displayCurrencyAndAmount";
+import ConfirmationForBudgetSubmission from "../ConfirmationForBudgetSubmission/ConfirmationForBudgetSubmission";
+import CurrencyOptions from "../CurrencyOptions/CurrencyOptions";
 import { CSSTransition } from "react-transition-group";
-import ConfirmationForBudgetDeletion from "./ConfirmationForBudgetDeletion/ConfirmationForBudgetDeletion";
 import IonIcon from "@reacticons/ionicons";
-import SpendingCycleInfo from "./SpendingCycleInfo/SpendingCycleInfo";
-import "../styles/flags/flag.css";
-import "../styles/freakflags/freakflags.css";
-import useMonthlyBudgetInfo from "../../hooks/useMonthlyBudgetInfo";
+import SpendingCycleInfo from "../SpendingCycleInfo/SpendingCycleInfo";
+import "../../styles/freakflags/freakflags.css";
+import { StyledCreateBudget } from "./CreateBudget.styled";
+import useMonthlyBudgetInfo from "../../../hooks/useMonthlyBudgetInfo";
 
-export default function Budget() {
+export default function CreateBudget() {
   const [amount, setAmount] = useState<string>("");
   const [displayedAmount, setDisplayedAmount] = useState<string>("");
   const [openCalendar, setOpenCalendar] = useState<boolean>(false);
@@ -49,7 +45,7 @@ export default function Budget() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const queryKey = ["budget", budgettype];
-  const theme = useTheme();
+
   const nodeRef = React.useRef(null);
 
   const createBudget = useMutation<any, any, CreateBudgetRequest>({
@@ -60,28 +56,19 @@ export default function Budget() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries(queryKey);
+      navigate("/budget/current");
     },
   });
 
-  const deleteBudget = useMutation<any, any, any>({
-    mutationKey: ["budget", "delete"],
-    mutationFn: api.deleteBudget,
-    onError: (error) => {
-      // setSubmitBudgetErrors(error.response.data);
-      console.log(error);
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries(queryKey);
-    },
-  });
-
-  const { data, isFetching, isStale, isSuccess } = useMonthlyBudgetInfo(budgettype)
+  const { data, isFetching, isStale, isSuccess } =
+    useMonthlyBudgetInfo(budgettype);
 
   useEffect(() => {
     if (isSuccess) {
       localStorage.setItem("budgetCurrency", data.currency);
       setCurrency(data.currency);
     }
+
   }, []);
 
   const handleInputChange = (e: any) => {
@@ -126,17 +113,7 @@ export default function Budget() {
     setDisplayedAmount("");
     setMenu(null);
     setAmount("");
-  };
-
-  const removeBudget = async () => {
-    deleteBudget.mutate({});
-    setMenu(null);
-    queryClient.invalidateQueries(queryKey);
-    setSubmitBudgetErrors([]);
-    setOpenCalendar(false);
-    setAmount("");
-    setHasSwitchedBudgetType(false);
-    setDisplayedAmount("");
+    
   };
 
   const calendarTypeHandler = (budgetType: BudgetType) => {
@@ -159,13 +136,24 @@ export default function Budget() {
 
   const querydata = queryClient.getQueryData(queryKey) as BudgetInfoResponse;
 
+  const handleBackButtonClick = () => {
+    if (data && data.budgetSubmitted) {
+      navigate(`/budget/current`);
+    } else {
+      navigate(`/`);
+    }
+  };
+
   return (
-    <StyledBudget>
+    <StyledCreateBudget>
       <div className="topBar">
         <div className="backButtonContainer">
-          <BiArrowBack className="backButton" onClick={() => navigate("/")} />
+          <BiArrowBack
+            className="backButton"
+            onClick={() => handleBackButtonClick()}
+          />
         </div>
-        <div className="descr">Budget Settings</div>
+        <div className="descr">Budget</div>
       </div>
 
       <div className="promptSpendingCap">
@@ -271,22 +259,14 @@ export default function Budget() {
       ) : (
         querydata && (
           <div className="spentInfo">
-            {!querydata.budgetSubmitted ? (
-              <div>
-                You have spent{" "}
-                {displayCurrencyAndAmount(
-                  data?.totalAmountSpent,
-                  querydata?.currency
-                )}{" "}
-                this {budgettype === 1 ? "month" : "week"}
-              </div>
-            ) : (
-              <>
-                <span className="currentBudgetTitle">Current budget</span>{" "}
-                <ProgressBar data={querydata}  />
-                {BudgetInfoMessage(theme, false, querydata)}
-              </>
-            )}
+            <div>
+              You have spent{" "}
+              {displayCurrencyAndAmount(
+                data?.totalAmountSpent,
+                querydata?.currency
+              )}{" "}
+              this {budgettype === 1 ? "month" : "week"}
+            </div>
           </div>
         )
       )}
@@ -326,6 +306,7 @@ export default function Budget() {
           }}
         />
       </CSSTransition>
+
       <CSSTransition
         in={menu === "createBudgetConfirmation"}
         timeout={100}
@@ -335,18 +316,6 @@ export default function Budget() {
         <ConfirmationForBudgetSubmission
           setMenu={setMenu}
           submitBudget={submitBudget}
-        />
-      </CSSTransition>
-
-      <CSSTransition
-        in={menu === "deleteBudgetConfirmation"}
-        timeout={100}
-        classNames="bottomslide"
-        unmountOnExit
-      >
-        <ConfirmationForBudgetDeletion
-          setMenu={setMenu}
-          removeBudget={removeBudget}
         />
       </CSSTransition>
 
@@ -367,10 +336,6 @@ export default function Budget() {
       >
         <CurrencyOptions setMenu={setMenu} setCurrency={setCurrency} />
       </CSSTransition>
-    </StyledBudget>
+    </StyledCreateBudget>
   );
 }
-
-//remaining days can be made decimal
-//change color of bar based on whether on target or not
-//when 0 is spent change message to simply you are on target to meeting your spending goal.
