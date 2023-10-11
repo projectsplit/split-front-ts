@@ -58,8 +58,8 @@ function App() {
     },
   };
   //rgb(49, 162, 76) fb green
-  const { data, isLoading, isFetching, isFetched } = useMonthlyBudgetInfo(BudgetType.Monthly);
-  console.log(isLoading, isFetching)
+  const { data, isFetching } = useMonthlyBudgetInfo(BudgetType.Monthly);
+
   return (
     <ThemeProvider theme={theme}>
       <>
@@ -82,10 +82,10 @@ function App() {
             </Route>
 
             <Route path="/budget" element={<Budget2 />}>
-              <Route index element={<RedirectToBudget data={data} isLoading={isLoading}/>} />
+              <Route index element={<RedirectToBudget data={data} isLoading={isFetching}/>} />
               <Route path="current" element={<CurrentBudget />} />
               <Route path="create" element={<CreateBudget />} />
-              <Route path="*" element={<RedirectToBudget data={data} isLoading={isLoading}/>} />
+              <Route path="*" element={<RedirectToBudget data={data} isLoading={isFetching}/>} />
             </Route>
 
             <Route path="i/:invitationCode" element={<VerifyInvitation />} />

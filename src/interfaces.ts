@@ -152,6 +152,10 @@ export interface ConfirmationForBudgetSubmissionProps {
   setMenu: React.Dispatch<React.SetStateAction<string | null>>;
 }
 
+export interface ManageBudgetMenuProps{
+  setMenu: React.Dispatch<React.SetStateAction<string | null>>;
+}
+
 export interface ConfirmationForBudgetDeletionProps {
   removeBudget: () => Promise<void>;
   setMenu: React.Dispatch<React.SetStateAction<string | null>>;
