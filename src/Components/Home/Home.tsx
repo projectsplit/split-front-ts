@@ -51,11 +51,11 @@ export default function Home() {
         ) : (
           <div className="optionsStripe">
             {showAdvice && budgetData?.budgetSubmitted && (
-              <OptionsContainer hasarrow={false}>
+              <>
                 {BudgetInfoMessage(theme, true, budgetData, () =>
                   setShowAdvice(false)
                 )}
-              </OptionsContainer>
+             </>
             )}
 
             <div className="mostRecent">

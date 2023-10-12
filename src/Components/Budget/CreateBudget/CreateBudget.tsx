@@ -113,7 +113,7 @@ export default function CreateBudget() {
     setDisplayedAmount("");
     setMenu(null);
     setAmount("");
-    
+    // navigate(`/budget/current`);
   };
 
   const calendarTypeHandler = (budgetType: BudgetType) => {
@@ -125,7 +125,6 @@ export default function CreateBudget() {
     }
 
     if (!hasSwitchedBudgetType || isStale) {
-      console.log("Invalidating queries");
       queryClient.invalidateQueries(queryKey);
     }
 

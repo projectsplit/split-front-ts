@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { api } from "../../../apis/api";
 import { BiArrowBack } from "react-icons/bi";
 import { useNavigate } from "react-router-dom";
@@ -16,6 +16,7 @@ import "../../styles/freakflags/freakflags.css";
 import { StyledCurrentBudget } from "./CurrentBudget.styled";
 import useMonthlyBudgetInfo from "../../../hooks/useMonthlyBudgetInfo";
 import SubmitButton from "../../SubmitButton/SubmitButton";
+import ManageBudgetMenu from "../ManageBudgetMenu/ManageBudgetMenu";
 
 export default function CurrentBudget() {
   const [menu, setMenu] = useState<string | null>(null);
@@ -25,6 +26,14 @@ export default function CurrentBudget() {
   const queryKey = ["budget", BudgetType.Monthly];
   const theme = useTheme();
   const nodeRef = React.useRef(null);
+
+  const { isFetching, data } = useMonthlyBudgetInfo(BudgetType.Monthly);
+
+  useEffect(() => { //prevents user from landing on this component after budget is deleted using <- of browser
+    if (!isFetching && !data?.budgetSubmitted) {
+      navigate("/budget/create");
+    }
+  }, []);
 
   const deleteBudget = useMutation<any, any, any>({
     mutationKey: ["budget", "delete"],
@@ -38,12 +47,13 @@ export default function CurrentBudget() {
     },
   });
 
-  const { isFetching } = useMonthlyBudgetInfo(BudgetType.Monthly);
+  console.log("current", data, "isFetiching", isFetching);
 
   const removeBudget = async () => {
     deleteBudget.mutate({});
     setMenu(null);
     queryClient.invalidateQueries(queryKey);
+    navigate("/budget/create");
   };
 
   const querydata = queryClient.getQueryData(queryKey) as BudgetInfoResponse;
@@ -76,9 +86,7 @@ export default function CurrentBudget() {
           )}
 
           <div className="submitButton">
-            <SubmitButton
-              onClick={()=>navigate("/budget/create")}
-            >
+            <SubmitButton onClick={() => setMenu("manageBudgetMenu")}>
               Manage Budget
             </SubmitButton>
           </div>
@@ -113,6 +121,15 @@ export default function CurrentBudget() {
               setMenu={setMenu}
               removeBudget={removeBudget}
             />
+          </CSSTransition>
+
+          <CSSTransition
+            in={menu === "manageBudgetMenu"}
+            timeout={100}
+            classNames="bottomslide"
+            unmountOnExit
+          >
+            <ManageBudgetMenu setMenu={setMenu} />
           </CSSTransition>
         </>
       )}
