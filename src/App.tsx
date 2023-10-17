@@ -34,7 +34,7 @@ import RedirectToBudget from "./routes/RedirectToBudget";
 import { useQuery } from "@tanstack/react-query";
 import { BudgetInfoResponse, BudgetType } from "./types";
 import { api } from "./apis/api";
-import useMonthlyBudgetInfo from "./hooks/useMonthlyBudgetInfo";
+import useBudgetInfo from "./hooks/useBudgetInfo";
 
 function App() {
   const theme = {
@@ -58,7 +58,7 @@ function App() {
     },
   };
   //rgb(49, 162, 76) fb green
-  const { data, isFetching } = useMonthlyBudgetInfo(BudgetType.Monthly);
+  const { data, isFetching } = useBudgetInfo(BudgetType.Monthly);
 
   return (
     <ThemeProvider theme={theme}>

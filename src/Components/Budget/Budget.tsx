@@ -31,7 +31,7 @@ import IonIcon from "@reacticons/ionicons";
 import SpendingCycleInfo from "./SpendingCycleInfo/SpendingCycleInfo";
 import "../styles/flags/flag.css";
 import "../styles/freakflags/freakflags.css";
-import useMonthlyBudgetInfo from "../../hooks/useMonthlyBudgetInfo";
+import useBudgetInfo from "../../hooks/useBudgetInfo";
 
 export default function Budget() {
   const [amount, setAmount] = useState<string>("");
@@ -75,7 +75,7 @@ export default function Budget() {
     },
   });
 
-  const { data, isFetching, isStale, isSuccess } = useMonthlyBudgetInfo(budgettype)
+  const { data, isFetching, isStale, isSuccess } = useBudgetInfo(budgettype)
 
   useEffect(() => {
     if (isSuccess) {

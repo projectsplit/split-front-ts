@@ -8,7 +8,7 @@ import SpendingCycleSelector from "../SpendingCycleSelector/SpendingCycleSelecto
 import Calendar from "../Calendar/Calendar";
 import { currencyMask } from "../../../helpers/currencyMask";
 import { removeCommas } from "../../../helpers/removeCommas";
-import { useMutation,useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   BudgetInfoResponse,
   BudgetType,
@@ -27,7 +27,7 @@ import IonIcon from "@reacticons/ionicons";
 import SpendingCycleInfo from "../SpendingCycleInfo/SpendingCycleInfo";
 import "../../styles/freakflags/freakflags.css";
 import { StyledCreateBudget } from "./CreateBudget.styled";
-import useMonthlyBudgetInfo from "../../../hooks/useMonthlyBudgetInfo";
+import useBudgetInfo from "../../../hooks/useBudgetInfo";
 
 export default function CreateBudget() {
   const [amount, setAmount] = useState<string>("");
@@ -60,15 +60,16 @@ export default function CreateBudget() {
     },
   });
 
-  const { data, isFetching, isStale, isSuccess } =
-    useMonthlyBudgetInfo(budgettype);
+  const { data, isFetching, isStale, isSuccess } = useBudgetInfo(
+    budgettype,
+   
+  );
 
   useEffect(() => {
     if (isSuccess) {
       localStorage.setItem("budgetCurrency", data.currency);
       setCurrency(data.currency);
     }
-
   }, []);
 
   const handleInputChange = (e: any) => {

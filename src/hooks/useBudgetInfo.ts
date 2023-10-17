@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { BudgetInfoResponse, BudgetType } from "../types";
 import { api } from "../apis/api";
 
-const useMonthlyBudgetInfo = (budgetType: BudgetType) => {
+const useBudgetInfo = (budgetType: BudgetType) => {
   return useQuery<BudgetInfoResponse>({
     queryKey: ["budget", budgetType],
     queryFn: () => api.getBudgetInfo(budgetType, "USD"),
@@ -13,4 +13,4 @@ const useMonthlyBudgetInfo = (budgetType: BudgetType) => {
   });
 };
 
-export default useMonthlyBudgetInfo;
+export default useBudgetInfo;

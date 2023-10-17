@@ -22,7 +22,7 @@ import {
 import Spinner from "../Spinner/Spinner";
 import { useTheme } from "styled-components";
 import { BudgetInfoMessage } from "../../helpers/BudgetInfoMessage";
-import useMonthlyBudgetInfo from "../../hooks/useMonthlyBudgetInfo";
+import useBudgetInfo from "../../hooks/useBudgetInfo";
 
 export default function Home() {
   const navigate = useNavigate();
@@ -37,7 +37,7 @@ export default function Home() {
   });
 
   const { data: budgetData, isFetching: budgetIsFetching } =
-    useMonthlyBudgetInfo(BudgetType.Monthly);
+    useBudgetInfo(BudgetType.Monthly);
   console.log(budgetData)
   return (
     <HomeWrapper>

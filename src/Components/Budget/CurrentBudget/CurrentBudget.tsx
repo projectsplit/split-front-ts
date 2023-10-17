@@ -14,7 +14,7 @@ import { CSSTransition } from "react-transition-group";
 import ConfirmationForBudgetDeletion from "./../ConfirmationForBudgetDeletion/ConfirmationForBudgetDeletion";
 import "../../styles/freakflags/freakflags.css";
 import { StyledCurrentBudget } from "./CurrentBudget.styled";
-import useMonthlyBudgetInfo from "../../../hooks/useMonthlyBudgetInfo";
+import useBudgetInfo from "../../../hooks/useBudgetInfo";
 import SubmitButton from "../../SubmitButton/SubmitButton";
 import ManageBudgetMenu from "../ManageBudgetMenu/ManageBudgetMenu";
 
@@ -27,7 +27,7 @@ export default function CurrentBudget() {
   const theme = useTheme();
   const nodeRef = React.useRef(null);
 
-  const { isFetching, data } = useMonthlyBudgetInfo(BudgetType.Monthly);
+  const { isFetching, data } = useBudgetInfo(BudgetType.Monthly);
 
   useEffect(() => { //prevents user from landing on this component after budget is deleted using <- of browser
     if (!isFetching && !data?.budgetSubmitted) {
