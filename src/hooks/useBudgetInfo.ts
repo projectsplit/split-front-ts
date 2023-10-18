@@ -2,10 +2,10 @@ import { useQuery } from "@tanstack/react-query";
 import { BudgetInfoResponse, BudgetType } from "../types";
 import { api } from "../apis/api";
 
-const useBudgetInfo = (budgetType: BudgetType) => {
+const useBudgetInfo = () => {
   return useQuery<BudgetInfoResponse>({
-    queryKey: ["budget", budgetType],
-    queryFn: () => api.getBudgetInfo(budgetType, "USD"),
+    queryKey: ["budget"],
+    queryFn: () => api.getBudgetInfo(),
     refetchOnWindowFocus: false,
     refetchOnMount: true,
     staleTime: 9000,

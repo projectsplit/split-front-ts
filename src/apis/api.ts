@@ -8,6 +8,7 @@ import {
   CreateBudgetRequest,
   BudgetType,
   BudgetInfoResponse,
+  SpendingInfoResponse,
 } from "../types";
 import { signOut } from "../util/signOut";
 
@@ -70,10 +71,18 @@ const getUserGroups = async (
   return response.data;
 };
 
-const getBudgetInfo = async (budgetType: BudgetType, currency:String): Promise<BudgetInfoResponse> => {
+const getBudgetInfo = async (): Promise<BudgetInfoResponse> => {
  
   const response = await apiHttpClient.get<BudgetInfoResponse>(
-    `/budget/budgetinfo?budgettype=${budgetType}&currency=${currency}`
+    `/budget/budgetinfo`
+  );
+  return response.data;
+};
+
+const getSpendingInfo = async (budgetType: BudgetType, currency:String): Promise<SpendingInfoResponse> => {
+ 
+  const response = await apiHttpClient.get<SpendingInfoResponse>(
+    `/budget/spendinginfo?budgettype=${budgetType}&currency=${currency}`
   );
   return response.data;
 };
@@ -100,6 +109,7 @@ export const api = {
   getUserGroups,
   getGroupsTotalAmounts,
   getBudgetInfo,
+  getSpendingInfo,
   createBudget,
   deleteBudget
 };

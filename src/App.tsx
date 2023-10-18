@@ -14,7 +14,7 @@ import {
   ArchivedGroups,
   DeletedGroups,
   Groups,
-  Budget,
+  // Budget,
   Budget2,
 } from "./components";
 
@@ -31,10 +31,8 @@ import GlobalStyles from "./components/styles/global";
 import CurrentBudget from "./components/Budget/CurrentBudget/CurrentBudget";
 import CreateBudget from "./components/Budget/CreateBudget/CreateBudget";
 import RedirectToBudget from "./routes/RedirectToBudget";
-import { useQuery } from "@tanstack/react-query";
-import { BudgetInfoResponse, BudgetType } from "./types";
-import { api } from "./apis/api";
 import useBudgetInfo from "./hooks/useBudgetInfo";
+import { BudgetType } from "./types";
 
 function App() {
   const theme = {
@@ -58,7 +56,7 @@ function App() {
     },
   };
   //rgb(49, 162, 76) fb green
-  const { data, isFetching } = useBudgetInfo(BudgetType.Monthly);
+  const { data, isFetching } = useBudgetInfo();
 
   return (
     <ThemeProvider theme={theme}>

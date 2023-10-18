@@ -88,10 +88,16 @@ export type BudgetInfoResponse = {
   budgetSubmitted: boolean;
   averageSpentPerDay?: string;
   remainingDays?: string;
-  totalAmountSpent: string;
+  totalAmountSpent?: string;
   goal?: string;
-  currency: string;
+  currency?: string;
   budgetType?: BudgetType;
-  startDate:any;
-  endDate:any;
+  startDate?: any;
+  endDate?: any;
+};
+
+export type SpendingInfoResponse = {
+  budgetSubmitted: boolean;
+  totalAmountSpent: string;
+  currency: string;
 };

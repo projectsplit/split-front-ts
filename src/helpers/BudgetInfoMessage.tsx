@@ -11,6 +11,16 @@ export const BudgetInfoMessage = (
   data: BudgetInfoResponse,
   onclick?: (event: React.MouseEvent<HTMLDivElement>) => void
 ): JSX.Element => {
+  
+  if (data.totalAmountSpent === undefined || data.currency === undefined) {
+    return (
+      <div>
+        <p>
+          Some required budget data is missing. Cannot calculate projections.
+        </p>
+      </div>
+    );
+  }
   const totalAmountSpent = parseFloat(data.totalAmountSpent);
 
   // Check if remainingDays, goal, and averageSpentPerDay are provided
