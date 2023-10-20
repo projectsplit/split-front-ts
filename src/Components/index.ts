@@ -11,5 +11,5 @@ export { default as ActiveGroups } from "./Groups/ActiveGroups/ActiveGroups";
 export { default as ArchivedGroups } from "./Groups/ArchivedGroups/ArchivedGroups";
 export { default as DeletedGroups } from "./Groups/DeletedGroups/DeletedGroups";
 export { default as Spinner } from "./Spinner/Spinner";
-export { default as Budget } from "./Budget/Budget";
+// export { default as Budget } from "./Budget/Budget";
 export { default as Budget2 } from "./Budget/Budget2";

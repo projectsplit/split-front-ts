@@ -1,8 +1,8 @@
 import React from "react";
 import { StyledRecommendation } from "./Recommendation.styled";
 import IonIcon from "@reacticons/ionicons";
-import { RecommendationMessageProps } from "../../interfaces";
-import { displayCurrencyAndAmount } from "../../helpers/displayCurrencyAndAmount";
+import { RecommendationMessageProps } from "../../../interfaces";
+import { displayCurrencyAndAmount } from "../../../helpers/displayCurrencyAndAmount";
 
 export default function Recommendation({
   onClick,

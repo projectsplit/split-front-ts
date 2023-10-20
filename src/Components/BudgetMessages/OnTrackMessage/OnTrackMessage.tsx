@@ -1,8 +1,8 @@
 import React from "react";
 import { StyledOnTrackMessage } from "./OnTrackMessage.styled";
-import { OnTrackMessageProps } from "../../interfaces";
+import { OnTrackMessageProps } from "../../../interfaces";
 import IonIcon from "@reacticons/ionicons";
-import { displayCurrencyAndAmount } from "../../helpers/displayCurrencyAndAmount";
+import { displayCurrencyAndAmount } from "../../../helpers/displayCurrencyAndAmount";
 
 export default function OnTrackMessage({
   onClick,

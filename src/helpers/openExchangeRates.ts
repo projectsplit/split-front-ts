@@ -166,8 +166,20 @@ const openExchangeCurrencies = [
   { symbol: "ZWL", name: "Zimbabwean Dollar" },
 ];
 
-export const currencyData = openExchangeCurrencies.map((currency) => ({
-  symbol: currency.symbol,
-  name: currency.name,
-  flagClass: `fflag fflag-${currency.symbol.substring(0, 2)} ff-xl ff-round`,
-}));
+export const currencyData = openExchangeCurrencies.map((currency) => {
+  let flagClass = `fflag fflag-${currency.symbol.substring(0, 2)} ff-xl ff-round`;
+
+  // Check for specific cases where symbols start with 'BT' and handle them differently
+  if (currency.symbol === 'BTN') {
+    flagClass = 'fflag fflag-BT ff-xl ff-round'; // Change the class for BTN
+  } else if (currency.symbol === 'BTC') {
+    flagClass = 'btcflag ff-xl ff-round'; // Change the class for BTC
+  }
+
+  return {
+    symbol: currency.symbol,
+    name: currency.name,
+    flagClass: flagClass,
+  };
+});
+

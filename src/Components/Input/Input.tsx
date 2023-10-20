@@ -17,6 +17,7 @@ export default React.forwardRef(function Input(
   }: InputProps,
   ref: React.Ref<HTMLInputElement>
 ) {
+  
   return (
     <StyledInput
       onChange={onChange}
@@ -29,6 +30,7 @@ export default React.forwardRef(function Input(
       autoFocus={autoFocus}
       error={error}
       width={width}
+     
     />
   );
 });

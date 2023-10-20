@@ -10,10 +10,12 @@ export const StyledInputMonetary = styled.div<StyledInputMonetary>`
   position: relative;
   justify-content: space-evenly;
   border-style: ${({ inputError }) => (inputError ? "solid" : "none")};
-  border-radius: ${({ inputError }) => (inputError ? "4px" : "0")};
   border-width: ${({ inputError }) => (inputError ? "1px" : "0")};
   border-color: ${({ theme, inputError }) =>
     inputError ? theme.colors.pink : "transparent"};
+  background-color: ${({ theme }) => theme.colors.layer2};
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 4px;
 
   .currencyOption {
     position: absolute;
@@ -36,6 +38,5 @@ export const StyledInputMonetary = styled.div<StyledInputMonetary>`
 
 export const StyledInput = styled(Input)`
   text-align: right;
-  background-color: ${({ theme }) => theme.colors.inputGrey};
-  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  margin-left: 70px;
 `;

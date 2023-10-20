@@ -1,7 +1,8 @@
-import OnTrackMessage from "../components/OnTrackMessage/OnTrackMessage";
-import OverspentMessage from "../components/OverspentMessage/OverspentMessage";
-import ReceivedMoreThanSpentMessage from "../components/ReceivedMoreThanSpentMessage/ReceivedMoreThanSpentMessage";
-import Recommendation from "../components/Recommendation/Recommendation";
+import OnTrackMessage from "../components/BudgetMessages/OnTrackMessage/OnTrackMessage";
+import OverspentMessage from "../components/BudgetMessages/OverspentMessage/OverspentMessage";
+import ReceivedMoreThanSpentMessage from "../components/BudgetMessages/ReceivedMoreThanSpentMessage/ReceivedMoreThanSpentMessage";
+import Recommendation from "../components/BudgetMessages/Recommendation/Recommendation";
+import SimpleOnTrackMessage from "../components/BudgetMessages/SimpleOnTrackMessage/SimpleOnTrackMessage";
 import { BudgetInfoResponse } from "../types";
 import { DefaultTheme } from "styled-components";
 
@@ -11,7 +12,6 @@ export const BudgetInfoMessage = (
   data: BudgetInfoResponse,
   onclick?: (event: React.MouseEvent<HTMLDivElement>) => void
 ): JSX.Element => {
-  
   if (data.totalAmountSpent === undefined || data.currency === undefined) {
     return (
       <div>
@@ -35,7 +35,22 @@ export const BudgetInfoMessage = (
     const goal = parseFloat(data.goal);
     const spendingProjection =
       totalAmountSpent + remainingDays * averageSpentPerDay;
-    if (totalAmountSpent === 0) return <></>;
+    if (totalAmountSpent === 0)
+      return (
+        <SimpleOnTrackMessage
+          onClick={onclick}
+          closeButton={closeButton}
+          style={{
+            backgroundColor: theme?.colors.layer2,
+            borderColor: theme?.colors.layer2,
+            borderStyle: "solid",
+            boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
+            borderRadius: "6px",
+            padding: "0.8rem",
+          }}
+        />
+      );
+      
     if (totalAmountSpent < 0)
       return (
         <ReceivedMoreThanSpentMessage

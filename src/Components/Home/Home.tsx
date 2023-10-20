@@ -1,10 +1,7 @@
 import React, { useState } from "react";
 import { StyledHomepage, HomeWrapper } from "./Home.Styled";
 import LogoStripe from "./LogoStripe/LogoStripe";
-import OptionsContainer from "../OptionsContainer/OptionsContainer";
 import TreeAdjustedContainer from "../TreeAdjustedContainer/TreeAdjustedContainer";
-import Recommendation from "../Recommendation/Recommendation";
-import OnTrackMessage from "../OnTrackMessage/OnTrackMessage";
 import { BsBarChartFill } from "react-icons/bs";
 import { BsFillPiggyBankFill } from "react-icons/bs";
 import { BsFillPersonFill } from "react-icons/bs";
@@ -15,8 +12,6 @@ import { api } from "../../apis/api";
 import { treeItemBuilder } from "../../helpers/treeItemBuilder";
 import { createUserPendingTransactionsFromTotals } from "../../helpers/createUserPendingTransactionsFromTotals";
 import {
-  BudgetInfoResponse,
-  BudgetType,
   GroupsTotalAmountsResponse,
 } from "../../types";
 import Spinner from "../Spinner/Spinner";
@@ -37,8 +32,8 @@ export default function Home() {
   });
 
   const { data: budgetData, isFetching: budgetIsFetching } =
-    useBudgetInfo(BudgetType.Monthly);
-  console.log(budgetData)
+    useBudgetInfo();
+
   return (
     <HomeWrapper>
       <StyledHomepage>

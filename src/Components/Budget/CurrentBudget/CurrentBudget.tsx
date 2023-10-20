@@ -23,11 +23,11 @@ export default function CurrentBudget() {
 
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const queryKey = ["budget", BudgetType.Monthly];
+  const queryKey = ["budget"];
   const theme = useTheme();
   const nodeRef = React.useRef(null);
 
-  const { isFetching, data } = useBudgetInfo(BudgetType.Monthly);
+  const { isFetching, data } = useBudgetInfo();
 
   useEffect(() => { //prevents user from landing on this component after budget is deleted using <- of browser
     if (!isFetching && !data?.budgetSubmitted) {
@@ -46,8 +46,6 @@ export default function CurrentBudget() {
       queryClient.invalidateQueries(queryKey);
     },
   });
-
-  console.log("current", data, "isFetiching", isFetching);
 
   const removeBudget = async () => {
     deleteBudget.mutate({});

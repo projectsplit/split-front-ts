@@ -14,7 +14,7 @@ export const StyledSpendingCycleSelector = styled.button<SpendingCycleSelectorPr
   padding: 0.8rem;
   outline: none;
   color: ${({ theme }) => theme.colors.whiteText};
-  background-color: ${({ theme }) => theme.colors.inputGrey};
+  background-color: ${({ theme }) => theme.colors.layer2};
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   font-size: 18px;
   cursor: pointer;

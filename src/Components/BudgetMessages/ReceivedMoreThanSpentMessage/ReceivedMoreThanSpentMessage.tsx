@@ -1,8 +1,8 @@
 import React from "react";
-import { ReceivedMoreThanSpentMessageProps } from "../../interfaces";
+import { ReceivedMoreThanSpentMessageProps } from "../../../interfaces";
 import { StyledReceivedMoreThanSpentMessage } from "./ReceivedMoreThanSpentMessage.styled";
 import IonIcon from "@reacticons/ionicons";
-import { displayCurrencyAndAmount } from "../../helpers/displayCurrencyAndAmount";
+import { displayCurrencyAndAmount } from "../../../helpers/displayCurrencyAndAmount";
 
 export default function ReceivedMoreThanSpentMessage({
   onClick,
@@ -31,7 +31,7 @@ export default function ReceivedMoreThanSpentMessage({
               funds than you have spent this {budgetType === 1 ? "month" : "week"}.
             </div>
             <div className="secondParagraph">
-              The total amount received on excess of your expenses is{" "}
+              The total amount received in excess of your expenses is{" "}
               <strong className="amount">
                 {displayCurrencyAndAmount(negativeAmountToPositive , currency)}
               </strong>.{" "}

@@ -1,8 +1,8 @@
 import React from "react";
 import { StyledOverspentMessage } from "./OverspentMessage.styled";
 import IonIcon from "@reacticons/ionicons";
-import { OverspentMessageProps } from "../../interfaces";
-import { displayCurrencyAndAmount } from "../../helpers/displayCurrencyAndAmount";
+import { OverspentMessageProps } from "../../../interfaces";
+import { displayCurrencyAndAmount } from "../../../helpers/displayCurrencyAndAmount";
 
 export default function OverspentMessage({
   onClick,

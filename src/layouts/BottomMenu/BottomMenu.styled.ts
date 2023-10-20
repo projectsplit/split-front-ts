@@ -10,7 +10,7 @@ export const StyledBottomMenu = styled.div<StyledBottomMenuProps>`
   position: fixed;
   left: 0;
   right: 0;
-  background-color: ${({ theme }) => theme.colors.inputGrey};
+  background-color: ${({ theme }) => theme.colors.layer2};
   border-radius: 12px 12px 0px 0px;
   display: flex;
   flex-direction: column;

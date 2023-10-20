@@ -25,7 +25,8 @@ export default function ProgressBar({ data}: ProgressBarProps) {
       data !== undefined &&
       data.remainingDays !== undefined &&
       data.goal !== undefined &&
-      data.averageSpentPerDay !== undefined
+      data.averageSpentPerDay !== undefined&&
+      data.totalAmountSpent!== undefined
     ) {
       const totalAmountSpent = parseFloat(data.totalAmountSpent);
       const remainingDays = parseFloat(data.remainingDays);

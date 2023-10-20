@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { api } from "../../../apis/api";
-import { StyledBudget } from "../Budget.styled";
 import { BiArrowBack } from "react-icons/bi";
 import { useNavigate } from "react-router-dom";
 import InputMonetary from "../../InputMonetary/InputMonetary";
@@ -13,6 +12,7 @@ import {
   BudgetInfoResponse,
   BudgetType,
   CreateBudgetRequest,
+  SpendingInfoResponse,
 } from "../../../types";
 import CalendarOptionsButton from "../CalendarOptionButton/CalendarOptionsButton";
 import SubmitButton from "../../SubmitButton/SubmitButton";
@@ -28,6 +28,7 @@ import SpendingCycleInfo from "../SpendingCycleInfo/SpendingCycleInfo";
 import "../../styles/freakflags/freakflags.css";
 import { StyledCreateBudget } from "./CreateBudget.styled";
 import useBudgetInfo from "../../../hooks/useBudgetInfo";
+import useSpendingInfo from "../../../hooks/useSpendingInfo";
 
 export default function CreateBudget() {
   const [amount, setAmount] = useState<string>("");
@@ -44,7 +45,8 @@ export default function CreateBudget() {
 
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const queryKey = ["budget", budgettype];
+  const budgetInfoQueryKey = ["budget"];
+  const spendingInfoQueryKey = ["spending", budgettype];
 
   const nodeRef = React.useRef(null);
 
@@ -55,18 +57,16 @@ export default function CreateBudget() {
       setSubmitBudgetErrors(error.response.data);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries(queryKey);
+      queryClient.invalidateQueries(budgetInfoQueryKey);
       navigate("/budget/current");
     },
   });
 
-  const { data, isFetching, isStale, isSuccess } = useBudgetInfo(
-    budgettype,
-   
-  );
+  const { data, isFetching, isStale, isSuccess } = useSpendingInfo(budgettype);
+  console.log(data)
 
   useEffect(() => {
-    if (isSuccess) {
+    if (isSuccess ) {
       localStorage.setItem("budgetCurrency", data.currency);
       setCurrency(data.currency);
     }
@@ -109,7 +109,7 @@ export default function CreateBudget() {
     }
     setSubmitBudgetErrors([]);
     setOpenCalendar(false);
-    queryClient.invalidateQueries(queryKey);
+    queryClient.invalidateQueries(budgetInfoQueryKey);
     setHasSwitchedBudgetType(false);
     setDisplayedAmount("");
     setMenu(null);
@@ -126,7 +126,7 @@ export default function CreateBudget() {
     }
 
     if (!hasSwitchedBudgetType || isStale) {
-      queryClient.invalidateQueries(queryKey);
+      queryClient.invalidateQueries(budgetInfoQueryKey);
     }
 
     if (!hasSwitchedBudgetType) {
@@ -134,7 +134,8 @@ export default function CreateBudget() {
     }
   };
 
-  const querydata = queryClient.getQueryData(queryKey) as BudgetInfoResponse;
+  const querydata = queryClient.getQueryData(spendingInfoQueryKey) as SpendingInfoResponse;
+  console.log(querydata);
 
   const handleBackButtonClick = () => {
     if (data && data.budgetSubmitted) {
@@ -255,9 +256,9 @@ export default function CreateBudget() {
       </div>
 
       {isFetching ? (
-        <Spinner />
+        <></>
       ) : (
-        querydata && (
+        querydata&& (
           <div className="spentInfo">
             <div>
               You have spent{" "}
@@ -272,19 +273,17 @@ export default function CreateBudget() {
       )}
 
       <div className="submitButton">
-        {!isFetching && (
-          <SubmitButton
-            onClick={() => {
-              if (querydata.budgetSubmitted) {
-                setMenu("createBudgetConfirmation");
-              } else {
-                submitBudget();
-              }
-            }}
-          >
-            Submit Budget
-          </SubmitButton>
-        )}
+        <SubmitButton
+          onClick={() => {
+            if (querydata.budgetSubmitted) {
+              setMenu("createBudgetConfirmation");
+            } else {
+              submitBudget();
+            }
+          }}
+        >
+          Submit Budget
+        </SubmitButton>
       </div>
 
       <CSSTransition

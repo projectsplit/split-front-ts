@@ -5,7 +5,7 @@ import useBudgetInfo from "../../hooks/useBudgetInfo";
 
 export default function Budget2() {
 
-  const { data,isLoading } = useBudgetInfo(BudgetType.Monthly);
+  const { data,isLoading } = useBudgetInfo();
 
   useRedirectToBudget(data, isLoading);
   

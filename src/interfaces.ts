@@ -96,6 +96,11 @@ export interface OnTrackMessageProps {
   budgetType?: BudgetType;
 }
 
+export interface SimpleOnTrackMessageProps {
+  onClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
+  style?: CSSProperties;
+  closeButton: boolean;
+}
 export interface ReceivedMoreThanSpentMessageProps
   extends OnTrackMessageProps {}
 

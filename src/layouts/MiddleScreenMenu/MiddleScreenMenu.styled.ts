@@ -8,7 +8,7 @@ export const StyledMiddleScreenMenu = styled.div`
   left: 50%;
   left: 0;
   right: 0; 
-  background-color: ${({ theme }) => theme.colors.inputGrey};
+  background-color: ${({ theme }) => theme.colors.layer2};
   border-radius: 12px 12px 12px 12px;
   display: flex;
   flex-direction: column;

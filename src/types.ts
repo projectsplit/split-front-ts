@@ -101,3 +101,9 @@ export type SpendingInfoResponse = {
   totalAmountSpent: string;
   currency: string;
 };
+
+export type Currency = {
+  symbol: string;
+  name: string;
+  flagClass: string;
+};
