@@ -1,4 +1,4 @@
-import { CSSProperties } from "react";
+import { CSSProperties, MouseEventHandler } from "react";
 import { BudgetInfoResponse, BudgetType } from "./types";
 
 
@@ -145,7 +145,8 @@ export interface MiddleScreenMenuProps extends BottomMenuProps {}
 
 export interface CurrencyOptionProps {
   setMenu: React.Dispatch<React.SetStateAction<string | null>>;
-  setCurrency: React.Dispatch<React.SetStateAction<string>>
+  setCurrency: React.Dispatch<React.SetStateAction<string>>;
+  budgettype: BudgetType;
 }
 
 export interface SpendingCycleInfoProps {
@@ -164,4 +165,10 @@ export interface ManageBudgetMenuProps{
 export interface ConfirmationForBudgetDeletionProps {
   removeBudget: () => Promise<void>;
   setMenu: React.Dispatch<React.SetStateAction<string | null>>;
+}
+
+export interface TopBarWithBackButtonProps
+ {
+  header:string;
+  onClick: MouseEventHandler<SVGElement>
 }

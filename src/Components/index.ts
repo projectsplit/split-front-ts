@@ -13,3 +13,4 @@ export { default as DeletedGroups } from "./Groups/DeletedGroups/DeletedGroups";
 export { default as Spinner } from "./Spinner/Spinner";
 // export { default as Budget } from "./Budget/Budget";
 export { default as Budget2 } from "./Budget/Budget2";
+export { default as Analytics } from "./Analytics/Analytics";

@@ -18,7 +18,6 @@ import CalendarOptionsButton from "../CalendarOptionButton/CalendarOptionsButton
 import SubmitButton from "../../SubmitButton/SubmitButton";
 import { getOrdinalSuffix } from "../../../helpers/getOrdinalSuffix";
 import { getWeekday } from "../../../helpers/getWeekDay";
-import Spinner from "../../Spinner/Spinner";
 import { displayCurrencyAndAmount } from "../../../helpers/displayCurrencyAndAmount";
 import ConfirmationForBudgetSubmission from "../ConfirmationForBudgetSubmission/ConfirmationForBudgetSubmission";
 import CurrencyOptions from "../CurrencyOptions/CurrencyOptions";
@@ -27,8 +26,8 @@ import IonIcon from "@reacticons/ionicons";
 import SpendingCycleInfo from "../SpendingCycleInfo/SpendingCycleInfo";
 import "../../styles/freakflags/freakflags.css";
 import { StyledCreateBudget } from "./CreateBudget.styled";
-import useBudgetInfo from "../../../hooks/useBudgetInfo";
 import useSpendingInfo from "../../../hooks/useSpendingInfo";
+import TopBarWithBackButton from "../../../layouts/TopBarWithBackButton/TopBarWithBackButton";
 
 export default function CreateBudget() {
   const [amount, setAmount] = useState<string>("");
@@ -46,7 +45,7 @@ export default function CreateBudget() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const budgetInfoQueryKey = ["budget"];
-  const spendingInfoQueryKey = ["spending", budgettype];
+  const spendingInfoQueryKey = ["spending", budgettype, currency];
 
   const nodeRef = React.useRef(null);
 
@@ -62,14 +61,11 @@ export default function CreateBudget() {
     },
   });
 
-  const { data, isFetching, isStale, isSuccess } = useSpendingInfo(budgettype);
-  console.log(data)
+  const { data, isFetching, isStale } = useSpendingInfo(budgettype, currency);
 
   useEffect(() => {
-    if (isSuccess ) {
-      localStorage.setItem("budgetCurrency", data.currency);
-      setCurrency(data.currency);
-    }
+    if (localStorage.getItem("budgetCurrency") === null)
+      localStorage.setItem("budgetCurrency", "USD");
   }, []);
 
   const handleInputChange = (e: any) => {
@@ -134,8 +130,9 @@ export default function CreateBudget() {
     }
   };
 
-  const querydata = queryClient.getQueryData(spendingInfoQueryKey) as SpendingInfoResponse;
-  console.log(querydata);
+  const querydata = queryClient.getQueryData(
+    spendingInfoQueryKey
+  ) as SpendingInfoResponse;
 
   const handleBackButtonClick = () => {
     if (data && data.budgetSubmitted) {
@@ -147,15 +144,8 @@ export default function CreateBudget() {
 
   return (
     <StyledCreateBudget>
-      <div className="topBar">
-        <div className="backButtonContainer">
-          <BiArrowBack
-            className="backButton"
-            onClick={() => handleBackButtonClick()}
-          />
-        </div>
-        <div className="descr">Budget</div>
-      </div>
+
+      <TopBarWithBackButton header="Budget" onClick={() => handleBackButtonClick()}/>
 
       <div className="promptSpendingCap">
         <div className="prompt">Set up your spending cap or goal</div>
@@ -258,7 +248,7 @@ export default function CreateBudget() {
       {isFetching ? (
         <></>
       ) : (
-        querydata&& (
+        querydata && (
           <div className="spentInfo">
             <div>
               You have spent{" "}
@@ -333,7 +323,11 @@ export default function CreateBudget() {
         classNames="bottomslide"
         unmountOnExit
       >
-        <CurrencyOptions setMenu={setMenu} setCurrency={setCurrency} />
+        <CurrencyOptions
+          setMenu={setMenu}
+          setCurrency={setCurrency}
+          budgettype={budgettype}
+        />
       </CSSTransition>
     </StyledCreateBudget>
   );

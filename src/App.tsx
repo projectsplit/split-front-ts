@@ -22,6 +22,7 @@ import {
   PrivateRoutes,
   RedirectToTransactions,
   RedirectToActiveGroups,
+  RedirectToAnalytics
 } from "./routes";
 
 import { Main } from "./layouts";
@@ -32,7 +33,8 @@ import CurrentBudget from "./components/Budget/CurrentBudget/CurrentBudget";
 import CreateBudget from "./components/Budget/CreateBudget/CreateBudget";
 import RedirectToBudget from "./routes/RedirectToBudget";
 import useBudgetInfo from "./hooks/useBudgetInfo";
-import { BudgetType } from "./types";
+import Analytics from "./components/Analytics/Analytics";
+
 
 function App() {
   const theme = {
@@ -85,6 +87,9 @@ function App() {
               <Route path="create" element={<CreateBudget />} />
               <Route path="*" element={<RedirectToBudget data={data} isLoading={isFetching}/>} />
             </Route>
+
+            <Route path="/analytics/*" element={<RedirectToAnalytics />} />
+            <Route path="/analytics" element={<Analytics />} />
 
             <Route path="i/:invitationCode" element={<VerifyInvitation />} />
             <Route path=":groupid" element={<Main />}>

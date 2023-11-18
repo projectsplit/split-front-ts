@@ -35,6 +35,7 @@ export default function EmailVerifyLinkToken() {
       refetchOnWindowFocus: false,
     }
   );
+  
 
   useEffect(() => {
     if (isSuccess) {

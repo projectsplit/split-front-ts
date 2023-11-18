@@ -79,8 +79,7 @@ const getBudgetInfo = async (): Promise<BudgetInfoResponse> => {
   return response.data;
 };
 
-const getSpendingInfo = async (budgetType: BudgetType, currency:String): Promise<SpendingInfoResponse> => {
- 
+const getSpendingInfo = async (budgetType: BudgetType, currency:string): Promise<SpendingInfoResponse> => {
   const response = await apiHttpClient.get<SpendingInfoResponse>(
     `/budget/spendinginfo?budgettype=${budgetType}&currency=${currency}`
   );

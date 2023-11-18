@@ -11,9 +11,7 @@ import { useQuery } from "@tanstack/react-query";
 import { api } from "../../apis/api";
 import { treeItemBuilder } from "../../helpers/treeItemBuilder";
 import { createUserPendingTransactionsFromTotals } from "../../helpers/createUserPendingTransactionsFromTotals";
-import {
-  GroupsTotalAmountsResponse,
-} from "../../types";
+import { GroupsTotalAmountsResponse } from "../../types";
 import Spinner from "../Spinner/Spinner";
 import { useTheme } from "styled-components";
 import { BudgetInfoMessage } from "../../helpers/BudgetInfoMessage";
@@ -31,8 +29,7 @@ export default function Home() {
     refetchOnMount: false,
   });
 
-  const { data: budgetData, isFetching: budgetIsFetching } =
-    useBudgetInfo();
+  const { data: budgetData, isFetching: budgetIsFetching } = useBudgetInfo();
 
   return (
     <HomeWrapper>
@@ -50,7 +47,7 @@ export default function Home() {
                 {BudgetInfoMessage(theme, true, budgetData, () =>
                   setShowAdvice(false)
                 )}
-             </>
+              </>
             )}
 
             <div className="mostRecent">
@@ -105,6 +102,7 @@ export default function Home() {
             <OptionButton
               name="Analytics"
               description="View your spending trends"
+              onClick={() => navigate("/analytics")}
             >
               <BsBarChartFill className="analyticsIcon" />
             </OptionButton>

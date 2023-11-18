@@ -15,16 +15,16 @@ export const useRedirectToBudget = (
       (!isLoading && location.pathname == "/budget/create")
     ) {
       navigate(location.pathname);
-      console.log("navigation 1")
+    
     } else if (isLoading) {
       navigate(location.pathname);
-      console.log("navigation 2")
+     
     } else if (data && data.budgetSubmitted) {
       navigate(`/budget/current`);
-      console.log("navigation 3")
+      
     } else {
       navigate(`/budget/create`);
-      console.log("navigation 4")
+     
     }
   }, [isLoading]);
 

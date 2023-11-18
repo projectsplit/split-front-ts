@@ -3,18 +3,25 @@ import { StyledCurrencyOptions } from "./CurrencyOptions.styled";
 import { CurrencyOptionProps } from "../../../interfaces";
 import { currencyData } from "../../../helpers/openExchangeRates";
 import { Currency } from "../../../types";
+import { useQueryClient } from "@tanstack/react-query";
 
 export default function CurrencyOptions({
   setMenu,
   setCurrency,
+  budgettype,
 }: CurrencyOptionProps) {
   const [searchItem, setSearchItem] = useState<string>("");
   const [filteredCurrencies, setFilteredCurrencies] =
     useState<Currency[]>(currencyData);
 
+  const queryClient = useQueryClient();
+ 
+
   const handldeClick = (currency: string) => {
     setCurrency(currency);
     localStorage.setItem("budgetCurrency", currency);
+    queryClient.invalidateQueries(["spending", budgettype, currency]);
+    queryClient.getQueryData(["spending", budgettype, currency]);
     setMenu(null);
   };
 
