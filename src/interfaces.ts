@@ -1,7 +1,6 @@
 import { CSSProperties, MouseEventHandler } from "react";
 import { BudgetInfoResponse, BudgetType } from "./types";
 
-
 export interface InputProps
   extends React.InputHTMLAttributes<HTMLInputElement> {
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
@@ -120,7 +119,10 @@ export interface NewButtonProps {
 }
 
 export interface CategoryButtonProps {
+  to?: string;
   children: any;
+  selected?: boolean;
+  onClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
 }
 
 export interface CalendarOptionsButtonProps {
@@ -129,7 +131,6 @@ export interface CalendarOptionsButtonProps {
 
 export interface ProgressBarProps {
   data: BudgetInfoResponse | undefined;
-  
 }
 
 export interface BudgetTitleProps {
@@ -158,7 +159,7 @@ export interface ConfirmationForBudgetSubmissionProps {
   setMenu: React.Dispatch<React.SetStateAction<string | null>>;
 }
 
-export interface ManageBudgetMenuProps{
+export interface ManageBudgetMenuProps {
   setMenu: React.Dispatch<React.SetStateAction<string | null>>;
 }
 
@@ -167,8 +168,11 @@ export interface ConfirmationForBudgetDeletionProps {
   setMenu: React.Dispatch<React.SetStateAction<string | null>>;
 }
 
-export interface TopBarWithBackButtonProps
- {
-  header:string;
-  onClick: MouseEventHandler<SVGElement>
+export interface TopBarWithBackButtonProps {
+  header: string;
+  onClick: MouseEventHandler<SVGElement>;
+}
+
+export interface CumulativeSpendingProps{
+  
 }

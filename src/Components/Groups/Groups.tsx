@@ -17,9 +17,9 @@ export default function Groups() {
         <NewButton />
       </div>
       <div className="groupCategories">
-        <CategoryButton>Active</CategoryButton>
-        <CategoryButton>Archived</CategoryButton>
-        <CategoryButton>Deleted</CategoryButton>
+        <CategoryButton to="active">Active</CategoryButton>
+        <CategoryButton to="archived">Archived</CategoryButton>
+        <CategoryButton to="deleted">Deleted</CategoryButton>
       </div>
       <Outlet />
     </StyledGroups>
