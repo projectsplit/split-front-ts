@@ -9,7 +9,7 @@ import OptionButton from "./SelectionButton/SelectionButton";
 import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { api } from "../../apis/api";
-import { treeItemBuilder } from "../../helpers/treeItemBuilder";
+import { TreeItemBuilder } from "../../helpers/TreeItemBuilder";
 import { createUserPendingTransactionsFromTotals } from "../../helpers/createUserPendingTransactionsFromTotals";
 import { GroupsTotalAmountsResponse } from "../../types";
 import Spinner from "../Spinner/Spinner";
@@ -80,7 +80,7 @@ export default function Home() {
               <TreeAdjustedContainer
                 hasarrow={true}
                 onClick={() => navigate("/groups/active")}
-                items={treeItemBuilder(
+                items={TreeItemBuilder(
                   createUserPendingTransactionsFromTotals(data)
                 )}
               >

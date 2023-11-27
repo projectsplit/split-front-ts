@@ -61,12 +61,6 @@ export default function Analytics() {
         <CategoryButton>Monthly</CategoryButton>
       </div>
 
-      {/* <div className="cumulativeSpending">
-        <div className="chart">
-          <CumulativeSpending />
-        </div>
-      </div> */}
-
       <div className="chartWrapper">
         <div className="chart">
           {selectedChart === "cumulativeSpending" && <CumulativeSpending />}

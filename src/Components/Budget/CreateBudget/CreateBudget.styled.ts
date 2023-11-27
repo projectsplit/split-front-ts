@@ -50,7 +50,6 @@ export const StyledCreateBudget = styled.div`
     text-align: center;
   }
 
-  .promptSpendingCap,
   .promptSpendingCycle {
     display: flex;
     flex-direction: column;

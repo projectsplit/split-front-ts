@@ -16,6 +16,43 @@ export interface InputMonetaryProps extends InputProps {
   setMenu: React.Dispatch<React.SetStateAction<string | null>>;
 }
 
+export interface SetUpSpendingGoalProps {
+  setMenu: React.Dispatch<React.SetStateAction<string | null>>;
+  displayedAmount: string;
+  currency: string;
+  submitBudgetErrors: any[];
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+}
+
+export interface SpendingCycleProps {
+  setMenu: React.Dispatch<React.SetStateAction<string | null>>;
+  submitBudgetErrors: any[];
+  calendarDay: string;
+  budgettype: BudgetType;
+  setCalendarDay: React.Dispatch<React.SetStateAction<string>>;
+  setBudgetType: React.Dispatch<React.SetStateAction<BudgetType>>;
+  isStale: boolean;
+  openCalendar: boolean;
+  setOpenCalendar: React.Dispatch<React.SetStateAction<boolean>>;
+  hasSwitchedBudgetType: boolean;
+  setHasSwitchedBudgetType: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+export interface MenuAnimationBackgroundProps{
+  menu: string | null;
+  setMenu: React.Dispatch<React.SetStateAction<string | null>>;
+}
+
+export interface CreateBudgetConfirmationAnimationProps extends MenuAnimationBackgroundProps{
+  submitBudget: () => Promise<void>
+}
+export interface InfoBoxAnimationProps extends MenuAnimationBackgroundProps{}
+
+export interface  CurrencyOptionsAnimationProps extends MenuAnimationBackgroundProps{
+  setCurrency: React.Dispatch<React.SetStateAction<string>>;
+  budgettype: BudgetType
+}
+
 export interface SubmitButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
@@ -173,6 +210,4 @@ export interface TopBarWithBackButtonProps {
   onClick: MouseEventHandler<SVGElement>;
 }
 
-export interface CumulativeSpendingProps{
-  
-}
+export interface CumulativeSpendingProps {}

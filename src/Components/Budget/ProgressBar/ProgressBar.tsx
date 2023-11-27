@@ -6,7 +6,6 @@ import { displayCurrencyAndAmount } from "../../../helpers/displayCurrencyAndAmo
 import { BudgetInfoResponse } from "../../../types";
 import { useTheme } from "styled-components";
 import { getIsoDateInfo } from "../../../helpers/getIsoDateInfo";
-import IonIcon from "@reacticons/ionicons";
 
 export default function ProgressBar({ data}: ProgressBarProps) {
   const theme = useTheme();

@@ -107,9 +107,6 @@ function App() {
 
 export default App;
 
-// Hook the LogoStripe and let the page slide up until the Groups
-// Backend to return the total from all groups in all currencies for the autheduser in homepage.
-// Member since at info of group?
 
 // /posts ->["posts"]
 // /posts/1 ->["posts", post.id]

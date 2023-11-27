@@ -1,33 +1,27 @@
 import React, { useEffect, useState } from "react";
 import { api } from "../../../apis/api";
-import { BiArrowBack } from "react-icons/bi";
 import { useNavigate } from "react-router-dom";
-import InputMonetary from "../../InputMonetary/InputMonetary";
-import SpendingCycleSelector from "../SpendingCycleSelector/SpendingCycleSelector";
-import Calendar from "../Calendar/Calendar";
 import { currencyMask } from "../../../helpers/currencyMask";
 import { removeCommas } from "../../../helpers/removeCommas";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
-  BudgetInfoResponse,
   BudgetType,
   CreateBudgetRequest,
   SpendingInfoResponse,
 } from "../../../types";
-import CalendarOptionsButton from "../CalendarOptionButton/CalendarOptionsButton";
+
 import SubmitButton from "../../SubmitButton/SubmitButton";
-import { getOrdinalSuffix } from "../../../helpers/getOrdinalSuffix";
-import { getWeekday } from "../../../helpers/getWeekDay";
 import { displayCurrencyAndAmount } from "../../../helpers/displayCurrencyAndAmount";
-import ConfirmationForBudgetSubmission from "../ConfirmationForBudgetSubmission/ConfirmationForBudgetSubmission";
-import CurrencyOptions from "../CurrencyOptions/CurrencyOptions";
-import { CSSTransition } from "react-transition-group";
-import IonIcon from "@reacticons/ionicons";
-import SpendingCycleInfo from "../SpendingCycleInfo/SpendingCycleInfo";
 import "../../styles/freakflags/freakflags.css";
 import { StyledCreateBudget } from "./CreateBudget.styled";
 import useSpendingInfo from "../../../hooks/useSpendingInfo";
 import TopBarWithBackButton from "../../../layouts/TopBarWithBackButton/TopBarWithBackButton";
+import SetUpSpendingGoal from "./SetUpSpendingGoal/SetUpSpendingGoal";
+import SpendingCycle from "./SpendingCycleSelector/SpendingCycleSelector";
+import MenuAnimationBackground from "./MenuAnimations/MenuAnimationBackground";
+import CreateBudgetConfirmationAnimation from "./MenuAnimations/CreateBudgetConfirmationAnimation";
+import InfoBoxAnimation from "./MenuAnimations/InfoBoxAnimation";
+import CurrencyOptionsAnimation from "./MenuAnimations/CurrencyOptionsAnimation";
 
 export default function CreateBudget() {
   const [amount, setAmount] = useState<string>("");
@@ -46,8 +40,6 @@ export default function CreateBudget() {
   const queryClient = useQueryClient();
   const budgetInfoQueryKey = ["budget"];
   const spendingInfoQueryKey = ["spending", budgettype, currency];
-
-  const nodeRef = React.useRef(null);
 
   const createBudget = useMutation<any, any, CreateBudgetRequest>({
     mutationKey: ["budget", "create"],
@@ -68,18 +60,10 @@ export default function CreateBudget() {
       localStorage.setItem("budgetCurrency", "USD");
   }, []);
 
-  const handleInputChange = (e: any) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setDisplayedAmount(currencyMask(e).target.value);
     setAmount(removeCommas(e.target.value));
   };
-
-  const monthDaysArray = Array.from({ length: 5 }, (_, weekIndex) =>
-    weekIndex < 4
-      ? Array.from({ length: 7 }, (_, dayIndex) => weekIndex * 7 + dayIndex + 1)
-      : [29, 30, 31, "", "", "", ""]
-  );
-
-  const daysArray = ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"];
 
   const getDayNumber = (day: string): string | null => {
     const index = ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"].indexOf(day);
@@ -95,7 +79,8 @@ export default function CreateBudget() {
         currency: currency,
         day: calendarDay.toString(),
       });
-    } else {
+    }
+    if (budgettype === BudgetType.Weekly) {
       createBudget.mutate({
         amount: amount,
         budgetType: budgettype,
@@ -113,23 +98,6 @@ export default function CreateBudget() {
     // navigate(`/budget/current`);
   };
 
-  const calendarTypeHandler = (budgetType: BudgetType) => {
-    if (calendarDay !== "" && budgetType === budgettype) {
-      setBudgetType(budgetType);
-    } else {
-      setBudgetType(budgetType);
-      setCalendarDay("");
-    }
-
-    if (!hasSwitchedBudgetType || isStale) {
-      queryClient.invalidateQueries(budgetInfoQueryKey);
-    }
-
-    if (!hasSwitchedBudgetType) {
-      setHasSwitchedBudgetType(true);
-    }
-  };
-
   const querydata = queryClient.getQueryData(
     spendingInfoQueryKey
   ) as SpendingInfoResponse;
@@ -144,106 +112,32 @@ export default function CreateBudget() {
 
   return (
     <StyledCreateBudget>
+      <TopBarWithBackButton
+        header="Budget"
+        onClick={() => handleBackButtonClick()}
+      />
 
-      <TopBarWithBackButton header="Budget" onClick={() => handleBackButtonClick()}/>
+      <SetUpSpendingGoal
+        setMenu={setMenu}
+        displayedAmount={displayedAmount}
+        currency={currency}
+        submitBudgetErrors={submitBudgetErrors}
+        onChange={(e) => handleInputChange(e)}
+      />
 
-      <div className="promptSpendingCap">
-        <div className="prompt">Set up your spending cap or goal</div>
-
-        <div className="inputAndErrorsWrapper">
-          <InputMonetary
-            setMenu={setMenu}
-            value={displayedAmount}
-            onChange={(e) => handleInputChange(e)}
-            currency={currency}
-            inputError={submitBudgetErrors.find(
-              (item) => item.field === "Amount" || item.field === "Currency"
-            )}
-          />
-          {submitBudgetErrors.find(
-            (item) => item.field === "Amount" || item.field === "Currency"
-          ) && (
-            <span className="errorMsg">
-              {
-                submitBudgetErrors.find(
-                  (item) => item.field === "Amount" || item.field === "Currency"
-                ).errorMessage
-              }
-            </span>
-          )}
-        </div>
-      </div>
-
-      <div className="promptSpendingCycle">
-        <div className="spendingCycleHeader">
-          <div className="prompt">Select your spending cycle</div>
-          <IonIcon
-            onClick={() => setMenu("infoBox")}
-            name="information-circle-outline"
-            className="information"
-          />
-        </div>
-        <div className="calendarAndErrorsWrapper">
-          <SpendingCycleSelector
-            onClick={() => setOpenCalendar((prev) => !prev)}
-            open={openCalendar}
-            inputError={submitBudgetErrors.find(
-              (item) => item.field === "Day" || item.field === "BudgetType"
-            )}
-          >
-            {calendarDay === "" ? (
-              budgettype === BudgetType.Monthly ? (
-                "Monthly"
-              ) : (
-                "Weekly"
-              )
-            ) : budgettype === BudgetType.Monthly ? (
-              <div className="monthlyPropmt">
-                Monthly on the {calendarDay}{" "}
-                <sup className="sup">{getOrdinalSuffix(calendarDay)}</sup>
-              </div>
-            ) : (
-              <>Weekly on {getWeekday(getDayNumber(calendarDay))}</>
-            )}
-          </SpendingCycleSelector>
-          {submitBudgetErrors.find(
-            (item) => item.field === "Day" || item.field === "BudgetType"
-          ) && (
-            <span className="errorMsg">
-              {
-                submitBudgetErrors.find(
-                  (item) => item.field === "Day" || item.field === "BudgetType"
-                ).errorMessage
-              }
-            </span>
-          )}
-        </div>
-        {openCalendar && (
-          <div className="categoryButtons">
-            <CalendarOptionsButton
-              onClick={() => {
-                calendarTypeHandler(BudgetType.Monthly);
-              }}
-              isactive={budgettype === BudgetType.Monthly}
-            >
-              Monthly
-            </CalendarOptionsButton>
-            <CalendarOptionsButton
-              onClick={() => {
-                calendarTypeHandler(BudgetType.Weekly);
-              }}
-              isactive={budgettype === BudgetType.Weekly}
-            >
-              Weekly
-            </CalendarOptionsButton>
-          </div>
-        )}
-        {openCalendar && (
-          <Calendar setCalendarDay={setCalendarDay} budgettype={budgettype}>
-            {budgettype === BudgetType.Monthly ? monthDaysArray : daysArray}
-          </Calendar>
-        )}
-      </div>
+      <SpendingCycle
+        submitBudgetErrors={submitBudgetErrors}
+        calendarDay={calendarDay}
+        setBudgetType={setBudgetType}
+        budgettype={budgettype}
+        setCalendarDay={setCalendarDay}
+        setMenu={setMenu}
+        isStale={isStale}
+        openCalendar={openCalendar}
+        setOpenCalendar={setOpenCalendar}
+        hasSwitchedBudgetType={hasSwitchedBudgetType}
+        setHasSwitchedBudgetType={setHasSwitchedBudgetType}
+      />
 
       {isFetching ? (
         <></>
@@ -276,59 +170,22 @@ export default function CreateBudget() {
         </SubmitButton>
       </div>
 
-      <CSSTransition
-        nodeRef={nodeRef}
-        onClick={() => setMenu(null)}
-        in={Boolean(menu)}
-        timeout={0}
-        unmountOnExit
-      >
-        <div
-          style={{
-            position: "fixed",
-            left: "0px",
-            top: "0px",
-            height: "100%",
-            width: "100%",
-            backgroundColor: "black",
-            opacity: "0.7",
-          }}
-        />
-      </CSSTransition>
+      <MenuAnimationBackground menu={menu} setMenu={setMenu} />
 
-      <CSSTransition
-        in={menu === "createBudgetConfirmation"}
-        timeout={100}
-        classNames="bottomslide"
-        unmountOnExit
-      >
-        <ConfirmationForBudgetSubmission
-          setMenu={setMenu}
-          submitBudget={submitBudget}
-        />
-      </CSSTransition>
+      <CreateBudgetConfirmationAnimation
+        menu={menu}
+        setMenu={setMenu}
+        submitBudget={submitBudget}
+      />
 
-      <CSSTransition
-        in={menu === "infoBox"}
-        timeout={100}
-        classNames="infoBox"
-        unmountOnExit
-      >
-        <SpendingCycleInfo setMenu={setMenu} />
-      </CSSTransition>
+      <InfoBoxAnimation menu={menu} setMenu={setMenu} />
 
-      <CSSTransition
-        in={menu === "currencyOptions"}
-        timeout={100}
-        classNames="bottomslide"
-        unmountOnExit
-      >
-        <CurrencyOptions
-          setMenu={setMenu}
-          setCurrency={setCurrency}
-          budgettype={budgettype}
-        />
-      </CSSTransition>
+      <CurrencyOptionsAnimation
+        menu={menu}
+        setMenu={setMenu}
+        budgettype={budgettype}
+        setCurrency={setCurrency}
+      />
     </StyledCreateBudget>
   );
 }

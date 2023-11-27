@@ -1,7 +1,7 @@
 import { UserPendingTransaction } from "../types";
 import { displayCurrencyAndAmount } from "./displayCurrencyAndAmount";
 
-export const treeItemBuilder = (
+export const TreeItemBuilder = (
   pendingTransactions: UserPendingTransaction[]
 ): JSX.Element[] => {
   return pendingTransactions.map(

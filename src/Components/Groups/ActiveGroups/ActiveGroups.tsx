@@ -4,7 +4,7 @@ import { StyledActiveGroups } from "./ActiveGroups.styled";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { api } from "../../../apis/api";
 import { useEffect } from "react";
-import { treeItemBuilder } from "../../../helpers/treeItemBuilder";
+import { TreeItemBuilder } from "../../../helpers/TreeItemBuilder";
 import Spinner from "../../Spinner/Spinner";
 
 export default function ActiveGroups() {
@@ -67,7 +67,7 @@ export default function ActiveGroups() {
                 <TreeAdjustedContainer
                   onClick={() => console.log("goto group")}
                   hasarrow={true}
-                  items={treeItemBuilder(element.pendingTransactions)}
+                  items={TreeItemBuilder(element.pendingTransactions)}
                 >
                   <div className="groupName">{element.group.title}</div>
                 </TreeAdjustedContainer>
