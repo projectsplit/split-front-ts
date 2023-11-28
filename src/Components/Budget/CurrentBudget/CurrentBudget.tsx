@@ -3,7 +3,7 @@ import { api } from "../../../apis/api";
 import { BiArrowBack } from "react-icons/bi";
 import { useNavigate } from "react-router-dom";
 
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { BudgetInfoResponse, BudgetType } from "../../../types";
 
 import ProgressBar from "./../ProgressBar/ProgressBar";

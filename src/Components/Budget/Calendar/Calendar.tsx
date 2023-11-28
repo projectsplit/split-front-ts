@@ -5,26 +5,24 @@ import { BudgetType } from "../../../types";
 
 export default function Calendar({
   children,
-  setCalendarDay,
   budgettype,
+  calendarDay,
 }: CalendarProps) {
-  const [selectedElementIndex, setSelectedElementIndex] = useState<string>("");
 
   const handleElementClick = (day: string) => {
-    setSelectedElementIndex(day);
-    setCalendarDay(day);
+    calendarDay.value = day;
   };
 
   return (
     <StyledCalendar as="div" budgettype={budgettype}>
-      {budgettype == BudgetType.Monthly
+      {budgettype.value == BudgetType.Monthly
         ? children.map((row: any, rowIndex: any) => (
             <div key={rowIndex} className="calendar-row">
               {row.map((day: string, dayIndex: number) => (
                 <div
                   key={day + dayIndex}
                   className={`calendar-day ${
-                    selectedElementIndex === day && day != "" ? "selected" : ""
+                    day === calendarDay.value && day !== "" ? "selected" : ""
                   }`}
                   style={{ cursor: day !== "" ? "pointer" : "default" }}
                   onClick={() => handleElementClick(day)}
@@ -38,7 +36,7 @@ export default function Calendar({
             <div
               key={day + dayIndex}
               className={`calendar-day ${
-                selectedElementIndex === day && day != "" ? "selected" : ""
+                day === calendarDay.value && day !== "" ? "selected" : ""
               }`}
               style={{ cursor: day !== "" ? "pointer" : "default" }}
               onClick={() => handleElementClick(day)}

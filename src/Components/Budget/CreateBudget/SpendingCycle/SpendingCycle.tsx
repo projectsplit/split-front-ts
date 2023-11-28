@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { StyledSpendingCycle } from "./SpendingCycleSelector.styled";
+import { StyledSpendingCycle } from "./SpendingCycle.styled";
 import IonIcon from "@reacticons/ionicons";
 import SpendingCycleSelector from "../../SpendingCycleSelector/SpendingCycleSelector";
 import { getWeekday } from "../../../../helpers/getWeekDay";
@@ -14,16 +14,12 @@ export default function SpendingCycle({
   submitBudgetErrors,
   calendarDay,
   budgettype,
-  setBudgetType,
-  setCalendarDay,
-  setMenu,
+  menu,
   isStale,
   openCalendar,
-  setOpenCalendar,
   hasSwitchedBudgetType,
-  setHasSwitchedBudgetType,
-}: SpendingCycleProps) {
-
+}:
+SpendingCycleProps) {
   const queryClient = useQueryClient();
 
   const getDayNumber = (day: string): string | null => {
@@ -40,74 +36,77 @@ export default function SpendingCycle({
       : [29, 30, 31, "", "", "", ""]
   );
   const budgetInfoQueryKey = ["budget"];
-  
+
   const calendarTypeHandler = (budgetType: BudgetType) => {
-    if (calendarDay !== "" && budgetType === budgettype) {
-      setBudgetType(budgetType);
+    if (calendarDay.value !== "" && budgetType === budgettype.value) {
+      // setBudgetType(budgetType);
+      budgettype.value = budgetType;
     } else {
-      setBudgetType(budgetType);
-      setCalendarDay("");
+      // setBudgetType(budgetType);
+      budgettype.value = budgetType;
+      calendarDay.value = "";
     }
-    if (!hasSwitchedBudgetType || isStale) {
+    if (!hasSwitchedBudgetType.value || isStale) {
       queryClient.invalidateQueries(budgetInfoQueryKey);
     }
-    if (!hasSwitchedBudgetType) {
-      setHasSwitchedBudgetType(true);
+    if (!hasSwitchedBudgetType.value) {
+      //setHasSwitchedBudgetType(true);
+      hasSwitchedBudgetType.value = true;
     }
   };
-
+  
   return (
     <StyledSpendingCycle>
       <div className="spendingCycleHeader">
         <div className="prompt">Select your spending cycle</div>
         <IonIcon
-          onClick={() => setMenu("infoBox")}
+          onClick={() => (menu.value = "infoBox")}
           name="information-circle-outline"
           className="information"
         />
       </div>
       <div className="calendarAndErrorsWrapper">
         <SpendingCycleSelector
-          onClick={() => setOpenCalendar((prev) => !prev)}
-          open={openCalendar}
-          inputError={submitBudgetErrors.find(
+          onClick={() => (openCalendar.value = !openCalendar.value)}
+          open={openCalendar.value}
+          inputError={submitBudgetErrors.value.find(
             (item) => item.field === "Day" || item.field === "BudgetType"
           )}
         >
-          {calendarDay === "" ? (
-            budgettype === BudgetType.Monthly ? (
+          {calendarDay.value === "" ? (
+            budgettype.value === BudgetType.Monthly ? (
               "Monthly"
             ) : (
               "Weekly"
             )
-          ) : budgettype === BudgetType.Monthly ? (
+          ) : budgettype.value === BudgetType.Monthly ? (
             <div className="monthlyPropmt">
-              Monthly on the {calendarDay}{" "}
-              <sup className="sup">{getOrdinalSuffix(calendarDay)}</sup>
+              Monthly on the {calendarDay.value}{" "}
+              <sup className="sup">{getOrdinalSuffix(calendarDay.value)}</sup>
             </div>
           ) : (
-            <>Weekly on {getWeekday(getDayNumber(calendarDay))}</>
+            <>Weekly on {getWeekday(getDayNumber(calendarDay.value))}</>
           )}
         </SpendingCycleSelector>
-        {submitBudgetErrors.find(
+        {submitBudgetErrors.value.find(
           (item) => item.field === "Day" || item.field === "BudgetType"
         ) && (
           <span className="errorMsg">
             {
-              submitBudgetErrors.find(
+              submitBudgetErrors.value.find(
                 (item) => item.field === "Day" || item.field === "BudgetType"
               ).errorMessage
             }
           </span>
         )}
       </div>
-      {openCalendar && (
+      {openCalendar.value && (
         <div className="categoryButtons">
           <CalendarOptionsButton
             onClick={() => {
               calendarTypeHandler(BudgetType.Monthly);
             }}
-            isactive={budgettype === BudgetType.Monthly}
+            isactive={budgettype.value === BudgetType.Monthly}
           >
             Monthly
           </CalendarOptionsButton>
@@ -115,15 +114,19 @@ export default function SpendingCycle({
             onClick={() => {
               calendarTypeHandler(BudgetType.Weekly);
             }}
-            isactive={budgettype === BudgetType.Weekly}
+            isactive={budgettype.value === BudgetType.Weekly}
           >
             Weekly
           </CalendarOptionsButton>
         </div>
       )}
-      {openCalendar && (
-        <Calendar setCalendarDay={setCalendarDay} budgettype={budgettype}>
-          {budgettype === BudgetType.Monthly ? monthDaysArray : daysArray}
+      {openCalendar.value && (
+        <Calendar
+          // setCalendarDay={setCalendarDay}
+          budgettype={budgettype}
+          calendarDay={calendarDay}
+        >
+          {budgettype.value === BudgetType.Monthly ? monthDaysArray : daysArray}
         </Calendar>
       )}
     </StyledSpendingCycle>

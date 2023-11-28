@@ -3,15 +3,15 @@ import { CSSTransition } from "react-transition-group";
 import SpendingCycleInfo from "../../SpendingCycleInfo/SpendingCycleInfo";
 import { InfoBoxAnimationProps } from "../../../../interfaces";
 
-export default function InfoBoxAnimation({ menu, setMenu }: InfoBoxAnimationProps) {
+export default function InfoBoxAnimation({ menu }: InfoBoxAnimationProps) {
   return (
     <CSSTransition
-      in={menu === "infoBox"}
+      in={menu.value === "infoBox"}
       timeout={100}
       classNames="infoBox"
       unmountOnExit
     >
-      <SpendingCycleInfo setMenu={setMenu} />
+      <SpendingCycleInfo menu={menu} />
     </CSSTransition>
   );
 }

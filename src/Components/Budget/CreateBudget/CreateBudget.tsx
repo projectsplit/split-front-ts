@@ -17,35 +17,37 @@ import { StyledCreateBudget } from "./CreateBudget.styled";
 import useSpendingInfo from "../../../hooks/useSpendingInfo";
 import TopBarWithBackButton from "../../../layouts/TopBarWithBackButton/TopBarWithBackButton";
 import SetUpSpendingGoal from "./SetUpSpendingGoal/SetUpSpendingGoal";
-import SpendingCycle from "./SpendingCycleSelector/SpendingCycleSelector";
+import SpendingCycle from "./SpendingCycle/SpendingCycle";
 import MenuAnimationBackground from "./MenuAnimations/MenuAnimationBackground";
 import CreateBudgetConfirmationAnimation from "./MenuAnimations/CreateBudgetConfirmationAnimation";
 import InfoBoxAnimation from "./MenuAnimations/InfoBoxAnimation";
 import CurrencyOptionsAnimation from "./MenuAnimations/CurrencyOptionsAnimation";
+import { useSignal } from "@preact/signals-react";
 
 export default function CreateBudget() {
+
   const [amount, setAmount] = useState<string>("");
-  const [displayedAmount, setDisplayedAmount] = useState<string>("");
-  const [openCalendar, setOpenCalendar] = useState<boolean>(false);
-  const [calendarDay, setCalendarDay] = useState<string>("");
-  const [budgettype, setBudgetType] = useState<BudgetType>(BudgetType.Monthly);
-  const [hasSwitchedBudgetType, setHasSwitchedBudgetType] = useState(false);
-  const [submitBudgetErrors, setSubmitBudgetErrors] = useState<any[]>([]);
-  const [menu, setMenu] = useState<string | null>(null);
-  const [currency, setCurrency] = useState<string>(
+  const displayedAmount = useSignal<string>("");
+  const openCalendar = useSignal<boolean>(false);
+  const calendarDay = useSignal<string>("");
+  const budgettype = useSignal<BudgetType>(BudgetType.Monthly);
+  const hasSwitchedBudgetType = useSignal<boolean>(false);
+  const submitBudgetErrors = useSignal<any[]>([]);
+  const menu = useSignal<string | null>(null);
+  const currency = useSignal<string>(
     localStorage.getItem("budgetCurrency") || "USD"
   );
 
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const budgetInfoQueryKey = ["budget"];
-  const spendingInfoQueryKey = ["spending", budgettype, currency];
+  const spendingInfoQueryKey = ["spending", budgettype.value, currency];
 
   const createBudget = useMutation<any, any, CreateBudgetRequest>({
     mutationKey: ["budget", "create"],
     mutationFn: api.createBudget,
     onError: (error) => {
-      setSubmitBudgetErrors(error.response.data);
+      submitBudgetErrors.value = error.response.data;
     },
     onSuccess: () => {
       queryClient.invalidateQueries(budgetInfoQueryKey);
@@ -53,7 +55,10 @@ export default function CreateBudget() {
     },
   });
 
-  const { data, isFetching, isStale } = useSpendingInfo(budgettype, currency);
+  const { data, isFetching, isStale } = useSpendingInfo(
+    budgettype.value,
+    currency.value
+  );
 
   useEffect(() => {
     if (localStorage.getItem("budgetCurrency") === null)
@@ -61,7 +66,7 @@ export default function CreateBudget() {
   }, []);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setDisplayedAmount(currencyMask(e).target.value);
+    displayedAmount.value = currencyMask(e).target.value;
     setAmount(removeCommas(e.target.value));
   };
 
@@ -72,30 +77,30 @@ export default function CreateBudget() {
   };
 
   const submitBudget = async () => {
-    if (budgettype === BudgetType.Monthly) {
+    if (budgettype.value === BudgetType.Monthly) {
       createBudget.mutate({
         amount: amount,
-        budgetType: budgettype,
-        currency: currency,
-        day: calendarDay.toString(),
+        budgetType: budgettype.value,
+        currency: currency.value,
+        day: calendarDay.value.toString(),
       });
     }
-    if (budgettype === BudgetType.Weekly) {
+    if (budgettype.value === BudgetType.Weekly) {
       createBudget.mutate({
         amount: amount,
-        budgetType: budgettype,
-        currency: currency,
-        day: getDayNumber(calendarDay),
+        budgetType: budgettype.value,
+        currency: currency.value,
+        day: getDayNumber(calendarDay.value),
       });
     }
-    setSubmitBudgetErrors([]);
-    setOpenCalendar(false);
+
+    submitBudgetErrors.value = [];
+    openCalendar.value = false;
     queryClient.invalidateQueries(budgetInfoQueryKey);
-    setHasSwitchedBudgetType(false);
-    setDisplayedAmount("");
-    setMenu(null);
+    hasSwitchedBudgetType.value = false;
+    displayedAmount.value = "";
+    menu.value = null;
     setAmount("");
-    // navigate(`/budget/current`);
   };
 
   const querydata = queryClient.getQueryData(
@@ -118,9 +123,9 @@ export default function CreateBudget() {
       />
 
       <SetUpSpendingGoal
-        setMenu={setMenu}
+        menu={menu}
         displayedAmount={displayedAmount}
-        currency={currency}
+        currency={currency.value}
         submitBudgetErrors={submitBudgetErrors}
         onChange={(e) => handleInputChange(e)}
       />
@@ -128,15 +133,11 @@ export default function CreateBudget() {
       <SpendingCycle
         submitBudgetErrors={submitBudgetErrors}
         calendarDay={calendarDay}
-        setBudgetType={setBudgetType}
         budgettype={budgettype}
-        setCalendarDay={setCalendarDay}
-        setMenu={setMenu}
+        menu={menu}
         isStale={isStale}
         openCalendar={openCalendar}
-        setOpenCalendar={setOpenCalendar}
         hasSwitchedBudgetType={hasSwitchedBudgetType}
-        setHasSwitchedBudgetType={setHasSwitchedBudgetType}
       />
 
       {isFetching ? (
@@ -150,7 +151,7 @@ export default function CreateBudget() {
                 data?.totalAmountSpent,
                 querydata?.currency
               )}{" "}
-              this {budgettype === 1 ? "month" : "week"}
+              this {budgettype.value === 1 ? "month" : "week"}
             </div>
           </div>
         )
@@ -160,7 +161,7 @@ export default function CreateBudget() {
         <SubmitButton
           onClick={() => {
             if (querydata.budgetSubmitted) {
-              setMenu("createBudgetConfirmation");
+              menu.value = "createBudgetConfirmation";
             } else {
               submitBudget();
             }
@@ -170,21 +171,19 @@ export default function CreateBudget() {
         </SubmitButton>
       </div>
 
-      <MenuAnimationBackground menu={menu} setMenu={setMenu} />
+      <MenuAnimationBackground menu={menu} />
 
       <CreateBudgetConfirmationAnimation
         menu={menu}
-        setMenu={setMenu}
         submitBudget={submitBudget}
       />
 
-      <InfoBoxAnimation menu={menu} setMenu={setMenu} />
+      <InfoBoxAnimation menu={menu} />
 
       <CurrencyOptionsAnimation
         menu={menu}
-        setMenu={setMenu}
         budgettype={budgettype}
-        setCurrency={setCurrency}
+        currency={currency}
       />
     </StyledCreateBudget>
   );

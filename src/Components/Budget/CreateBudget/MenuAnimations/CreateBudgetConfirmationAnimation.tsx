@@ -5,18 +5,18 @@ import { CreateBudgetConfirmationAnimationProps } from "../../../../interfaces";
 
 export default function CreateBudgetConfirmationAnimation({
   menu,
-  setMenu,
+
   submitBudget,
 }: CreateBudgetConfirmationAnimationProps) {
   return (
     <CSSTransition
-      in={menu === "createBudgetConfirmation"}
+      in={menu.value === "createBudgetConfirmation"}
       timeout={100}
       classNames="bottomslide"
       unmountOnExit
     >
       <ConfirmationForBudgetSubmission
-        setMenu={setMenu}
+        menu={menu}
         submitBudget={submitBudget}
       />
     </CSSTransition>

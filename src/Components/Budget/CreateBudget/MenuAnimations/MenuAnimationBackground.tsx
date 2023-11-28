@@ -4,11 +4,10 @@ import { MenuAnimationBackgroundProps } from "../../../../interfaces";
 
 export default function MenuAnimationBackground({
   menu,
-  setMenu,
 }: MenuAnimationBackgroundProps) {
   const nodeRef = React.useRef(null);
   return (
-    <CSSTransition in={Boolean(menu)} timeout={0} unmountOnExit>
+    <CSSTransition in={Boolean(menu.value)} timeout={0} unmountOnExit>
       <div
         style={{
           position: "fixed",
@@ -19,7 +18,7 @@ export default function MenuAnimationBackground({
           backgroundColor: "black",
           opacity: "0.7",
         }}
-        onClick={() => setMenu(null)}
+        onClick={() => (menu.value = null)}
       />
     </CSSTransition>
   );

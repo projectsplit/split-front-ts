@@ -11,8 +11,8 @@ export const useRedirectToBudget = (
 
   useEffect(() => {
     if (
-      (isLoading && location.pathname == "/budget/create") ||
-      (!isLoading && location.pathname == "/budget/create")
+      (isLoading && location.pathname === "/budget/create") ||
+      (!isLoading && location.pathname === "/budget/create")
     ) {
       navigate(location.pathname);
     

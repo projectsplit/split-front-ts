@@ -1,5 +1,6 @@
 import { CSSProperties, MouseEventHandler } from "react";
 import { BudgetInfoResponse, BudgetType } from "./types";
+import { Signal } from "@preact/signals-react";
 
 export interface InputProps
   extends React.InputHTMLAttributes<HTMLInputElement> {
@@ -13,44 +14,46 @@ export interface InputMonetaryProps extends InputProps {
   onBlur?: React.FocusEventHandler<HTMLInputElement>;
   currency: string;
   inputError?: boolean;
-  setMenu: React.Dispatch<React.SetStateAction<string | null>>;
+  menu: Signal<React.SetStateAction<string | null>>;
 }
 
 export interface SetUpSpendingGoalProps {
-  setMenu: React.Dispatch<React.SetStateAction<string | null>>;
-  displayedAmount: string;
+  // setMenu: React.Dispatch<React.SetStateAction<string | null>>;
+  menu: Signal<string | null>;
+  displayedAmount: Signal<string>;
   currency: string;
-  submitBudgetErrors: any[];
+  submitBudgetErrors: Signal<any[]>;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 export interface SpendingCycleProps {
-  setMenu: React.Dispatch<React.SetStateAction<string | null>>;
-  submitBudgetErrors: any[];
-  calendarDay: string;
-  budgettype: BudgetType;
-  setCalendarDay: React.Dispatch<React.SetStateAction<string>>;
-  setBudgetType: React.Dispatch<React.SetStateAction<BudgetType>>;
+  menu: Signal<React.SetStateAction<string | null>>;
+  submitBudgetErrors: Signal<any[]>;
+  calendarDay: Signal<string>;
+  budgettype: Signal<BudgetType>;
+  //setCalendarDay: React.Dispatch<React.SetStateAction<string>>;
+  //setBudgetType: React.Dispatch<React.SetStateAction<BudgetType>>;
   isStale: boolean;
-  openCalendar: boolean;
-  setOpenCalendar: React.Dispatch<React.SetStateAction<boolean>>;
-  hasSwitchedBudgetType: boolean;
-  setHasSwitchedBudgetType: React.Dispatch<React.SetStateAction<boolean>>;
+  openCalendar: Signal<boolean>;
+  //setOpenCalendar: React.Dispatch<React.SetStateAction<boolean>>;
+  hasSwitchedBudgetType: Signal<boolean>;
+  //setHasSwitchedBudgetType: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export interface MenuAnimationBackgroundProps{
-  menu: string | null;
-  setMenu: React.Dispatch<React.SetStateAction<string | null>>;
+export interface MenuAnimationBackgroundProps {
+  menu: Signal<string | null>;
 }
 
-export interface CreateBudgetConfirmationAnimationProps extends MenuAnimationBackgroundProps{
-  submitBudget: () => Promise<void>
+export interface CreateBudgetConfirmationAnimationProps
+  extends MenuAnimationBackgroundProps {
+  submitBudget: () => Promise<void>;
 }
-export interface InfoBoxAnimationProps extends MenuAnimationBackgroundProps{}
+export interface InfoBoxAnimationProps extends MenuAnimationBackgroundProps {}
 
-export interface  CurrencyOptionsAnimationProps extends MenuAnimationBackgroundProps{
-  setCurrency: React.Dispatch<React.SetStateAction<string>>;
-  budgettype: BudgetType
+export interface CurrencyOptionsAnimationProps
+  extends MenuAnimationBackgroundProps {
+  currency: Signal<React.SetStateAction<string>>;
+  budgettype: Signal<BudgetType>;
 }
 
 export interface SubmitButtonProps
@@ -84,8 +87,9 @@ export interface OptionsButtonProps {
 
 export interface CalendarProps {
   children: any;
-  setCalendarDay: React.Dispatch<React.SetStateAction<string>>;
-  budgettype: BudgetType;
+  //setCalendarDay: React.Dispatch<React.SetStateAction<string>>;
+  budgettype: Signal<BudgetType>;
+  calendarDay: Signal<string>;
 }
 
 export interface OptionsContainerProps {
@@ -182,18 +186,18 @@ export interface BottomMenuProps {
 export interface MiddleScreenMenuProps extends BottomMenuProps {}
 
 export interface CurrencyOptionProps {
-  setMenu: React.Dispatch<React.SetStateAction<string | null>>;
-  setCurrency: React.Dispatch<React.SetStateAction<string>>;
-  budgettype: BudgetType;
+  menu:Signal<React.SetStateAction<string | null>>;
+  currency: Signal<React.SetStateAction<string>>;
+  budgettype: Signal<BudgetType>;
 }
 
 export interface SpendingCycleInfoProps {
-  setMenu: React.Dispatch<React.SetStateAction<string | null>>;
+  menu: Signal<React.SetStateAction<string | null>>;
 }
 
 export interface ConfirmationForBudgetSubmissionProps {
   submitBudget: () => Promise<void>;
-  setMenu: React.Dispatch<React.SetStateAction<string | null>>;
+  menu: Signal<React.SetStateAction<string | null>>;
 }
 
 export interface ManageBudgetMenuProps {

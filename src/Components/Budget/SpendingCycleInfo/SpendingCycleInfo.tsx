@@ -3,7 +3,7 @@ import { StyledSpendingCycleInfo } from "./SpendingCycleInfo.styled";
 import { SpendingCycleInfoProps } from "../../../interfaces";
 import IonIcon from "@reacticons/ionicons";
 
-export default function SpendingCycleInfo({ setMenu }: SpendingCycleInfoProps) {
+export default function SpendingCycleInfo({ menu }: SpendingCycleInfoProps) {
   return (
     <StyledSpendingCycleInfo>
       <div className="header">
@@ -11,7 +11,7 @@ export default function SpendingCycleInfo({ setMenu }: SpendingCycleInfoProps) {
           <IonIcon name="information-circle-outline" className="infoLogo" />
           <strong>Spending Cycle</strong>
         </div>
-        <div className="closeButton" onClick={() => setMenu(null)}>
+        <div className="closeButton" onClick={() => (menu.value = null)}>
           <IonIcon name="close-outline" className="close" />
         </div>
       </div>
@@ -26,15 +26,24 @@ export default function SpendingCycleInfo({ setMenu }: SpendingCycleInfoProps) {
           budget commences, your budget will run from midnight{" "}
           <strong>00:00:00</strong> on a <strong>Monday</strong> until{" "}
           <strong>23:59:59</strong> on the following <strong>Sunday</strong>,{" "}
-         effectively covering <strong>7</strong> days.
+          effectively covering <strong>7</strong> days.
         </span>
 
         <span className="thirdP">
-          If you choose the <strong>5<sup>th</sup></strong> of the month as your starting
-          day, your budget for the month will run from midnight{" "}
-          <strong>00:00:00</strong> on the <strong>5<sup>th</sup></strong> of one month
-          until <strong>23:59:59</strong> on the <strong>4<sup>th</sup></strong> of the
-          next month.
+          If you choose the{" "}
+          <strong>
+            5<sup>th</sup>
+          </strong>{" "}
+          of the month as your starting day, your budget for the month will run
+          from midnight <strong>00:00:00</strong> on the{" "}
+          <strong>
+            5<sup>th</sup>
+          </strong>{" "}
+          of one month until <strong>23:59:59</strong> on the{" "}
+          <strong>
+            4<sup>th</sup>
+          </strong>{" "}
+          of the next month.
         </span>
       </div>
     </StyledSpendingCycleInfo>

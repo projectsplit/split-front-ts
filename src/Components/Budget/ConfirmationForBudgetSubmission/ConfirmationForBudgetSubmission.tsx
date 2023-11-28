@@ -5,10 +5,11 @@ import { ConfirmationForBudgetSubmissionProps } from "../../../interfaces";
 
 export default function ConfirmationForBudgetSubmission({
   submitBudget,
-  setMenu,
+  // setMenu,
+  menu,
 }: ConfirmationForBudgetSubmissionProps) {
   return (
-    <StyledConfirmationForBudgetSubmission> 
+    <StyledConfirmationForBudgetSubmission>
       <div className="header">
         {" "}
         <strong>Submit Budget</strong>
@@ -19,7 +20,7 @@ export default function ConfirmationForBudgetSubmission({
       </div>
 
       <SubmitButton onClick={submitBudget}>Continue</SubmitButton>
-      <SubmitButton onClick={() => setMenu(null)}>Cancel</SubmitButton>
+      <SubmitButton onClick={() => (menu.value = null)}>Cancel</SubmitButton>
     </StyledConfirmationForBudgetSubmission>
   );
 }

@@ -5,20 +5,19 @@ import { CurrencyOptionsAnimationProps } from "../../../../interfaces";
 
 export default function CurrencyOptionsAnimation({
   menu,
-  setMenu,
-  setCurrency,
+  currency,
   budgettype,
 }: CurrencyOptionsAnimationProps) {
   return (
     <CSSTransition
-      in={menu === "currencyOptions"}
+      in={menu.value === "currencyOptions"}
       timeout={100}
       classNames="bottomslide"
       unmountOnExit
     >
       <CurrencyOptions
-        setMenu={setMenu}
-        setCurrency={setCurrency}
+        menu={menu}
+        currency={currency}
         budgettype={budgettype}
       />
     </CSSTransition>

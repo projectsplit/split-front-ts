@@ -6,8 +6,8 @@ import { Currency } from "../../../types";
 import { useQueryClient } from "@tanstack/react-query";
 
 export default function CurrencyOptions({
-  setMenu,
-  setCurrency,
+  menu,
+  currency,
   budgettype,
 }: CurrencyOptionProps) {
   const [searchItem, setSearchItem] = useState<string>("");
@@ -15,14 +15,14 @@ export default function CurrencyOptions({
     useState<Currency[]>(currencyData);
 
   const queryClient = useQueryClient();
- 
 
-  const handldeClick = (currency: string) => {
-    setCurrency(currency);
-    localStorage.setItem("budgetCurrency", currency);
-    queryClient.invalidateQueries(["spending", budgettype, currency]);
-    queryClient.getQueryData(["spending", budgettype, currency]);
-    setMenu(null);
+  const handldeClick = (curr: string) => {
+    //setCurrency(currency);
+    currency.value = curr;
+    localStorage.setItem("budgetCurrency", curr);
+    queryClient.invalidateQueries(["spending", budgettype, curr]);
+    queryClient.getQueryData(["spending", budgettype, curr]);
+    menu.value = null;
   };
 
   const handleInputChange = (e: any) => {

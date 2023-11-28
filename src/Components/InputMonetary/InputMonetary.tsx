@@ -11,7 +11,8 @@ export default React.forwardRef(function InputMonetary(
     value,
     currency,
     inputError,
-    setMenu,
+    // setMenu,
+    menu
   }: InputMonetaryProps,
   ref: React.Ref<HTMLInputElement>
 ) {
@@ -21,7 +22,7 @@ export default React.forwardRef(function InputMonetary(
     >
       <div
         className="currencyOption"
-        onClick={() => setMenu("currencyOptions")}
+        onClick={() => menu.value="currencyOptions"}
       >
         <i className="angle down icon"></i>
         <div>{currency}</div>
