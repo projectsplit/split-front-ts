@@ -9,12 +9,23 @@ import { MdSsidChart } from "react-icons/md";
 import logo from "../../components/styles/svg/office-chart-line-forecast.svg";
 import { CumulativeSpending } from "./Charts/CumulativeSpending/CumulativeSpending";
 import { AverageSpending } from "./Charts/AverageSpending/AverageSpending";
-import {TotalLentBorrowed} from "./Charts/TotalLentBorrowed/TotalLentBorrowed";
+import { TotalLentBorrowed } from "./Charts/TotalLentBorrowed/TotalLentBorrowed";
 import { BarChart } from "./Charts/BarChart/BarChart";
+import { useSignal } from "@preact/signals-react";
+import MenuAnimationBackground from "../MenuAnimations/MenuAnimationBackground";
+import CycleOptions from "./CycleOption/CycleOption";
+import Years from "./YearOption/YearOption";
+import AnalyticsCycleSelectionAnimation from "../MenuAnimations/AnalyticsCycleSelectionAnimation";
+import AnalyticsYearSelectionAnimation from "../MenuAnimations/AnalyticsYearSelectionAnimation";
+import { CycleType } from "../../types";
 
 export default function Analytics() {
   const [selectedChart, setSelectedChart] =
     useState<string>("cumulativeSpending");
+
+  const selectedCycle = useSignal<CycleType>(CycleType.Monthly);
+  const selectedYear = useSignal<number>(new Date().getFullYear());
+  const menu = useSignal<string | null>(null);
 
   const navigate = useNavigate();
 
@@ -58,19 +69,39 @@ export default function Analytics() {
             <img src={logo} className="dashed" />
           </CategoryButton>
         </div>
-        <CategoryButton>Monthly</CategoryButton>
+      </div>
+
+      <div className="dateOptions">
+        <CategoryButton onClick={() => (menu.value = "cycle")}>
+          <div className="height"></div>
+          <span>{CycleType[selectedCycle.value]}</span>
+          <div className="height"></div>
+        </CategoryButton>
+        <CategoryButton onClick={() => (menu.value = "year")}>
+          <div className="height"></div>
+          <span>{selectedYear.value}</span>
+          <div className="height"></div>
+        </CategoryButton>
       </div>
 
       <div className="chartWrapper">
         <div className="chart">
-          {selectedChart === "cumulativeSpending" && <CumulativeSpending />}
+          {selectedChart === "cumulativeSpending" && <CumulativeSpending selectedCycle={selectedCycle} selectedYear={selectedYear}/>}
           {selectedChart === "barChart" && <BarChart />}
           {selectedChart === "totalLentBorrowed" && <TotalLentBorrowed />}
           {selectedChart === "averageSpending" && <AverageSpending />}
         </div>
       </div>
 
-      <div className="period">April</div>
+      <MenuAnimationBackground menu={menu} />
+
+      <AnalyticsCycleSelectionAnimation menu={menu} header="Select Cycle">
+        <CycleOptions menu={menu} selectedCycle={selectedCycle} />
+      </AnalyticsCycleSelectionAnimation>
+
+      <AnalyticsYearSelectionAnimation menu={menu} header="Select Year">
+        <Years menu={menu} selectedYear={selectedYear} />
+      </AnalyticsYearSelectionAnimation>
     </StyledAnalytics>
   );
 }

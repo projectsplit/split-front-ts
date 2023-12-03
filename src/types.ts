@@ -77,6 +77,12 @@ export enum BudgetType {
   Monthly,
 }
 
+export enum CycleType {
+  Weekly,
+  Monthly,
+  Annually,
+}
+
 export type CreateBudgetRequest = {
   amount: string;
   currency: string;

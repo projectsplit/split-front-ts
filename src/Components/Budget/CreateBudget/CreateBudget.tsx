@@ -18,10 +18,10 @@ import useSpendingInfo from "../../../hooks/useSpendingInfo";
 import TopBarWithBackButton from "../../../layouts/TopBarWithBackButton/TopBarWithBackButton";
 import SetUpSpendingGoal from "./SetUpSpendingGoal/SetUpSpendingGoal";
 import SpendingCycle from "./SpendingCycle/SpendingCycle";
-import MenuAnimationBackground from "./MenuAnimations/MenuAnimationBackground";
-import CreateBudgetConfirmationAnimation from "./MenuAnimations/CreateBudgetConfirmationAnimation";
-import InfoBoxAnimation from "./MenuAnimations/InfoBoxAnimation";
-import CurrencyOptionsAnimation from "./MenuAnimations/CurrencyOptionsAnimation";
+import MenuAnimationBackground from "../../MenuAnimations/MenuAnimationBackground";
+import CreateBudgetConfirmationAnimation from "../../MenuAnimations/CreateBudgetConfirmationAnimation";
+import InfoBoxAnimation from "../../MenuAnimations/InfoBoxAnimation";
+import CurrencyOptionsAnimation from "../../MenuAnimations/CurrencyOptionsAnimation";
 import { useSignal } from "@preact/signals-react";
 
 export default function CreateBudget() {
@@ -42,7 +42,6 @@ export default function CreateBudget() {
   const queryClient = useQueryClient();
   const budgetInfoQueryKey = ["budget"];
   const spendingInfoQueryKey = ["spending", budgettype.value, currency];
-
   const createBudget = useMutation<any, any, CreateBudgetRequest>({
     mutationKey: ["budget", "create"],
     mutationFn: api.createBudget,

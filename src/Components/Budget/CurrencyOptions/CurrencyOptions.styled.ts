@@ -38,7 +38,7 @@ export const StyledCurrencyOptions = styled(StyledBottomMenu)`
     align-items: center;
   }
   .currencyOption.clicked {
-    background-color: #464689;
+    background-color: ${({ theme }) => theme.colors.clicked};
   }
 
   .noResults {

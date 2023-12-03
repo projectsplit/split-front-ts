@@ -4,7 +4,7 @@ import { api } from "../apis/api";
 
 const useSpendingInfo = (budgetType: BudgetType, currency: string) => {
   return useQuery<SpendingInfoResponse>({
-    queryKey: ["spending", budgetType,currency],
+    queryKey: ["spending", budgetType, currency],
     queryFn: () => api.getSpendingInfo(budgetType, currency),
     refetchOnWindowFocus: false,
     refetchOnMount: true,

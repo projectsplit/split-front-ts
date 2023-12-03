@@ -1,8 +1,10 @@
 import styled from "styled-components";
+import { CategoryButtonProps } from "../../interfaces";
 
-export const StyledCategoryButton = styled.div`
+export const StyledCategoryButton = styled.div<CategoryButtonProps>`
   display: flex;
   flex-direction: row;
+
   .active {
     padding-top: 0.5rem;
     padding-bottom: 0.5rem;
@@ -10,7 +12,10 @@ export const StyledCategoryButton = styled.div`
     padding-right: 0.8rem;
     cursor: pointer;
     border-radius: 8px;
-    background-color: ${({ theme }) => theme.colors.whiteText};
+    background-color: ${(props) =>
+      props.backgroundColorOnSelect
+        ? props.backgroundColorOnSelect
+        : ({ theme }) => theme.colors.whiteText};
     color: ${({ theme }) => theme.colors.body};
     font-weight: bold;
     text-decoration: none;
@@ -36,7 +41,8 @@ export const StyledCategoryButton = styled.div`
     padding-right: 0.8rem;
     cursor: pointer;
     border-radius: 8px;
-    background-color: ${({ theme }) => theme.colors.whiteText};
+    background-color: ${(props) =>
+    props.backgroundColorOnSelect ? props.backgroundColorOnSelect : ({ theme }) => theme.colors.whiteText};
     color: ${({ theme }) => theme.colors.body};
     font-weight: bold;
     text-decoration: none;
@@ -55,4 +61,8 @@ export const StyledCategoryButton = styled.div`
       background-color: ${({ theme }) => theme.colors.layer1};
     }
   }
+
+  ${(props) => `
+    ${props.style}
+  `}
 `;

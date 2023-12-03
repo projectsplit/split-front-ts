@@ -41,6 +41,7 @@ function App() {
     colors: {
       body: "#0E0E10",
       text: "#26272B",
+      clicked:"#464689",
       whiteText: "#DDDDDD",
       lightColor: "#f5f5f5",
       pink: "#f91880",

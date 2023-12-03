@@ -8,10 +8,12 @@ export default function CategoryButton({
   to,
   selected,
   onClick,
+  backgroundColorOnSelect,
+  style
 }: CategoryButtonProps) {
-  // const to = `${children.toLowerCase()}`;
+
   return (
-    <StyledCategoryButton>
+    <StyledCategoryButton backgroundColorOnSelect={backgroundColorOnSelect} style={style}>
       {to ? (
         <NavLink
           to={to}

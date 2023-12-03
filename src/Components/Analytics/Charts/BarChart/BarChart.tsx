@@ -142,7 +142,7 @@ export function BarChart() {
   };
 
   const dataPoints = getRandomNumbers(31, 0, 1000); // This is supposed to be the total amount spent per calendar day
-
+  console.log(dataPoints)
   const sumPerWeek = (arr: any) => {
     const newArr = [];
     const num_of_groups = Math.floor(arr.length / 7);

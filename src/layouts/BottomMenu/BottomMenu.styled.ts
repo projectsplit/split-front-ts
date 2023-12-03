@@ -17,5 +17,5 @@ export const StyledBottomMenu = styled.div<StyledBottomMenuProps>`
   z-index: 2;
   gap: 14px;
   padding: 14px;
-  height:${props=>props.height} ;
+  height: ${(props) => props.height};
 `;

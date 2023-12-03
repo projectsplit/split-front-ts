@@ -1,7 +1,7 @@
 import React from "react";
 import { CSSTransition } from "react-transition-group";
-import SpendingCycleInfo from "../../SpendingCycleInfo/SpendingCycleInfo";
-import { InfoBoxAnimationProps } from "../../../../interfaces";
+import SpendingCycleInfo from "../Budget/SpendingCycleInfo/SpendingCycleInfo";
+import { InfoBoxAnimationProps } from "../../interfaces";
 
 export default function InfoBoxAnimation({ menu }: InfoBoxAnimationProps) {
   return (

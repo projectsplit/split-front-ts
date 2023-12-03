@@ -1,7 +1,7 @@
 import React from "react";
 import { CSSTransition } from "react-transition-group";
-import CurrencyOptions from "../../CurrencyOptions/CurrencyOptions";
-import { CurrencyOptionsAnimationProps } from "../../../../interfaces";
+import CurrencyOptions from "../Budget/CurrencyOptions/CurrencyOptions";
+import { CurrencyOptionsAnimationProps } from "../../interfaces";
 
 export default function CurrencyOptionsAnimation({
   menu,

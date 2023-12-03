@@ -29,6 +29,12 @@ export const StyledAnalytics = styled.div`
     font-size: 40px;
     color: ${({ theme }) => theme.colors.deepPurple};
   }
+  .calendar {
+    font-size: 25px;
+    color: ${({ theme }) => theme.colors.layer6};
+    border-top: 15px;
+  }
+
   .dashed {
     width: 40px;
     fill: ${({ theme }) => theme.colors.deepPurple};
@@ -44,11 +50,13 @@ export const StyledAnalytics = styled.div`
       }
     }
   }
-  .period {
+  .dateOptions {
     display: flex;
-    justify-content: center;
-    color:#DDDDDD;
-    font-weight: bold;
-    font-size: 1.8em;
+    flex-direction: row;
+    gap: 4px;
+    align-items: center;
+    .height {
+      height: 13px;
+    }
   }
 `;

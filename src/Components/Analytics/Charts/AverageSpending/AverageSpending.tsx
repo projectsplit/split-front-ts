@@ -35,7 +35,7 @@ export function AverageSpending() {
 
   const dates = getAllDaysInMonth(2, 2021);
   const datesToNumbers = dates.map((date) => date.getDate());
-
+  
   const period = "April";
   const year = "2021";
   const currency = "$";

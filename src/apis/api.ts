@@ -86,6 +86,13 @@ const getSpendingInfo = async (budgetType: BudgetType, currency:string): Promise
   return response.data;
 };
 
+const getCumulativeSpendingArray = async (startDate: string, endDate: string): Promise<number[]> => {
+  const response = await apiHttpClient.get<number[]>(
+    `/analytics/cumulativespending?startDate=${startDate}&endDate=${endDate}`
+  );
+  return response.data;
+};
+
 const getGroupsTotalAmounts = async () => {
   const response = await apiHttpClient.get<GroupsTotalAmountsResponse>(
     `/group/total-amounts`
@@ -110,5 +117,6 @@ export const api = {
   getBudgetInfo,
   getSpendingInfo,
   createBudget,
-  deleteBudget
+  deleteBudget,
+  getCumulativeSpendingArray
 };

@@ -1,5 +1,5 @@
 import { CSSProperties, MouseEventHandler } from "react";
-import { BudgetInfoResponse, BudgetType } from "./types";
+import { BudgetInfoResponse, BudgetType, CycleType } from "./types";
 import { Signal } from "@preact/signals-react";
 
 export interface InputProps
@@ -18,7 +18,6 @@ export interface InputMonetaryProps extends InputProps {
 }
 
 export interface SetUpSpendingGoalProps {
-  // setMenu: React.Dispatch<React.SetStateAction<string | null>>;
   menu: Signal<string | null>;
   displayedAmount: Signal<string>;
   currency: string;
@@ -31,17 +30,26 @@ export interface SpendingCycleProps {
   submitBudgetErrors: Signal<any[]>;
   calendarDay: Signal<string>;
   budgettype: Signal<BudgetType>;
-  //setCalendarDay: React.Dispatch<React.SetStateAction<string>>;
-  //setBudgetType: React.Dispatch<React.SetStateAction<BudgetType>>;
   isStale: boolean;
   openCalendar: Signal<boolean>;
-  //setOpenCalendar: React.Dispatch<React.SetStateAction<boolean>>;
   hasSwitchedBudgetType: Signal<boolean>;
-  //setHasSwitchedBudgetType: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export interface MenuAnimationBackgroundProps {
   menu: Signal<string | null>;
+}
+export interface AnalyticsCycleSelectionAnimationProps
+  extends MenuAnimationBackgroundProps {
+  header: string;
+  children: any;
+}
+
+export interface AnalyticsYearSelectionAnimationProps
+  extends AnalyticsCycleSelectionAnimationProps {}
+
+export interface CycleSelectionProps {
+  children: any;
+  header: string;
 }
 
 export interface CreateBudgetConfirmationAnimationProps
@@ -87,7 +95,6 @@ export interface OptionsButtonProps {
 
 export interface CalendarProps {
   children: any;
-  //setCalendarDay: React.Dispatch<React.SetStateAction<string>>;
   budgettype: Signal<BudgetType>;
   calendarDay: Signal<string>;
 }
@@ -164,6 +171,8 @@ export interface CategoryButtonProps {
   children: any;
   selected?: boolean;
   onClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
+  backgroundColorOnSelect?: string;
+  style?: CSSProperties;
 }
 
 export interface CalendarOptionsButtonProps {
@@ -186,7 +195,7 @@ export interface BottomMenuProps {
 export interface MiddleScreenMenuProps extends BottomMenuProps {}
 
 export interface CurrencyOptionProps {
-  menu:Signal<React.SetStateAction<string | null>>;
+  menu: Signal<React.SetStateAction<string | null>>;
   currency: Signal<React.SetStateAction<string>>;
   budgettype: Signal<BudgetType>;
 }
@@ -215,3 +224,18 @@ export interface TopBarWithBackButtonProps {
 }
 
 export interface CumulativeSpendingProps {}
+
+export interface CycleOptionProps {
+  selectedCycle: Signal<CycleType>;
+  menu: Signal<React.SetStateAction<string | null>>;
+}
+
+export interface YearOptionProps {
+  selectedYear: Signal<number>;
+  menu: Signal<React.SetStateAction<string | null>>;
+}
+
+export interface CumulativeSpendingProps {
+  selectedCycle: Signal<CycleType>;
+  selectedYear: Signal<number>;
+}

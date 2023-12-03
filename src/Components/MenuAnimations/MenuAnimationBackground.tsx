@@ -1,6 +1,6 @@
 import React from "react";
 import { CSSTransition } from "react-transition-group";
-import { MenuAnimationBackgroundProps } from "../../../../interfaces";
+import { MenuAnimationBackgroundProps } from "../../interfaces";
 
 export default function MenuAnimationBackground({
   menu,
