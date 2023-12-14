@@ -13,8 +13,8 @@ export const StyledCategoryButton = styled.div<CategoryButtonProps>`
     cursor: pointer;
     border-radius: 8px;
     background-color: ${(props) =>
-      props.backgroundColorOnSelect
-        ? props.backgroundColorOnSelect
+      props.backgroundcoloronselect
+        ? props.backgroundcoloronselect
         : ({ theme }) => theme.colors.whiteText};
     color: ${({ theme }) => theme.colors.body};
     font-weight: bold;
@@ -42,7 +42,7 @@ export const StyledCategoryButton = styled.div<CategoryButtonProps>`
     cursor: pointer;
     border-radius: 8px;
     background-color: ${(props) =>
-    props.backgroundColorOnSelect ? props.backgroundColorOnSelect : ({ theme }) => theme.colors.whiteText};
+    props.backgroundcoloronselect ? props.backgroundcoloronselect : ({ theme }) => theme.colors.whiteText};
     color: ${({ theme }) => theme.colors.body};
     font-weight: bold;
     text-decoration: none;

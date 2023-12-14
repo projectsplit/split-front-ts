@@ -171,7 +171,7 @@ export interface CategoryButtonProps {
   children: any;
   selected?: boolean;
   onClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
-  backgroundColorOnSelect?: string;
+  backgroundcoloronselect?: string;
   style?: CSSProperties;
 }
 
@@ -226,11 +226,13 @@ export interface TopBarWithBackButtonProps {
 export interface CumulativeSpendingProps {
   currentDateIndex: number;
   monthsAndDaysArrays: string[][];
+  cyclehaschanged: Signal<boolean>;
 }
 
 export interface CycleOptionProps {
   selectedCycle: Signal<CycleType>;
   menu: Signal<React.SetStateAction<string | null>>;
+  cyclehaschanged: Signal<boolean>;
 }
 
 export interface YearOptionProps {
@@ -247,4 +249,5 @@ export interface CarouselProps {
   carouselItems: string[] | string[][];
   selectedTimeCycleIndex: Signal<number>;
   selectedCycle: Signal<CycleType>;
+  cyclehaschanged:Signal<boolean>
 }

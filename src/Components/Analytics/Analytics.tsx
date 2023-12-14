@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useState } from "react";
 import { StyledAnalytics } from "./Analytics.styled";
 import TopBarWithBackButton from "../../layouts/TopBarWithBackButton/TopBarWithBackButton";
 import { useNavigate } from "react-router-dom";
@@ -11,7 +11,7 @@ import { CumulativeSpending } from "./Charts/CumulativeSpending/CumulativeSpendi
 import { AverageSpending } from "./Charts/AverageSpending/AverageSpending";
 import { TotalLentBorrowed } from "./Charts/TotalLentBorrowed/TotalLentBorrowed";
 import { BarChart } from "./Charts/BarChart/BarChart";
-import { useSignal } from "@preact/signals-react";
+import { useComputed, useSignal } from "@preact/signals-react";
 import MenuAnimationBackground from "../MenuAnimations/MenuAnimationBackground";
 import CycleOptions from "./CycleOption/CycleOption";
 import Years from "./YearOption/YearOption";
@@ -26,6 +26,7 @@ export default function Analytics() {
 
   const selectedCycle = useSignal<CycleType>(CycleType.Monthly);
   const selectedYear = useSignal<number>(new Date().getFullYear());
+  const cyclehaschanged = useSignal<boolean>(false)
   const menu = useSignal<string | null>(null);
 
   const navigate = useNavigate();
@@ -100,6 +101,7 @@ export default function Analytics() {
               selectedYear={selectedYear}
               currentDateIndex={currentDateIndex}
               monthsAndDaysArrays={monthsAndDaysArrays}
+              cyclehaschanged = {cyclehaschanged}
             />
           )}
           {selectedChart === "barChart" && <BarChart />}
@@ -111,7 +113,7 @@ export default function Analytics() {
       <MenuAnimationBackground menu={menu} />
 
       <AnalyticsCycleSelectionAnimation menu={menu} header="Select Cycle">
-        <CycleOptions menu={menu} selectedCycle={selectedCycle} />
+        <CycleOptions menu={menu} selectedCycle={selectedCycle} cyclehaschanged={cyclehaschanged} />
       </AnalyticsCycleSelectionAnimation>
 
       <AnalyticsYearSelectionAnimation menu={menu} header="Select Year">

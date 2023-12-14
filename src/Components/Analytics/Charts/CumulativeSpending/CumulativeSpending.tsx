@@ -54,6 +54,7 @@ export function CumulativeSpending({
   selectedYear,
   currentDateIndex,
   monthsAndDaysArrays,
+  cyclehaschanged
 }: CumulativeSpendingProps) {
 
   
@@ -302,6 +303,8 @@ export function CumulativeSpending({
           )}
           selectedTimeCycleIndex={selectedTimeCycleIndex}
           selectedCycle={selectedCycle}
+          cyclehaschanged={cyclehaschanged}
+
         />
       </div>
     </StyledCumulativeSpending>

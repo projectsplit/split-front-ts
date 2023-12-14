@@ -9,33 +9,39 @@ export default function Carousel({
   carouselItems,
   selectedTimeCycleIndex,
   selectedCycle,
+  cyclehaschanged,
 }: CarouselProps) {
-  
+
+
   const nextItem = () => {
+    cyclehaschanged.value = false;
     selectedTimeCycleIndex.value =
       (selectedTimeCycleIndex.value + 1) % carouselItems.length;
+   
   };
 
   const prevItem = () => {
+    cyclehaschanged.value = false;
     selectedTimeCycleIndex.value =
       (selectedTimeCycleIndex.value - 1 + carouselItems.length) %
       carouselItems.length;
+   
   };
 
-  const displayCarouselItem = (cycle:CycleType, item:any)=>{
+  const displayCarouselItem = (cycle: CycleType, item: any) => {
     switch (cycle) {
       case CycleType.Monthly:
-        return item
+        return item;
       case CycleType.Weekly:
-        if(item.length ===1) return item[0]
-        return item[0] + "- " + item[item.length - 1]
+        if (item.length === 1) return item[0];
+        return item[0] + "- " + item[item.length - 1];
       default:
         return 0;
     }
-  }
+  };
 
   return (
-    <StyledCarousel>
+    <StyledCarousel cyclehaschanged={cyclehaschanged}>
       <div className="carousel-container">
         <div className="arrow-btn left" onClick={prevItem}>
           <SlArrowLeft className="arrow" />
@@ -46,7 +52,7 @@ export default function Carousel({
         >
           {carouselItems.map((item: any, index: any) => (
             <div key={index} className="carousel-item">
-              {displayCarouselItem(selectedCycle.value,item)}
+              {displayCarouselItem(selectedCycle.value, item)}
             </div>
           ))}
         </div>

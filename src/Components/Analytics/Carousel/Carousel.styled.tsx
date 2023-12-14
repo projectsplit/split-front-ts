@@ -1,6 +1,11 @@
+import { Signal } from "@preact/signals-react";
 import styled from "styled-components";
 
-export const StyledCarousel = styled.div`
+interface StyledCarouselProps{
+  cyclehaschanged:Signal<boolean>;
+}
+
+export const StyledCarousel = styled.div<StyledCarouselProps>`
   position: relative;
   overflow: hidden;
   margin: 0;
@@ -8,7 +13,7 @@ export const StyledCarousel = styled.div`
 
   .carousel {
     display: flex;
-    transition: transform 0.3s ease-in-out;
+    transition: ${props => (props.cyclehaschanged.value ? 'none' : 'transform 0.3s ease-in-out')};
   }
 
   .carousel-item {

@@ -3,11 +3,18 @@ import { StyledCycleOption } from "./CycleOption.styled";
 import { CycleOptionProps } from "../../../interfaces";
 import { CycleType } from "../../../types";
 
-export default function CycleOption({ selectedCycle, menu }: CycleOptionProps) {
+export default function CycleOption({
+  selectedCycle,
+  menu,
+  cyclehaschanged,
+}: CycleOptionProps) {
   return (
     <StyledCycleOption>
       <div
         onClick={() => {
+          selectedCycle.value === CycleType.Weekly
+            ? (cyclehaschanged.value = true)
+            : (cyclehaschanged.value = false);
           selectedCycle.value = CycleType.Monthly;
           menu.value = null;
         }}
@@ -19,6 +26,9 @@ export default function CycleOption({ selectedCycle, menu }: CycleOptionProps) {
       </div>
       <div
         onClick={() => {
+          selectedCycle.value === CycleType.Monthly
+            ? (cyclehaschanged.value = true)
+            : (cyclehaschanged.value = false);
           selectedCycle.value = CycleType.Weekly;
           menu.value = null;
         }}
