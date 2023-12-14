@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { StyledAnalytics } from "./Analytics.styled";
 import TopBarWithBackButton from "../../layouts/TopBarWithBackButton/TopBarWithBackButton";
 import { useNavigate } from "react-router-dom";
@@ -18,6 +18,7 @@ import Years from "./YearOption/YearOption";
 import AnalyticsCycleSelectionAnimation from "../MenuAnimations/AnalyticsCycleSelectionAnimation";
 import AnalyticsYearSelectionAnimation from "../MenuAnimations/AnalyticsYearSelectionAnimation";
 import { CycleType } from "../../types";
+import { useWeeklyDatesMemo } from "./hooks/useWeekyDatesMemo";
 
 export default function Analytics() {
   const [selectedChart, setSelectedChart] =
@@ -32,6 +33,13 @@ export default function Analytics() {
   const handleBackButtonClick = () => {
     navigate(`/`);
   };
+  
+  const [
+    allWeeksPerYear ,
+    wksToDateString,
+    monthsAndDaysArrays,
+    currentDateIndex
+  ]= useWeeklyDatesMemo(selectedYear);
 
   return (
     <StyledAnalytics>
@@ -86,7 +94,14 @@ export default function Analytics() {
 
       <div className="chartWrapper">
         <div className="chart">
-          {selectedChart === "cumulativeSpending" && <CumulativeSpending selectedCycle={selectedCycle} selectedYear={selectedYear}/>}
+          {selectedChart === "cumulativeSpending" && (
+            <CumulativeSpending
+              selectedCycle={selectedCycle}
+              selectedYear={selectedYear}
+              currentDateIndex={currentDateIndex}
+              monthsAndDaysArrays={monthsAndDaysArrays}
+            />
+          )}
           {selectedChart === "barChart" && <BarChart />}
           {selectedChart === "totalLentBorrowed" && <TotalLentBorrowed />}
           {selectedChart === "averageSpending" && <AverageSpending />}

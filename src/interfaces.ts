@@ -223,7 +223,10 @@ export interface TopBarWithBackButtonProps {
   onClick: MouseEventHandler<SVGElement>;
 }
 
-export interface CumulativeSpendingProps {}
+export interface CumulativeSpendingProps {
+  currentDateIndex: number;
+  monthsAndDaysArrays: string[][];
+}
 
 export interface CycleOptionProps {
   selectedCycle: Signal<CycleType>;
@@ -238,4 +241,10 @@ export interface YearOptionProps {
 export interface CumulativeSpendingProps {
   selectedCycle: Signal<CycleType>;
   selectedYear: Signal<number>;
+}
+
+export interface CarouselProps {
+  carouselItems: string[] | string[][];
+  selectedTimeCycleIndex: Signal<number>;
+  selectedCycle: Signal<CycleType>;
 }

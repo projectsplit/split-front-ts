@@ -8,7 +8,7 @@ const useCumulativeSpendingArray = (startDate: string, endDate: string) => {
     queryFn: () => api.getCumulativeSpendingArray(startDate, endDate),
     refetchOnWindowFocus: false,
     refetchOnMount: true,
-    staleTime: 9000,
+    staleTime: 10000,
     enabled: true,
   });
 };

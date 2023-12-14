@@ -1,4 +1,4 @@
-import React, { CanvasHTMLAttributes } from "react";
+import React, { useEffect } from "react";
 import { roundThousandsAndMillions } from "../../../../helpers/roundThousandsAndMils";
 import { Context } from "chartjs-plugin-datalabels";
 
@@ -19,6 +19,7 @@ import {
   // DatasetChartOptions,
   // LineControllerChartOptions,
 } from "chart.js";
+
 import { Line } from "react-chartjs-2";
 import ChartDataLabels from "chartjs-plugin-datalabels";
 import { _DeepPartialObject } from "chart.js/dist/types/utils";
@@ -26,8 +27,16 @@ import useCumulativeSpendingArray from "../../../../hooks/useCumulativeSpendingA
 import { StyledCumulativeSpending } from "./CumulativeSpending.styled";
 import Carousel from "../../Carousel/Carousel";
 import { CumulativeSpendingProps } from "../../../../interfaces";
-import {  useSignal } from "@preact/signals-react";
+import { useSignal } from "@preact/signals-react";
 import { CycleType } from "../../../../types";
+import { noData } from "../plugins/noData";
+import {
+  getAllDaysInMonth,
+  getNameForCurrentMonth,
+} from "../../helpers/monthlyDataHelpers";
+import { formatDateIntoYMD } from "../../helpers/formatDateIntoYMD";
+import { months, weekDays } from "../../../../constants/dates";
+import { getCarouselItemsBasedOnCycle } from "../../helpers/getCarouselItemsBasedOnCycle";
 
 ChartJS.register(
   CategoryScale,
@@ -43,11 +52,17 @@ ChartJS.register(
 export function CumulativeSpending({
   selectedCycle,
   selectedYear,
+  currentDateIndex,
+  monthsAndDaysArrays,
 }: CumulativeSpendingProps) {
+
+  
   const initialiseSelectedTimeCycle = (cycle: CycleType) => {
     switch (cycle) {
       case CycleType.Monthly:
-        return new Date().getMonth();
+        return new Date().getMonth(); //start by displaying current month if user selects month
+      case CycleType.Weekly:
+        return currentDateIndex; //start by displaying current week if user selects week
       default:
         return 0;
     }
@@ -57,70 +72,50 @@ export function CumulativeSpending({
     initialiseSelectedTimeCycle(selectedCycle.value)
   );
 
-  const getAllDaysInMonth = (month: number, year: number) =>
-    Array.from(
-      { length: new Date(year, month, 0).getDate() },
-      (_, i) => new Date(year, month - 1, i + 1)
-    );
+  
+  useEffect(() => {
+    if (selectedCycle.value === CycleType.Monthly)
+      selectedTimeCycleIndex.value = new Date().getMonth();
 
-  const dates = getAllDaysInMonth(
-    selectedTimeCycleIndex.value + 1,
-    selectedYear.value
-  );
-
-  const datesToNumbers = dates.map((date) => date.getDate());
+    if (selectedCycle.value === CycleType.Weekly)
+      selectedTimeCycleIndex.value = currentDateIndex;
+  }, [selectedCycle.value]);
 
   const allDaysInMonth = getAllDaysInMonth(
     selectedTimeCycleIndex.value + 1,
     selectedYear.value
   );
 
-  const firstDayOfMonth = formatDate(allDaysInMonth[0]);
-  const lastDayOfMonth = formatDate(allDaysInMonth[allDaysInMonth.length - 1]);
-  
+  const datesToNumbers = allDaysInMonth.map((day) => day.getDate());
 
-  function formatDate(date: Date): string {
-    const year = date.getFullYear();
-    const month = (date.getMonth() + 1).toString().padStart(2, "0"); // Months are zero-based
-    const day = date.getDate().toString().padStart(2, "0");
+  const firstDayOfMonth = formatDateIntoYMD(allDaysInMonth[0]);
+  const lastDayOfMonth = formatDateIntoYMD(
+    allDaysInMonth[allDaysInMonth.length - 1]
+  );
 
-    return `${year}-${month}-${day}`;
-  }
-
-  const carouselItems = [
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December",
-  ];
-
-  const year = "2023";
+  //build a fn that decides first and last date based on cycle
 
   const labels: string[] = datesToNumbers.map((num) =>
     num.toString().padStart(2, "0")
   );
+  //const labels: string[] = weekDays
 
-  const {
-    data: cumulArrayData,
-    isFetching,
-    isStale,
-  } = useCumulativeSpendingArray(firstDayOfMonth, lastDayOfMonth);
+  const { data: cumulArrayData, isSuccess } = useCumulativeSpendingArray(
+    firstDayOfMonth,
+    lastDayOfMonth
+  );
 
   const date = new Date(selectedYear.value, selectedTimeCycleIndex.value, 1);
+  // console.log(selectedTimeCycleIndex.value);
+  // console.log(monthsAndDaysArrays)
 
   const dateOptions: Intl.DateTimeFormatOptions = { month: "long" };
 
   const fullMonthName = date.toLocaleDateString("en-US", dateOptions);
+  //console.log(getNameForCurrentMonth(2023, 1, 1));
 
   const options = {
+    isSuccess: isSuccess,
     responsive: true,
 
     maintainAspectRatio: false,
@@ -137,7 +132,7 @@ export function CumulativeSpending({
         },
       },
       title: {
-        display: true,
+        display: isSuccess && cumulArrayData.length !== 0,
         text: "Cumulative Spending",
         color: "#a1a1a1",
       },
@@ -187,6 +182,7 @@ export function CumulativeSpending({
         },
       },
     },
+
     layout: {
       padding: {
         right: 20,
@@ -207,21 +203,26 @@ export function CumulativeSpending({
             size: 20,
           },
           callback: (index: number, value: number) => {
-            // show the label for the first and last date of the month
-            if (
-              index === 0 ||
-              value + 1 === datesToNumbers[datesToNumbers.length - 1]
-            ) {
-              return labels[index];
+            switch (selectedCycle.value) {
+              case CycleType.Monthly:
+                // show the label for the first and last date of the month
+                if (
+                  index === 0 ||
+                  value + 1 === datesToNumbers[datesToNumbers.length - 1]
+                ) {
+                  return labels[index];
+                }
+                // show the label for intervals of 5
+                if (parseFloat(labels[index]) % 5 === 0 && value + 2 !== 31) {
+                  return Math.floor(parseFloat(labels[index]))
+                    .toString()
+                    .padStart(2, "0");
+                }
+                // hide all other labels
+                return null;
+              case CycleType.Weekly:
+                return;
             }
-            // show the label for intervals of 5
-            if (parseFloat(labels[index]) % 5 === 0 && value + 2 !== 31) {
-              return Math.floor(parseFloat(labels[index]))
-                .toString()
-                .padStart(2, "0");
-            }
-            // hide all other labels
-            return null;
           },
         },
       },
@@ -260,10 +261,8 @@ export function CumulativeSpending({
   const pointRadius: number[] = [];
   const pointBackgroundColor: string[] = [];
 
-  // const expensePoints = [
-  //   2, 12, 20, 39, 56, 69, 100, 102, 120, 130, 150, 180, 190, 200, 210.36, 222,
-  //   250.36, 310, 400, 420, 450, 500, 540, 690, 780, 952, 1000, 1045.36,
-  // ];
+  const expensePointsWeekly = [2, 12, 20, 39, 56, 69, 100];
+
   expensePoints.map((dp, indx) => {
     if (indx === 0 || indx === expensePoints.length - 1 || indx === 14) {
       pointRadius.push(2);
@@ -293,36 +292,18 @@ export function CumulativeSpending({
 
   return (
     <StyledCumulativeSpending>
-      <Line options={options} data={data} plugins={[ChartDataLabels]} />
+      <Line options={options} data={data} plugins={[noData, ChartDataLabels]} />
       <div className="periodOptions">
         <Carousel
-          carouselItems={carouselItems}
+          carouselItems={getCarouselItemsBasedOnCycle(
+            selectedCycle.value,
+            months,
+            monthsAndDaysArrays
+          )}
           selectedTimeCycleIndex={selectedTimeCycleIndex}
-          firstDayOfMonth={firstDayOfMonth}
-          lastDayOfMonth={lastDayOfMonth}
+          selectedCycle={selectedCycle}
         />
       </div>
     </StyledCumulativeSpending>
   );
 }
-
-// type _DeepPartialObject<T> = {
-//   [P in keyof T]?: T[P] extends object ? _DeepPartialObject<T[P]> : T[P];
-// };
-
-// type YourChartOptionsType = _DeepPartialObject<
-//   CoreChartOptions<"line"> &
-//   ElementChartOptions<"line"> &
-//   PluginChartOptions<"line"> &
-//   DatasetChartOptions<"line"> &
-//   ScaleChartOptions<any> &  // Replace 'any' with the specific type you want for ScaleChartOptions
-//   LineControllerChartOptions
-// > | undefined;
-
-//response
-//month as string or int
-//year
-//an array with expenses/transfers for this period in one single currency. Need to be calculated cumulative
-
-//request
-//

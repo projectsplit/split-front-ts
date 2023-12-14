@@ -2,23 +2,37 @@ import React, { useState } from "react";
 import { StyledCarousel } from "./Carousel.styled";
 import { SlArrowLeft } from "react-icons/sl";
 import { SlArrowRight } from "react-icons/sl";
-import { useQueryClient } from "@tanstack/react-query";
+import { CarouselProps } from "../../../interfaces";
+import { CycleType } from "../../../types";
 
-export default function Carousel({ carouselItems, selectedTimeCycleIndex, firstDayOfMonth, lastDayOfMonth }: any) {
-
-  const queryClient = useQueryClient();
-
-  const nextItem = () => {
-    selectedTimeCycleIndex.value = (selectedTimeCycleIndex.value+1) % carouselItems.length
-    queryClient.invalidateQueries(["cumulativeSpending",firstDayOfMonth,lastDayOfMonth]);
-    
-  };
+export default function Carousel({
+  carouselItems,
+  selectedTimeCycleIndex,
+  selectedCycle,
+}: CarouselProps) {
   
-  const prevItem = () => {
-    selectedTimeCycleIndex.value = (selectedTimeCycleIndex.value- 1 + carouselItems.length) % carouselItems.length
-    queryClient.invalidateQueries(["cumulativeSpending",firstDayOfMonth,lastDayOfMonth]);
+  const nextItem = () => {
+    selectedTimeCycleIndex.value =
+      (selectedTimeCycleIndex.value + 1) % carouselItems.length;
   };
 
+  const prevItem = () => {
+    selectedTimeCycleIndex.value =
+      (selectedTimeCycleIndex.value - 1 + carouselItems.length) %
+      carouselItems.length;
+  };
+
+  const displayCarouselItem = (cycle:CycleType, item:any)=>{
+    switch (cycle) {
+      case CycleType.Monthly:
+        return item
+      case CycleType.Weekly:
+        if(item.length ===1) return item[0]
+        return item[0] + "- " + item[item.length - 1]
+      default:
+        return 0;
+    }
+  }
 
   return (
     <StyledCarousel>
@@ -32,7 +46,7 @@ export default function Carousel({ carouselItems, selectedTimeCycleIndex, firstD
         >
           {carouselItems.map((item: any, index: any) => (
             <div key={index} className="carousel-item">
-              {item}
+              {displayCarouselItem(selectedCycle.value,item)}
             </div>
           ))}
         </div>
