@@ -14,6 +14,15 @@ import {
 } from "chart.js";
 import { Bar } from "react-chartjs-2";
 import ChartDataLabels from "chartjs-plugin-datalabels";
+import { StyledBarChart } from "./BarChart.styled";
+import Carousel from "../../Carousel/Carousel";
+import { getCarouselItemsBasedOnCycle } from "../../helpers/getCarouselItemsBasedOnCycle";
+import { months } from "../../../../constants/dates";
+import { BarChartProps } from "../../../../interfaces";
+import { getAllDaysInMonth } from "../../helpers/monthlyDataHelpers";
+import { createGroupedLabels } from "../../helpers/createGroupedLabels";
+import { getChartOptions } from "./options/getChartOptions";
+import { groupExpensesPerWeek } from "../../helpers/groupExpensesPerWeek";
 
 ChartJS.register(
   CategoryScale,
@@ -26,111 +35,37 @@ ChartJS.register(
   Filler
 );
 
-export function BarChart() {
-  const getAllDaysInMonth = (month: number, year: number) =>
-    Array.from(
-      { length: new Date(year, month, 0).getDate() },
-      (_, i) => new Date(year, month - 1, i + 1)
-    );
-  const dates = getAllDaysInMonth(3, 2021);
-  const dateNumbers = dates.map((date) => date.getDate());
+export function BarChart({
+  selectedCycle,
+  selectedYear,
+  currentDateIndex,
+  monthsAndDaysArrays,
+  cyclehaschanged,
+  allWeeksPerYear,
+  menu,
+  selectedTimeCycleIndex,
+}: BarChartProps) {
 
-  const period = "April";
-  const year = "2021";
-  const currency = "$";
 
-  const createGroupedLabels = (dateNumbers: number[]) => {
-    const groupedLabels: string[] = [];
-    dateNumbers.forEach((dn, index) => {
-      if (index % 7 === 0) {
-        const start = dn;
-        const end = Math.min(dn + 6, dateNumbers[dateNumbers.length - 1]);
-        groupedLabels.push(
-          `${start.toString().padStart(2, "0")}-${end
-            .toString()
-            .padStart(2, "0")}`
-        );
-      }
-    });
-    return groupedLabels;
-  };
-  const groupedLabels = createGroupedLabels(dateNumbers);
+  const allDaysInMonth = getAllDaysInMonth(
+    selectedTimeCycleIndex.value + 1,
+    selectedYear.value
+  );
 
-  const options = {
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: {
-      legend: {
-        display: false,
-      },
-      title: {
-        display: false,
-        text: "Chart.js Line Chart",
-      },
+  const datesToNumbers = allDaysInMonth.map((day) => day.getDate());
 
-      tooltip: {
-        yAlign: "top",
-        displayColors: false,
-        enabled: true,
-        callbacks: {
-          title: (context: Context[]) => {
-            const index = context[0].dataIndex;
-            return groupedLabels[index] + " " + period + " " + year;
-          },
-          label: (context: any) => {
-            const value = context.parsed.y;
-          return  `Total spent:` + ` ` + `${currency}` + `${value}`
-          },
-        }
-        
-      },
-      datalabels: {
-        display: true,
-        color: "white",
-        font: {
-          size: 14,
-          weight: "bold",
-        },
-        align: "top",
-        padding: -10,
-        formatter: (value: any) => {
-          return "$" + roundThousandsAndMillions(value);
-        },
-      },
-    },
-    layout: {
-      padding: {
-        right: 20,
-        top: 20,
-        left: 20,
-      },
-    },
-    scales: {
-      x: {
-        offset: true,
-        grid: {
-          display: false,
-        },
-        ticks: {
-          color: "#DDDDDD",
-          font: {
-            weight: "bold",
-            size: 20,
-          },
-        },
-      },
-      y: {
-        offset: true,
-        display: false,
+  const groupedLabels = createGroupedLabels(datesToNumbers);
 
-        grid: {
-          display: false,
-        },
-      },
-    },
-  } as any;
-
-;
+  const options = getChartOptions(
+    // isSuccess,
+    // cumulArrayData,
+    selectedCycle.value,
+    groupedLabels,
+    datesToNumbers,
+    selectedYear.value,
+    selectedTimeCycleIndex.value,
+    "USD"
+  );
 
   const getRandomNumbers = (length: number, min: number, max: number) => {
     const numbers = [];
@@ -141,37 +76,9 @@ export function BarChart() {
     return numbers;
   };
 
-  const dataPoints = getRandomNumbers(31, 0, 1000); // This is supposed to be the total amount spent per calendar day
-  console.log(dataPoints)
-  const sumPerWeek = (arr: any) => {
-    const newArr = [];
-    const num_of_groups = Math.floor(arr.length / 7);
-    for (let i = 0; i < num_of_groups; i++) {
-      // Calculate the start and end indices for each group
-      const start = i * 7;
-      const end = start + 6;
+  const dataPoints = getRandomNumbers(31, -500, 1000); // This is supposed to be the total amount spent per calendar day
 
-      // Sum the numbers within the current group
-      const sum = arr
-        .slice(start, end + 1)
-        .reduce((acc: number, num: number) => acc + num, 0);
-
-      // Add the sum to the new array
-      newArr.push(sum);
-    }
-    // Add the remaining numbers (if any) to the new array
-    if (arr.length % 7 !== 0) {
-      const remainingStart = num_of_groups * 7;
-      const remainingEnd = arr.length - 1;
-      const remainingSum = arr
-        .slice(remainingStart, remainingEnd + 1)
-        .reduce((acc: number, num: number) => acc + num, 0);
-      newArr.push(remainingSum);
-    }
-    return newArr;
-  };
-
-  const groupedDataPoints = sumPerWeek(dataPoints);
+  const groupedDataPoints = groupExpensesPerWeek(dataPoints);
 
   const data = {
     labels: groupedLabels,
@@ -189,11 +96,26 @@ export function BarChart() {
   } as any;
 
   return (
-    <Bar
-      style={{ width: "100%", height: "330px" }}
-      options={options}
-      data={data}
-      plugins={[ChartDataLabels]}
-    />
+    <StyledBarChart>
+      <Bar
+        style={{ width: "100%", height: "330px" }}
+        options={options}
+        data={data}
+        plugins={[ChartDataLabels]}
+      />
+      <div className="periodOptions">
+        <Carousel
+          carouselItems={getCarouselItemsBasedOnCycle(
+            selectedCycle.value,
+            months,
+            monthsAndDaysArrays
+          )}
+          selectedTimeCycleIndex={selectedTimeCycleIndex}
+          selectedCycle={selectedCycle}
+          cyclehaschanged={cyclehaschanged}
+          menu={menu}
+        />
+      </div>
+    </StyledBarChart>
   );
 }

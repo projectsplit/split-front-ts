@@ -21,7 +21,6 @@ import { useSignal } from "@preact/signals-react";
 import { CycleType } from "../../../../types";
 import { noData } from "../plugins/noData";
 import {
-  convertToFullMonthNames,
   getAllDaysInMonth,
 } from "../../helpers/monthlyDataHelpers";
 import { months } from "../../../../constants/dates";
@@ -48,24 +47,10 @@ export function CumulativeSpending({
   monthsAndDaysArrays,
   cyclehaschanged,
   allWeeksPerYear,
-  menu
+  menu,
+  selectedTimeCycleIndex
 }: CumulativeSpendingProps) {
 
-  const initialiseSelectedTimeCycle = (cycle: CycleType) => {
-    switch (cycle) {
-      case CycleType.Monthly:
-        return new Date().getMonth(); //start by displaying current month if user selects month
-      case CycleType.Weekly:
-        return currentDateIndex; //start by displaying current week if user selects week
-      default:
-        return 0;
-    }
-  };
-
-  const selectedTimeCycleIndex = useSignal<number>(
-    initialiseSelectedTimeCycle(selectedCycle.value)
-  );
-  
   const startDate = useSignal<string>(
     buildStartAndEndDates(
       selectedCycle.value,

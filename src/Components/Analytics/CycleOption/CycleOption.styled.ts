@@ -10,7 +10,9 @@ export const StyledCycleOption = styled.div`
     border-radius: 10px;
     padding: 14px;
     gap: 2px;
+    transition: background-color 0.2s ease-in-out;
     &:hover {
+    
       border-radius: 10px;
       background-color: ${({ theme }) => theme.colors.layer1};
     }

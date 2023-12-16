@@ -52,7 +52,7 @@ export default function Carousel({
           className="carousel"
           style={{ transform: `translateX(${-selectedTimeCycleIndex.value * 100}%)` }}
         >
-          {carouselItems.map((item: any, index: any) => (
+          {carouselItems.map((item: any, index: number) => (
             <div key={index} className="carousel-item" onClick={()=>(menu.value = "timePeriod")}>
               {displayCarouselItem(selectedCycle.value, item)}
             </div>

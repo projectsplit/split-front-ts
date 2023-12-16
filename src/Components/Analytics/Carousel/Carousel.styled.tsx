@@ -28,7 +28,7 @@ export const StyledCarousel = styled.div<StyledCarouselProps>`
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    font-size: 20px;
+    
     cursor: pointer;
     z-index: 1;
   }

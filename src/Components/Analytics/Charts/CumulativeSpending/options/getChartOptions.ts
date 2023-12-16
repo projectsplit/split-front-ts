@@ -42,7 +42,9 @@ export const getChartOptions = (
         text: "Cumulative Spending",
         color: "#a1a1a1",
       },
-
+      customCanvasBackgroundColor: {
+        color: '#27273C',
+      },
       tooltip: {
         yAlign: "bottom",
         displayColors: false,

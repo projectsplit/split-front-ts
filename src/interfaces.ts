@@ -228,13 +228,18 @@ export interface TopBarWithBackButtonProps {
 }
 
 export interface CumulativeSpendingProps {
+  selectedCycle: Signal<CycleType>;
+  selectedYear: Signal<number>;
   currentDateIndex: number;
   monthsAndDaysArrays: string[][];
   cyclehaschanged: Signal<boolean>;
   allWeeksPerYear: Date[][];
   menu:Signal<string | null>;
+  selectedTimeCycleIndex: Signal<number>;
 }
 
+export interface BarChartProps extends CumulativeSpendingProps {
+}
 export interface CycleOptionProps {
   selectedCycle: Signal<CycleType>;
   menu: Signal<React.SetStateAction<string | null>>;
@@ -260,5 +265,8 @@ export interface CarouselProps {
 }
 
 export interface PeriodOptionProps {
-  menu:Signal<string | null>
+  menu:Signal<string | null>;
+  selectedCycle: Signal<CycleType>;
+  selectedTimeCycleIndex: Signal<number>;
+  monthsAndDaysArrays:string[][];
 }

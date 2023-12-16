@@ -21,6 +21,7 @@ import { CycleType } from "../../types";
 import { useWeeklyDatesMemo } from "./hooks/useWeekyDatesMemo";
 import AnalyticsTimePeriodSelectionAnimation from "../MenuAnimations/AnalyticsTimePeriodSelectionAnimation";
 import PeriodOption from "./Charts/PeriodOption/PeriodOption";
+import { initialiseSelectedTimeCycle } from "./helpers/initialiseSelectedTimeCycle";
 
 export default function Analytics() {
   const [selectedChart, setSelectedChart] =
@@ -30,7 +31,6 @@ export default function Analytics() {
   const selectedYear = useSignal<number>(new Date().getFullYear());
   const cyclehaschanged = useSignal<boolean>(false);
   const menu = useSignal<string | null>(null);
-
   const navigate = useNavigate();
 
   const handleBackButtonClick = () => {
@@ -43,6 +43,10 @@ export default function Analytics() {
     monthsAndDaysArrays,
     currentDateIndex,
   ] = useWeeklyDatesMemo(selectedYear);
+
+  const selectedTimeCycleIndex = useSignal<number>(
+    initialiseSelectedTimeCycle(selectedCycle.value, currentDateIndex)
+  );
 
   return (
     <StyledAnalytics>
@@ -106,9 +110,21 @@ export default function Analytics() {
               cyclehaschanged={cyclehaschanged}
               allWeeksPerYear={allWeeksPerYear}
               menu={menu}
+              selectedTimeCycleIndex={selectedTimeCycleIndex}
             />
           )}
-          {selectedChart === "barChart" && <BarChart />}
+          {selectedChart === "barChart" && (
+            <BarChart
+            selectedCycle={selectedCycle}
+            selectedYear={selectedYear}
+            currentDateIndex={currentDateIndex}
+            monthsAndDaysArrays={monthsAndDaysArrays}
+            cyclehaschanged={cyclehaschanged}
+            allWeeksPerYear={allWeeksPerYear}
+            menu={menu}
+            selectedTimeCycleIndex={selectedTimeCycleIndex}
+            />
+          )}
           {selectedChart === "totalLentBorrowed" && <TotalLentBorrowed />}
           {selectedChart === "averageSpending" && <AverageSpending />}
         </div>
@@ -136,7 +152,12 @@ export default function Analytics() {
             : "Select Week"
         }
       >
-        <PeriodOption menu={menu}/>
+        <PeriodOption
+          menu={menu}
+          selectedCycle={selectedCycle}
+          selectedTimeCycleIndex={selectedTimeCycleIndex}
+          monthsAndDaysArrays={monthsAndDaysArrays}
+        />
       </AnalyticsTimePeriodSelectionAnimation>
     </StyledAnalytics>
   );
