@@ -17,6 +17,7 @@ export const StyledCarousel = styled.div<StyledCarouselProps>`
   }
 
   .carousel-item {
+    cursor: pointer;
     flex: 0 0 100%;
     display: flex;
     justify-content: center;

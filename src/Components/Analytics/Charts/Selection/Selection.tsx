@@ -1,17 +1,17 @@
 import React from "react";
-import { StyledCycleSelection } from "./CycleSelection.styled";
+import { StyledSelection } from "./Selection.styled";
 import { CycleSelectionProps } from "../../../../interfaces";
 
-export default function CycleSelection({
+export default function Selection({
   children,
   header
 }: CycleSelectionProps) {
   return (
-    <StyledCycleSelection>
+    <StyledSelection>
       <div className="header">
         <strong>{header}</strong>
       </div>
       {children}
-    </StyledCycleSelection>
+    </StyledSelection>
   );
 }

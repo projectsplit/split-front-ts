@@ -29,6 +29,7 @@ export default function YearOption({ selectedYear, menu }: YearOptionProps) {
             menu.value = null;
           }}
           backgroundcoloronselect={theme?.colors.clicked}
+          key ={index}
         >
           <div className="wrapper">
             <div key={index} className="height"></div>

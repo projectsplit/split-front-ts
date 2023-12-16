@@ -38,14 +38,17 @@ export interface SpendingCycleProps {
 export interface MenuAnimationBackgroundProps {
   menu: Signal<string | null>;
 }
-export interface AnalyticsCycleSelectionAnimationProps
+export interface AnalyticsSelectionAnimationProps
   extends MenuAnimationBackgroundProps {
   header: string;
   children: any;
 }
 
 export interface AnalyticsYearSelectionAnimationProps
-  extends AnalyticsCycleSelectionAnimationProps {}
+  extends AnalyticsSelectionAnimationProps {}
+
+export interface AnalyticsTimePeriodSelectionAnimationProps
+  extends AnalyticsSelectionAnimationProps {}
 
 export interface CycleSelectionProps {
   children: any;
@@ -173,6 +176,7 @@ export interface CategoryButtonProps {
   onClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
   backgroundcoloronselect?: string;
   style?: CSSProperties;
+  key?: any;
 }
 
 export interface CalendarOptionsButtonProps {
@@ -227,6 +231,8 @@ export interface CumulativeSpendingProps {
   currentDateIndex: number;
   monthsAndDaysArrays: string[][];
   cyclehaschanged: Signal<boolean>;
+  allWeeksPerYear: Date[][];
+  menu:Signal<string | null>;
 }
 
 export interface CycleOptionProps {
@@ -249,5 +255,10 @@ export interface CarouselProps {
   carouselItems: string[] | string[][];
   selectedTimeCycleIndex: Signal<number>;
   selectedCycle: Signal<CycleType>;
-  cyclehaschanged:Signal<boolean>
+  cyclehaschanged: Signal<boolean>;
+  menu:Signal<string | null>
+}
+
+export interface PeriodOptionProps {
+  menu:Signal<string | null>
 }

@@ -10,6 +10,7 @@ export default function Carousel({
   selectedTimeCycleIndex,
   selectedCycle,
   cyclehaschanged,
+  menu
 }: CarouselProps) {
 
 
@@ -40,6 +41,7 @@ export default function Carousel({
     }
   };
 
+ 
   return (
     <StyledCarousel cyclehaschanged={cyclehaschanged}>
       <div className="carousel-container">
@@ -48,10 +50,10 @@ export default function Carousel({
         </div>
         <div
           className="carousel"
-          style={{ transform: `translateX(${-selectedTimeCycleIndex * 100}%)` }}
+          style={{ transform: `translateX(${-selectedTimeCycleIndex.value * 100}%)` }}
         >
           {carouselItems.map((item: any, index: any) => (
-            <div key={index} className="carousel-item">
+            <div key={index} className="carousel-item" onClick={()=>(menu.value = "timePeriod")}>
               {displayCarouselItem(selectedCycle.value, item)}
             </div>
           ))}

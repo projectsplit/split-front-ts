@@ -1,7 +1,7 @@
 import React from "react";
 import { CSSTransition } from "react-transition-group";
 import { AnalyticsYearSelectionAnimationProps } from "../../interfaces";
-import CycleSelection from "../Analytics/Charts/CycleSelection/CycleSelection";
+import Selection from "../Analytics/Charts/Selection/Selection";
 
 export default function AnalyticsYearSelectionAnimation({
   menu,
@@ -15,7 +15,7 @@ export default function AnalyticsYearSelectionAnimation({
       classNames="bottomslide"
       unmountOnExit
     >
-      <CycleSelection header={header}>{children}</CycleSelection>
+      <Selection header={header}>{children}</Selection>
     </CSSTransition>
   );
 }

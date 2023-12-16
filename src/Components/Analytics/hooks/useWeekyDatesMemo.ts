@@ -13,6 +13,7 @@ export const useWeeklyDatesMemo = (selectedYear:Signal<number>): [Date[][], stri
       generateAllWeeksPerYear(new Date().getFullYear()),
       new Date(currentDate.setHours(0, 0, 0, 0))
     );
+    
     return [
       allWeeksPerYear,
       wksToDateString,

@@ -19,6 +19,8 @@ import AnalyticsCycleSelectionAnimation from "../MenuAnimations/AnalyticsCycleSe
 import AnalyticsYearSelectionAnimation from "../MenuAnimations/AnalyticsYearSelectionAnimation";
 import { CycleType } from "../../types";
 import { useWeeklyDatesMemo } from "./hooks/useWeekyDatesMemo";
+import AnalyticsTimePeriodSelectionAnimation from "../MenuAnimations/AnalyticsTimePeriodSelectionAnimation";
+import PeriodOption from "./Charts/PeriodOption/PeriodOption";
 
 export default function Analytics() {
   const [selectedChart, setSelectedChart] =
@@ -26,7 +28,7 @@ export default function Analytics() {
 
   const selectedCycle = useSignal<CycleType>(CycleType.Monthly);
   const selectedYear = useSignal<number>(new Date().getFullYear());
-  const cyclehaschanged = useSignal<boolean>(false)
+  const cyclehaschanged = useSignal<boolean>(false);
   const menu = useSignal<string | null>(null);
 
   const navigate = useNavigate();
@@ -34,13 +36,13 @@ export default function Analytics() {
   const handleBackButtonClick = () => {
     navigate(`/`);
   };
-  
+
   const [
-    allWeeksPerYear ,
+    allWeeksPerYear,
     wksToDateString,
     monthsAndDaysArrays,
-    currentDateIndex
-  ]= useWeeklyDatesMemo(selectedYear);
+    currentDateIndex,
+  ] = useWeeklyDatesMemo(selectedYear);
 
   return (
     <StyledAnalytics>
@@ -101,7 +103,9 @@ export default function Analytics() {
               selectedYear={selectedYear}
               currentDateIndex={currentDateIndex}
               monthsAndDaysArrays={monthsAndDaysArrays}
-              cyclehaschanged = {cyclehaschanged}
+              cyclehaschanged={cyclehaschanged}
+              allWeeksPerYear={allWeeksPerYear}
+              menu={menu}
             />
           )}
           {selectedChart === "barChart" && <BarChart />}
@@ -113,12 +117,27 @@ export default function Analytics() {
       <MenuAnimationBackground menu={menu} />
 
       <AnalyticsCycleSelectionAnimation menu={menu} header="Select Cycle">
-        <CycleOptions menu={menu} selectedCycle={selectedCycle} cyclehaschanged={cyclehaschanged} />
+        <CycleOptions
+          menu={menu}
+          selectedCycle={selectedCycle}
+          cyclehaschanged={cyclehaschanged}
+        />
       </AnalyticsCycleSelectionAnimation>
 
       <AnalyticsYearSelectionAnimation menu={menu} header="Select Year">
         <Years menu={menu} selectedYear={selectedYear} />
       </AnalyticsYearSelectionAnimation>
+
+      <AnalyticsTimePeriodSelectionAnimation
+        menu={menu}
+        header={
+          selectedCycle.value === CycleType.Monthly
+            ? "Select Month"
+            : "Select Week"
+        }
+      >
+        <PeriodOption menu={menu}/>
+      </AnalyticsTimePeriodSelectionAnimation>
     </StyledAnalytics>
   );
 }
