@@ -1,27 +1,33 @@
 import { Context } from "chartjs-plugin-datalabels/types/context";
 import { roundThousandsAndMillions } from "../../../../../helpers/roundThousandsAndMils";
 import { CycleType } from "../../../../../types";
-import { shortWeekdays } from "../../../../../constants/dates";
-
+import { convertToFullMonthNames } from "../../../helpers/monthlyDataHelpers";
 
 export const getChartOptions = (
-//   isSuccess: boolean,
-//   cumulArrayData: number[]|undefined,
+  isSuccess: boolean,
+  monthsAndDaysArrays: string[][],
   selectedCycle: CycleType,
   labels: string[],
   datesToNumbers: number[],
   selectedYear: number,
-  selectedTimeCycleIndex:number,
-  currency:string
+  selectedTimeCycleIndex: number,
+  currency: string
 ) => {
-
   const date = new Date(selectedYear, selectedTimeCycleIndex, 1);
 
   const dateOptions: Intl.DateTimeFormatOptions = { month: "long" };
 
   const fullMonthName = date.toLocaleDateString("en-US", dateOptions);
+  
+  function transformDateArray(dateArray: string[]): string[] {
+    return dateArray.map((dateString) => {
+      const [month, day] = dateString.split(' ');
+      return `${day} ${month}`;
+    });
+  }
 
   return {
+    isSuccess: isSuccess,
     responsive: true,
     maintainAspectRatio: false,
     plugins: {
@@ -32,7 +38,6 @@ export const getChartOptions = (
         display: false,
         text: "Chart.js Line Chart",
       },
-
       tooltip: {
         yAlign: "top",
         displayColors: false,
@@ -40,7 +45,12 @@ export const getChartOptions = (
         callbacks: {
           title: (context: Context[]) => {
             const index = context[0].dataIndex;
-            return labels[index] + " " + fullMonthName + " " + selectedYear;
+            switch (selectedCycle) {
+              case CycleType.Monthly:
+                return labels[index] + " " + fullMonthName + " " + selectedYear;
+              case CycleType.Weekly:
+                return transformDateArray(convertToFullMonthNames(monthsAndDaysArrays)[selectedTimeCycleIndex])[index]+ " " +selectedYear;
+            }
           },
           label: (context: any) => {
             const value = context.parsed.y;
@@ -57,8 +67,18 @@ export const getChartOptions = (
         },
         align: "top",
         padding: -10,
-        formatter: (value: any) => {
-          return "$" + roundThousandsAndMillions(value);
+        formatter: (value:any) => {
+          // Check if the value is negative
+          if (value < 0) {
+            // If negative, format within parentheses
+            return "($" + Math.abs(Number(roundThousandsAndMillions(value))) + ")";
+          } 
+          if (value >= 0) {
+            // If non-negative, format normally
+            return "$" + roundThousandsAndMillions(value);
+          }
+          // if(value===0)
+          // return ""
         },
       },
     },
@@ -80,6 +100,9 @@ export const getChartOptions = (
           font: {
             weight: "bold",
             size: 20,
+          },
+          callback: (index: number, value: number) => {
+            return labels[index];
           },
         },
       },

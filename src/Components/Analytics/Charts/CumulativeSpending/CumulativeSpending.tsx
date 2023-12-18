@@ -18,16 +18,15 @@ import { StyledCumulativeSpending } from "./CumulativeSpending.styled";
 import Carousel from "../../Carousel/Carousel";
 import { CumulativeSpendingProps } from "../../../../interfaces";
 import { useSignal } from "@preact/signals-react";
-import { CycleType } from "../../../../types";
 import { noData } from "../plugins/noData";
-import {
-  getAllDaysInMonth,
-} from "../../helpers/monthlyDataHelpers";
+import { getAllDaysInMonth } from "../../helpers/monthlyDataHelpers";
 import { months } from "../../../../constants/dates";
 import { getCarouselItemsBasedOnCycle } from "../../helpers/getCarouselItemsBasedOnCycle";
 import { buildStartAndEndDates } from "../../helpers/buildStartAndEndDates";
 import { getChartOptions } from "./options/getChartOptions";
 import { buildLabels } from "../../helpers/buildLabels";
+import { useCycleEffectEffect } from "../../hooks/useCycleIndexEffect";
+import { useStartAndEndDatesEffect } from "../../hooks/useStartEndDatesEffect";
 
 ChartJS.register(
   CategoryScale,
@@ -48,7 +47,7 @@ export function CumulativeSpending({
   cyclehaschanged,
   allWeeksPerYear,
   menu,
-  selectedTimeCycleIndex
+  selectedTimeCycleIndex,
 }: CumulativeSpendingProps) {
 
   const startDate = useSignal<string>(
@@ -68,13 +67,7 @@ export function CumulativeSpending({
     )[1]
   );
 
-  useEffect(() => {
-    if (selectedCycle.value === CycleType.Monthly)
-      selectedTimeCycleIndex.value = new Date().getMonth();
-
-    if (selectedCycle.value === CycleType.Weekly)
-      selectedTimeCycleIndex.value = currentDateIndex;
-  }, [selectedCycle.value]);
+  useCycleEffectEffect(selectedCycle, selectedTimeCycleIndex, currentDateIndex);
 
   const allDaysInMonth = getAllDaysInMonth(
     selectedTimeCycleIndex.value + 1,
@@ -90,16 +83,15 @@ export function CumulativeSpending({
     monthsAndDaysArrays
   );
   
-  useEffect(() => {
-    const startAndEndDates = buildStartAndEndDates(
-      selectedCycle.value,
-      selectedTimeCycleIndex.value,
-      selectedYear.value,
-      allWeeksPerYear
-    );
-    startDate.value = startAndEndDates[0];
-    endDate.value = startAndEndDates[1];
-  }, [selectedTimeCycleIndex.value]);
+  
+  useStartAndEndDatesEffect(
+    selectedCycle,
+    selectedTimeCycleIndex,
+    selectedYear,
+    allWeeksPerYear,
+    startDate,
+    endDate
+  );
 
   const { data: cumulArrayData, isSuccess } = useCumulativeSpendingArray(
     startDate.value,

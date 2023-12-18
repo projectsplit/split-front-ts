@@ -1,4 +1,5 @@
-export  const groupExpensesPerWeek = (arr: number[]) => {
+export  const groupExpensesPerWeek = (arr: number[]|undefined) => {
+  if (arr === undefined) return []
     const newArr = [];
     const num_of_groups = Math.floor(arr.length / 7);
     for (let i = 0; i < num_of_groups; i++) {
@@ -12,7 +13,7 @@ export  const groupExpensesPerWeek = (arr: number[]) => {
         .reduce((acc: number, num: number) => acc + num, 0);
 
       // Add the sum to the new array
-      newArr.push(sum);
+      newArr.push((Math.round(sum*100))/100);
     }
     // Add the remaining numbers (if any) to the new array
     if (arr.length % 7 !== 0) {
@@ -21,7 +22,7 @@ export  const groupExpensesPerWeek = (arr: number[]) => {
       const remainingSum = arr
         .slice(remainingStart, remainingEnd + 1)
         .reduce((acc: number, num: number) => acc + num, 0);
-      newArr.push(remainingSum);
+      newArr.push((Math.round(remainingSum*100))/100);
     }
     return newArr;
   };

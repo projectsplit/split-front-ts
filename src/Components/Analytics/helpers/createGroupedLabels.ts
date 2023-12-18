@@ -1,4 +1,4 @@
-export   const createGroupedLabels = (dateNumbers: number[]) => {
+export const createGroupedLabels = (dateNumbers: number[]) => {
     const groupedLabels: string[] = [];
     dateNumbers.forEach((dn, index) => {
       if (index % 7 === 0) {

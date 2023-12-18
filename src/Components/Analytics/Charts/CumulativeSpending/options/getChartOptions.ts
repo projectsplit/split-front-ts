@@ -3,7 +3,6 @@ import { roundThousandsAndMillions } from "../../../../../helpers/roundThousands
 import { CycleType } from "../../../../../types";
 import { shortWeekdays } from "../../../../../constants/dates";
 
-
 export const getChartOptions = (
   isSuccess: boolean,
   cumulArrayData: number[]|undefined,
@@ -90,7 +89,12 @@ export const getChartOptions = (
             context.dataIndex === 14 ||
             context.dataIndex === context.dataset.data.length - 1
           ) {
-            return "$" + roundThousandsAndMillions(value.toString());
+            if (value < 0) {
+              // If negative, format within parentheses
+              return "($" + Math.abs(Number(roundThousandsAndMillions(value.toString()))) + ")";
+            } else {
+              return "$" + roundThousandsAndMillions(value.toString());
+            }
           } else {
             return null;
           }
@@ -144,7 +148,6 @@ export const getChartOptions = (
       y: {
         offset: true,
         display: false,
-
         grid: {
           display: false,
         },
