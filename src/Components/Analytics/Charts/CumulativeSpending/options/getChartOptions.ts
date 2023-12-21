@@ -5,14 +5,15 @@ import { shortWeekdays } from "../../../../../constants/dates";
 
 export const getChartOptions = (
   isSuccess: boolean,
-  cumulArrayData: number[]|undefined,
+  cumulArrayData: number[] | undefined,
   selectedCycle: CycleType,
   labels: string[],
   datesToNumbers: number[],
   selectedYear: number,
-  selectedTimeCycleIndex:number
+  selectedTimeCycleIndex: number,
+  lastNumberBeforeNaN: number | undefined,
+  currentDateIndex: number
 ) => {
-
   const date = new Date(selectedYear, selectedTimeCycleIndex, 1);
 
   const dateOptions: Intl.DateTimeFormatOptions = { month: "long" };
@@ -26,9 +27,9 @@ export const getChartOptions = (
     maintainAspectRatio: false,
     plugins: {
       legend: {
-        display: false,
+        display: isSuccess && cumulArrayData?.length !== 0,
         position: "chartArea",
-        align: "start",
+        align: "center",
         labels: {
           usePointStyle: false, // use a square instead of a rectangle
           boxWidth: 10, // set the width of the square
@@ -37,12 +38,12 @@ export const getChartOptions = (
         },
       },
       title: {
-        display: isSuccess && cumulArrayData?.length !== 0,
+        display: false, //isSuccess && cumulArrayData?.length !== 0,
         text: "Cumulative Spending",
         color: "#a1a1a1",
       },
       customCanvasBackgroundColor: {
-        color: '#27273C',
+        color: "#27273C",
       },
       tooltip: {
         yAlign: "bottom",
@@ -51,24 +52,39 @@ export const getChartOptions = (
         callbacks: {
           title: (context: Context[]) => {
             const index = context[0].dataIndex;
-            if(selectedCycle===CycleType.Monthly)
-            return (
-              labels[index] +
-              " " +
-              fullMonthName +
-              " " +
-              selectedYear.toString()
-            );
-            if(selectedCycle===CycleType.Weekly)
-            return (
-              labels[index] +
-              " " +
-              selectedYear.toString()
-            );
+            if (selectedCycle === CycleType.Monthly)
+              return (
+                labels[index] +
+                " " +
+                fullMonthName +
+                " " +
+                selectedYear.toString()
+              );
+            if (selectedCycle === CycleType.Weekly)
+              return labels[index] + " " + selectedYear.toString();
           },
           label: (context: any) => {
             const value = context.parsed.y;
-            return `Cumulative spending: $${value}`;
+            switch (selectedCycle) {
+              case CycleType.Monthly:
+                if (
+                  selectedTimeCycleIndex === new Date().getMonth() &&
+                  context.dataIndex === context.dataset.data.length - 1
+                ) {
+                  return `Forecasted Spending: $${value}`;
+                }
+                return `Cumulative spending: $${value}`;
+              case CycleType.Weekly:
+                if (
+                  selectedTimeCycleIndex === currentDateIndex &&
+                  context.dataIndex === context.dataset.data.length - 1
+                ) {
+                  return `Forecasted Spending: $${value}`;
+                }
+                return `Cumulative spending: $${value}`;
+              default:
+                return `Cumulative spending: $${value}`; 
+            }
           },
         },
       },
@@ -87,11 +103,16 @@ export const getChartOptions = (
           if (
             context.dataIndex === 0 ||
             context.dataIndex === 14 ||
-            context.dataIndex === context.dataset.data.length - 1
+            context.dataIndex === context.dataset.data.length - 1 ||
+            lastNumberBeforeNaN === context.dataIndex
           ) {
             if (value < 0) {
               // If negative, format within parentheses
-              return "($" + Math.abs(Number(roundThousandsAndMillions(value.toString()))) + ")";
+              return (
+                "($" +
+                Math.abs(Number(roundThousandsAndMillions(value.toString()))) +
+                ")"
+              );
             } else {
               return "$" + roundThousandsAndMillions(value.toString());
             }

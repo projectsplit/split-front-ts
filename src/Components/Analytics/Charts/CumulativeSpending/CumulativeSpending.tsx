@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -20,13 +20,16 @@ import { CumulativeSpendingProps } from "../../../../interfaces";
 import { useSignal } from "@preact/signals-react";
 import { noData } from "../plugins/noData";
 import { getAllDaysInMonth } from "../../helpers/monthlyDataHelpers";
-import { months } from "../../../../constants/dates";
+import { months} from "../../../../constants/dates";
 import { getCarouselItemsBasedOnCycle } from "../../helpers/getCarouselItemsBasedOnCycle";
 import { buildStartAndEndDates } from "../../helpers/buildStartAndEndDates";
 import { getChartOptions } from "./options/getChartOptions";
+import { getData } from "./data/getData";
 import { buildLabels } from "../../helpers/buildLabels";
 import { useCycleEffectEffect } from "../../hooks/useCycleIndexEffect";
 import { useStartAndEndDatesEffect } from "../../hooks/useStartEndDatesEffect";
+import { CycleType } from "../../../../types";
+import { deCumulArray } from "../../helpers/deCumulArray";
 
 ChartJS.register(
   CategoryScale,
@@ -82,8 +85,7 @@ export function CumulativeSpending({
     datesToNumbers,
     monthsAndDaysArrays
   );
-  
-  
+
   useStartAndEndDatesEffect(
     selectedCycle,
     selectedTimeCycleIndex,
@@ -98,6 +100,61 @@ export function CumulativeSpending({
     endDate.value
   );
 
+  const projectionArray = (
+    cumulArrayData: number[] | undefined,
+    cycle: CycleType
+  ) => {
+    if (cumulArrayData === undefined) return [];
+    const enhancedCumulArray = [...cumulArrayData];
+    let upLimit: number;
+    //const now = new Date();
+    upLimit = getAllDaysInMonth(
+      // now.getMonth() + 1,
+      // now.getFullYear()
+      selectedTimeCycleIndex.value + 1,
+      selectedYear.value
+    ).length;
+    if (cycle === CycleType.Weekly) upLimit = 7;
+    let enhancedCumulArrayLength = enhancedCumulArray?.length;
+
+    while (enhancedCumulArrayLength < upLimit - 1) {
+      enhancedCumulArray.push(NaN);
+      enhancedCumulArrayLength = enhancedCumulArray?.length;
+    }
+    const forecastValue = calculateForcastValue(cumulArrayData, upLimit);
+    enhancedCumulArray.push(forecastValue);
+    return enhancedCumulArray;
+  };
+
+  const calculateForcastValue = (
+    cumulArrayData: number[] | undefined,
+    upLimit: number
+  ) => {
+    const spendingArray = deCumulArray(cumulArrayData);
+    const total = spendingArray.reduce(
+      (accumulator, currentValue) => accumulator + currentValue,
+      0
+    );
+    const average = total / spendingArray.length;
+    const forecastValue = average * upLimit;
+    return Number(forecastValue.toFixed(2));
+  };
+
+  const findLastNumberBeforeNaN = (arr: any) => {
+    let lastIndex = -1;
+    for (let [index, num] of arr.entries()) {
+      if (isNaN(num)) {
+        return lastIndex;
+      }
+      lastIndex = index;
+    }
+  };
+
+  const expensePoints = cumulArrayData === undefined ? [] : cumulArrayData;
+  const projectedArray = projectionArray(cumulArrayData, selectedCycle.value);
+
+  const lastNumberBeforeNaN = findLastNumberBeforeNaN(projectedArray);
+
   const options = getChartOptions(
     isSuccess,
     cumulArrayData,
@@ -105,21 +162,34 @@ export function CumulativeSpending({
     labels,
     datesToNumbers,
     selectedYear.value,
-    selectedTimeCycleIndex.value
+    selectedTimeCycleIndex.value,
+    lastNumberBeforeNaN,
+    currentDateIndex
   );
-
-  const gradient = document
-    .createElement("canvas")
-    .getContext("2d") as CanvasRenderingContext2D;
-
-  const linearGradient = gradient.createLinearGradient(0, 0, 0, 300);
-  linearGradient.addColorStop(0, "rgba(153, 30, 251, 0.25)");
-  linearGradient.addColorStop(1, "rgba(217, 217, 217, 0)");
-
-  const expensePoints = cumulArrayData === undefined ? [] : cumulArrayData;
 
   const pointRadius: number[] = [];
   const pointBackgroundColor: string[] = [];
+
+  const pointRadiusProjection: number[] = [];
+  const pointBackgroundColorProjection: string[] = [];
+
+  projectedArray.map((dp, indx) => {
+    if (
+      indx === 0 ||
+      indx === expensePoints.length - 1 ||
+      indx === 14 ||
+      indx === lastNumberBeforeNaN
+    ) {
+      pointRadiusProjection.push(2);
+      pointBackgroundColorProjection.push("#A12BFF");
+    } else if (indx === projectedArray.length - 1) {
+      pointRadiusProjection.push(2);
+      pointBackgroundColorProjection.push("grey");
+    } else {
+      pointRadiusProjection.push(0);
+      pointBackgroundColorProjection.push("transparent");
+    }
+  });
 
   expensePoints.map((dp, indx) => {
     if (indx === 0 || indx === expensePoints.length - 1 || indx === 14) {
@@ -131,22 +201,19 @@ export function CumulativeSpending({
     }
   });
 
-  const data = {
-    labels: labels,
-    datasets: [
-      {
-        label: "Cumulative Spending",
-        data: expensePoints,
-        borderColor: "#A12BFF",
-        backgroundColor: linearGradient,
-        fill: true,
-        tension: 0.2,
-        borderWidth: 2,
-        pointRadius: pointRadius,
-        pointBackgroundColor: pointBackgroundColor,
-      },
-    ],
-  };
+  const data = getData(
+    labels,
+    selectedCycle,
+    selectedTimeCycleIndex,
+    projectedArray,
+    expensePoints,
+    currentDateIndex,
+    pointRadiusProjection,
+    pointRadius,
+    pointBackgroundColorProjection,
+    pointBackgroundColor,
+    isSuccess
+  );
 
   return (
     <StyledCumulativeSpending>

@@ -206,6 +206,7 @@ export function AverageSpending() {
   };
 
   const dataPoints3 = badFunction();
+  console.log(dataPoints3)
   const pointRadius: number[] = [];
   const pointBackgroundColor: string[] = [];
 
