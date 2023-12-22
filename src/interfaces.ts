@@ -240,6 +240,9 @@ export interface CumulativeSpendingProps {
 
 export interface BarChartProps extends CumulativeSpendingProps {
 }
+export interface TotalLentBorrowedProps extends CumulativeSpendingProps {
+}
+
 export interface CycleOptionProps {
   selectedCycle: Signal<CycleType>;
   menu: Signal<React.SetStateAction<string | null>>;

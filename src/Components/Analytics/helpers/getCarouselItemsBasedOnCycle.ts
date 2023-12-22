@@ -1,6 +1,6 @@
 import { CycleType } from "../../../types";
 
-export   const getCarouselItemsBasedOnCycle = (cycle: CycleType, months:string[], monthsAndDays:string[][]) => {
+export const getCarouselItemsBasedOnCycle = (cycle: CycleType, months:string[], monthsAndDays:string[][]) => {
     switch (cycle) {
       case CycleType.Monthly:
         return months;

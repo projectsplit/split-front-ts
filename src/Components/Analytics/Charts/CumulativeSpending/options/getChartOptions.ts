@@ -39,7 +39,7 @@ export const getChartOptions = (
       },
       title: {
         display: false, //isSuccess && cumulArrayData?.length !== 0,
-        text: "Cumulative Spending",
+        text: "Total Spending",
         color: "#a1a1a1",
       },
       customCanvasBackgroundColor: {
@@ -73,17 +73,17 @@ export const getChartOptions = (
                 ) {
                   return `Forecasted Spending: $${value}`;
                 }
-                return `Cumulative spending: $${value}`;
+                return `Total Spending: $${value}`;
               case CycleType.Weekly:
                 if (
                   selectedTimeCycleIndex === currentDateIndex &&
                   context.dataIndex === context.dataset.data.length - 1
                 ) {
-                  return `Forecasted Spending: $${value}`;
+                  return `Forecast Spending: $${value}`;
                 }
-                return `Cumulative spending: $${value}`;
+                return `Total Spending: $${value}`;
               default:
-                return `Cumulative spending: $${value}`; 
+                return `Total Spending: $${value}`; 
             }
           },
         },

@@ -6,12 +6,10 @@ import CategoryButton from "../CategoryButton/CategoryButton";
 import { MdOutlineShowChart } from "react-icons/md";
 import { MdBarChart } from "react-icons/md";
 import { MdSsidChart } from "react-icons/md";
-import logo from "../../components/styles/svg/office-chart-line-forecast.svg";
 import { CumulativeSpending } from "./Charts/CumulativeSpending/CumulativeSpending";
-import { AverageSpending } from "./Charts/AverageSpending/AverageSpending";
 import { TotalLentBorrowed } from "./Charts/TotalLentBorrowed/TotalLentBorrowed";
 import { BarChart } from "./Charts/BarChart/BarChart";
-import { useComputed, useSignal } from "@preact/signals-react";
+import { useSignal } from "@preact/signals-react";
 import MenuAnimationBackground from "../MenuAnimations/MenuAnimationBackground";
 import CycleOptions from "./CycleOption/CycleOption";
 import Years from "./YearOption/YearOption";
@@ -76,13 +74,6 @@ export default function Analytics() {
           >
             <MdSsidChart className="buttonChart" />
           </CategoryButton>
-
-          <CategoryButton
-            selected={selectedChart === "averageSpending"}
-            onClick={() => setSelectedChart("averageSpending")}
-          >
-            <img src={logo} className="dashed" />
-          </CategoryButton>
         </div>
       </div>
 
@@ -115,18 +106,28 @@ export default function Analytics() {
           )}
           {selectedChart === "barChart" && (
             <BarChart
-            selectedCycle={selectedCycle}
-            selectedYear={selectedYear}
-            currentDateIndex={currentDateIndex}
-            monthsAndDaysArrays={monthsAndDaysArrays}
-            cyclehaschanged={cyclehaschanged}
-            allWeeksPerYear={allWeeksPerYear}
-            menu={menu}
-            selectedTimeCycleIndex={selectedTimeCycleIndex}
+              selectedCycle={selectedCycle}
+              selectedYear={selectedYear}
+              currentDateIndex={currentDateIndex}
+              monthsAndDaysArrays={monthsAndDaysArrays}
+              cyclehaschanged={cyclehaschanged}
+              allWeeksPerYear={allWeeksPerYear}
+              menu={menu}
+              selectedTimeCycleIndex={selectedTimeCycleIndex}
             />
           )}
-          {selectedChart === "totalLentBorrowed" && <TotalLentBorrowed />}
-          {selectedChart === "averageSpending" && <AverageSpending />}
+          {selectedChart === "totalLentBorrowed" && (
+            <TotalLentBorrowed
+              selectedCycle={selectedCycle}
+              selectedYear={selectedYear}
+              currentDateIndex={currentDateIndex}
+              monthsAndDaysArrays={monthsAndDaysArrays}
+              cyclehaschanged={cyclehaschanged}
+              allWeeksPerYear={allWeeksPerYear}
+              menu={menu}
+              selectedTimeCycleIndex={selectedTimeCycleIndex}
+            />
+          )}
         </div>
       </div>
 

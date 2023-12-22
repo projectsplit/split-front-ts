@@ -45,7 +45,7 @@ export const getData = (
     labels: labels,
     datasets: [
       {
-        label: "Cumulative Spending",
+        label: "Total Spent",
         data: (() => {
           switch (selectedCycle.value) {
             case CycleType.Monthly:
