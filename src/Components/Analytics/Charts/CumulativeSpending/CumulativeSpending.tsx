@@ -26,7 +26,7 @@ import { buildStartAndEndDates } from "../../helpers/buildStartAndEndDates";
 import { getChartOptions } from "./options/getChartOptions";
 import { getData } from "./data/getData";
 import { buildLabels } from "../../helpers/buildLabels";
-import { useCycleEffectEffect } from "../../hooks/useCycleIndexEffect";
+import { useCycleIndexEffect } from "../../hooks/useCycleIndexEffect";
 import { useStartAndEndDatesEffect } from "../../hooks/useStartEndDatesEffect";
 import { CycleType } from "../../../../types";
 import { deCumulArray } from "../../helpers/deCumulArray";
@@ -70,7 +70,7 @@ export function CumulativeSpending({
     )[1]
   );
 
-  useCycleEffectEffect(selectedCycle, selectedTimeCycleIndex, currentDateIndex);
+  useCycleIndexEffect(selectedCycle, selectedTimeCycleIndex, currentDateIndex);
 
   const allDaysInMonth = getAllDaysInMonth(
     selectedTimeCycleIndex.value + 1,
@@ -169,9 +169,11 @@ export function CumulativeSpending({
 
   const pointRadius: number[] = [];
   const pointBackgroundColor: string[] = [];
+ 
 
   const pointRadiusProjection: number[] = [];
   const pointBackgroundColorProjection: string[] = [];
+ 
 
   projectedArray.map((dp, indx) => {
     if (
@@ -191,6 +193,7 @@ export function CumulativeSpending({
     }
   });
 
+  
   expensePoints.map((dp, indx) => {
     if (indx === 0 || indx === expensePoints.length - 1 || indx === 14) {
       pointRadius.push(2);

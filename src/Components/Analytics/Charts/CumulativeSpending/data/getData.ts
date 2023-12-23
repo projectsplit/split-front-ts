@@ -24,9 +24,13 @@ export const getData = (
   linearGradient.addColorStop(1, "rgba(217, 217, 217, 0)");
 
   const skipped = (ctx: any, value: any) => {
-    return ctx.p0.skip || ctx.p1.skip ? value : undefined;
+   
+   return ctx.p0.skip || ctx.p1.skip ? value : undefined;
+
   };
 
+ // console.log(projectedArray, cumulArrayData)
+  
   const showForecastLegend = (cycle:CycleType)=>{
     switch (cycle) {
       case CycleType.Monthly:

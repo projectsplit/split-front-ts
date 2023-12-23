@@ -21,7 +21,7 @@ import { convertToFullMonthNames, getAllDaysInMonth } from "../../helpers/monthl
 import { createGroupedLabels } from "../../helpers/createGroupedLabels";
 import { getChartOptions } from "./options/getChartOptions";
 import { groupExpensesPerWeek } from "../../helpers/groupExpensesPerWeek";
-import { useCycleEffectEffect } from "../../hooks/useCycleIndexEffect";
+import { useCycleIndexEffect } from "../../hooks/useCycleIndexEffect";
 import { useSignal } from "@preact/signals-react";
 import { buildStartAndEndDates } from "../../helpers/buildStartAndEndDates";
 import { useStartAndEndDatesEffect } from "../../hooks/useStartEndDatesEffect";
@@ -97,7 +97,7 @@ export function BarChart({
 
   const labels = labelBuilder(selectedCycle.value);
 
-  useCycleEffectEffect(selectedCycle, selectedTimeCycleIndex, currentDateIndex);
+  useCycleIndexEffect(selectedCycle, selectedTimeCycleIndex, currentDateIndex);
 
   useStartAndEndDatesEffect(
     selectedCycle,

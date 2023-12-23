@@ -145,22 +145,24 @@ export const getChartOptions = (
           callback: (index: number, value: number) => {
             switch (selectedCycle) {
               case CycleType.Monthly:
-                // show the label for the first and last date of the month
+                // show the x axis for the first and last date of the month
                 if (
                   index === 0 ||
                   value + 1 === datesToNumbers[datesToNumbers.length - 1]
                 ) {
                   return labels[index];
                 }
-                // show the label for intervals of 5
+                // show the x axis for intervals of 5
                 if (parseFloat(labels[index]) % 5 === 0 && value + 2 !== 31) {
                   return Math.floor(parseFloat(labels[index]))
                     .toString()
                     .padStart(2, "0");
                 }
-                // hide all other labels
+                // hide all other x axis
                 return null;
               case CycleType.Weekly:
+                // shortWeekdays.splice(shortWeekdays.length-2, 0,"")
+
                 return shortWeekdays[index];
             }
           },

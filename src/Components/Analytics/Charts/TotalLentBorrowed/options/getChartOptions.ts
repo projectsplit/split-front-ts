@@ -13,13 +13,25 @@ export const getChartOptions = (
   selectedYear: number,
   selectedTimeCycleIndex: number,
   currentDateIndex: number,
-  hitRadius: number[]
+  hitRadius: number[],
+  fractalFactor: number
 ) => {
   const date = new Date(selectedYear, selectedTimeCycleIndex, 1);
 
   const dateOptions: Intl.DateTimeFormatOptions = { month: "long" };
 
   const fullMonthName = date.toLocaleDateString("en-US", dateOptions);
+
+  const enhanceWeekDays = (arr: string[], num: number): string[] => {
+    return arr.flatMap((day, index) => {
+      if (index < arr.length - 1) {
+        return [day, ...Array(num).fill("")];
+      } else {
+        return [day];
+      }
+    });
+  };
+  const enhancedWeekDays = enhanceWeekDays(shortWeekdays, 4);
 
   return {
     responsive: true,
@@ -46,8 +58,16 @@ export const getChartOptions = (
         callbacks: {
           title: (context: Context[]) => {
             const index = context[0].dataIndex;
-            
-            return labels[index] + " " + fullMonthName + " " + selectedYear;
+            if (selectedCycle === CycleType.Monthly)
+              return (
+                labels[index] +
+                " " +
+                fullMonthName +
+                " " +
+                selectedYear.toString()
+              );
+            if (selectedCycle === CycleType.Weekly)
+              return labels[index] + " " + selectedYear.toString();
           },
           label: (context: any) => {
             const value = context.parsed.y;
@@ -95,33 +115,31 @@ export const getChartOptions = (
             ) {
               return "top";
             } else return "bottom";
-          return
+          return;
         },
         padding: 5,
         formatter: (value: number, context: Context) => {
-          //console.log(context.dataIndex)
           // Show price label for first, middle, and last data points
           if (
             context.dataIndex === 0 ||
             context.dataIndex === context.dataset.data.length - 1 ||
             enhancedDatesToNumbers[context.dataIndex] === 15
           ) {
-           
             return "$" + roundThousandsAndMillions(value.toString());
-          // } else if (
-          //   context.dataIndex === Math.floor(context.dataset.data.length / 2)
-           
-          // ) {
-          //   if (enhancedDatesToNumbers[context.dataIndex] % 1 === 0) {
-          //     return "$" + roundThousandsAndMillions(value.toString());
-          //   } else {
-          //     return (
-          //       "$" +
-          //       roundThousandsAndMillions(
-          //         context.dataset.data[context.dataIndex + 1]?.toString()
-          //       )
-          //     );
-          //   }
+            // } else if (
+            //   context.dataIndex === Math.floor(context.dataset.data.length / 2)
+
+            // ) {
+            //   if (enhancedDatesToNumbers[context.dataIndex] % 1 === 0) {
+            //     return "$" + roundThousandsAndMillions(value.toString());
+            //   } else {
+            //     return (
+            //       "$" +
+            //       roundThousandsAndMillions(
+            //         context.dataset.data[context.dataIndex + 1]?.toString()
+            //       )
+            //     );
+            //   }
           } else {
             return null;
           }
@@ -147,22 +165,36 @@ export const getChartOptions = (
             weight: "bold",
             size: 20,
           },
-          callback: (index: number) => {
-            // show the label for the first and last date of the month
-            if (index === 0) return labels[index];
+          callback: (index: number, value: number) => {
+            switch (selectedCycle) {
+              case CycleType.Monthly:
+                // show x axis values for the first and last date of the month
+                if (
+                  index === 0 ||
+                  index === enhancedDatesToNumbers.length - 1
+                ) {
+                  return labels[index];
+                }
+                // show x axis values for intervals of 5
 
-            // show the label for intervals of 5
-            if (parseFloat(labels[index]) % 5 === 0) {
-              return Math.floor(parseFloat(labels[index]))
-                .toString()
-                .padStart(2, "0");
+                if (
+                  parseFloat(labels[index]) % 5 === 0 &&
+                  enhancedDatesToNumbers[index + fractalFactor + 1] !== 31
+                ) {
+                  return Math.floor(parseFloat(labels[index]))
+                    .toString()
+                    .padStart(2, "0");
+                }
+                // hide all other x axis values
+                return null;
+              case CycleType.Weekly:
+                if (
+                  index === 0 ||
+                  index === enhancedWeekDays.length - 1 ||
+                  index % 5 === 0
+                )
+                  return enhancedWeekDays[index];
             }
-            //show label for last date of chart
-            if (index === enhancedDatesToNumbers.length - 1) {
-              return labels[enhancedDatesToNumbers.length - 1];
-            }
-            // hide all other labels
-            return null;
           },
         },
       },

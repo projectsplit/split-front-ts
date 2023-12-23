@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { CycleType } from "../../../types";
 import { Signal } from "@preact/signals-react";
 
-export const useCycleEffectEffect = (
+export const useCycleIndexEffect = (
   selectedCycle: Signal<CycleType>,
   selectedTimeCycleIndex: Signal<number>,
   currentDateIndex: number

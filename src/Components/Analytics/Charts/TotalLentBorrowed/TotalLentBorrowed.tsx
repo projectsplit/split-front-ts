@@ -17,13 +17,14 @@ import ChartDataLabels from "chartjs-plugin-datalabels";
 import { noData } from "../plugins/noData";
 import Carousel from "../../Carousel/Carousel";
 import { getCarouselItemsBasedOnCycle } from "../../helpers/getCarouselItemsBasedOnCycle";
-import { months } from "../../../../constants/dates";
+import { months, shortWeekdays } from "../../../../constants/dates";
 import { TotalLentBorrowedProps } from "../../../../interfaces";
-import { getAllDaysInMonth } from "../../helpers/monthlyDataHelpers";
-import { buildLabels } from "../../helpers/buildLabels";
+import { convertToFullMonthNames, getAllDaysInMonth } from "../../helpers/monthlyDataHelpers";
 import { buildMidPoints } from "../../helpers/buildMidPoints";
 import { getChartOptions } from "./options/getChartOptions";
 import { getData } from "./data/getData";
+import { useCycleIndexEffect } from "../../hooks/useCycleIndexEffect";
+import { CycleType } from "../../../../types";
 
 ChartJS.register(
   CategoryScale,
@@ -46,7 +47,12 @@ export function TotalLentBorrowed({
   menu,
   selectedTimeCycleIndex,
 }: TotalLentBorrowedProps) {
+
+
   const fractalFactor = 4
+
+  useCycleIndexEffect(selectedCycle, selectedTimeCycleIndex, currentDateIndex);
+
   const allDaysInMonth = getAllDaysInMonth(
     selectedTimeCycleIndex.value + 1,
     selectedYear.value
@@ -57,6 +63,32 @@ export function TotalLentBorrowed({
     fractalFactor
   );
 
+  const enhanceWeekDays =(arr: string[], num: number): string[] => {
+    return arr.flatMap((day, index) => {
+      if (index < arr.length - 1) {
+        return [day, ...Array(num).fill("")];
+      } else {
+        return [day];
+      }
+    });
+  }
+  const buildLabels = (
+    cycle: CycleType,
+    selectedTimeCycleIndex: number,
+    datesToNumbers: number[],
+    monthsAndDaysArrays: string[][]
+      ) => {
+    switch (cycle) {
+      case CycleType.Monthly:
+        return datesToNumbers.map((num) => num.toString().padStart(2, "0"));
+      case CycleType.Weekly:
+         const toFullMonthNames= convertToFullMonthNames(monthsAndDaysArrays)[selectedTimeCycleIndex];
+         return enhanceWeekDays(toFullMonthNames, fractalFactor)
+      default:
+        return [""];
+    }
+  };
+
   const labels = buildLabels(
     selectedCycle.value,
     selectedTimeCycleIndex.value,
@@ -65,23 +97,22 @@ export function TotalLentBorrowed({
   );
 
   //const totalLent = [1, 12, 15, 16, 56, 69, 100, 102, 120, 130, 150, 180, 190, 200, 210.36, 222, 250.36, 310, 400, 420, 450, 500, 540, 690, 940, 952, 1000, 1045.36]
-  const totalBorrowed = [
-    1, 12, 15, 16, 56, 69, 100, 102, 120, 130, 150, 180, 190, 200, 210.36, 222,
-    250.36, 310, 400, 420, 450, 500, 540, 690, 940, 952, 1000, 1045.36,
-  ];
-  const totalLent = [
-    2, 5, 10, 75, 80, 80, 100, 100, 100, 110, 110, 120, 130, 145, 200, 250,
-    250.36, 300, 312, 400, 500, 500, 520, 610, 620, 1200, 1300, 1445.36,
-  ];
+  // const totalBorrowed = [
+  //   1, 12, 15, 16, 56, 69, 100, 102, 120, 130, 150, 180, 190, 200, 210.36, 222,
+  //   250.36, 310, 400, 420, 450, 500, 540, 690, 940, 952, 1000, 1045.36,
+  // ];
+  // const totalLent = [
+  //   2, 5, 10, 75, 80, 80, 100, 100, 100, 110, 110, 120, 130, 145, 200, 250,
+  //   250.36, 300, 312, 400, 500, 500, 520, 610, 620, 1200, 1300, 1445.36,
+  // ];
 
-  // const totalLent = [ 2, 50, 100, 750, 800, 800, 1000]
-  // const totalBorrowed =[7, 150, 10, 15, 25, 35, 150]
+  const totalLent = [ 2, 50, 100, 750, 800, 800, 1000]
+  const totalBorrowed =[7, 150, 10, 15, 25, 35, 150]
 
   const totalLentExt = buildMidPoints(totalLent,fractalFactor);
-   
-
   const totalBorrowedExt = buildMidPoints(totalBorrowed,fractalFactor);
 
+ 
   const pointRadius: number[] = [];
   const hitRadius: number[] = []; //determines which cicles will be highlited on hover.
   const pointBackgroundColorTotalLent: string[] = [];
@@ -138,6 +169,7 @@ export function TotalLentBorrowed({
   });
 
   const isSuccess: boolean = true;
+  
   const options = getChartOptions(
     isSuccess,
     totalLentExt,
@@ -148,7 +180,8 @@ export function TotalLentBorrowed({
     selectedYear.value,
     selectedTimeCycleIndex.value,
     currentDateIndex,
-    hitRadius
+    hitRadius,
+    fractalFactor
   );
 
   const data = getData(
