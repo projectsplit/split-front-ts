@@ -4,8 +4,8 @@ import { StyledActiveGroups } from "./ActiveGroups.styled";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { api } from "../../../apis/api";
 import { useEffect } from "react";
-import { TreeItemBuilder } from "../../../helpers/TreeItemBuilder";
 import Spinner from "../../Spinner/Spinner";
+import { TreeItemBuilder } from "../../../helpers/TreeItemBuilder";
 
 export default function ActiveGroups() {
   const heightFromTop = window.innerHeight - (58 + 36 + 18 + 4 + 30);

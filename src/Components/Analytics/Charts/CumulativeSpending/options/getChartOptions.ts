@@ -20,6 +20,17 @@ export const getChartOptions = (
 
   const fullMonthName = date.toLocaleDateString("en-US", dateOptions);
 
+  
+  const enhanceWeekDays = (arr: string[], num: number): string[] => {
+    return arr.flatMap((day, index) => {
+      if (index < arr.length - 1) {
+        return [day, ...Array(num).fill("")];
+      } else {
+        return [day];
+      }
+    });
+  };
+  const enhancedWeekDays = enhanceWeekDays(shortWeekdays, 1);
   return {
     isSuccess: isSuccess,
     responsive: true,
@@ -161,9 +172,13 @@ export const getChartOptions = (
                 // hide all other x axis
                 return null;
               case CycleType.Weekly:
-                // shortWeekdays.splice(shortWeekdays.length-2, 0,"")
-
-                return shortWeekdays[index];
+                // shortWeekdays.splice(shortWeekdays.length-2, 0,"")            
+                if (
+                  index === 0 ||
+                  index === enhancedWeekDays.length - 1 ||
+                  index % 2 === 0 //TODO fractalFactor+1 instead of 2
+                )
+                  return enhancedWeekDays[index];
             }
           },
         },

@@ -19,7 +19,7 @@ import Carousel from "../../Carousel/Carousel";
 import { CumulativeSpendingProps } from "../../../../interfaces";
 import { useSignal } from "@preact/signals-react";
 import { noData } from "../plugins/noData";
-import { getAllDaysInMonth } from "../../helpers/monthlyDataHelpers";
+import { convertToFullMonthNames, getAllDaysInMonth } from "../../helpers/monthlyDataHelpers";
 import { months} from "../../../../constants/dates";
 import { getCarouselItemsBasedOnCycle } from "../../helpers/getCarouselItemsBasedOnCycle";
 import { buildStartAndEndDates } from "../../helpers/buildStartAndEndDates";
@@ -30,6 +30,7 @@ import { useCycleIndexEffect } from "../../hooks/useCycleIndexEffect";
 import { useStartAndEndDatesEffect } from "../../hooks/useStartEndDatesEffect";
 import { CycleType } from "../../../../types";
 import { deCumulArray } from "../../helpers/deCumulArray";
+import { buildMidPoints } from "../../helpers/buildMidPoints";
 
 ChartJS.register(
   CategoryScale,
@@ -79,6 +80,31 @@ export function CumulativeSpending({
 
   const datesToNumbers = allDaysInMonth.map((day) => day.getDate());
 
+  const enhanceWeekDays =(arr: string[], num: number): string[] => {
+    return arr.flatMap((day, index) => {
+      if (index < arr.length - 1) {
+        return [day, ...Array(num).fill("")];
+      } else {
+        return [day];
+      }
+    });
+  }
+  const buildLabels = (
+    cycle: CycleType,
+    selectedTimeCycleIndex: number,
+    datesToNumbers: number[],
+    monthsAndDaysArrays: string[][]
+      ) => {
+    switch (cycle) {
+      case CycleType.Monthly:
+        return datesToNumbers.map((num) => num.toString().padStart(2, "0"));
+      case CycleType.Weekly:
+         const toFullMonthNames= convertToFullMonthNames(monthsAndDaysArrays)[selectedTimeCycleIndex];
+         return enhanceWeekDays(toFullMonthNames, 1)
+      default:
+        return [""];
+    }
+  };
   const labels = buildLabels(
     selectedCycle.value,
     selectedTimeCycleIndex.value,
@@ -95,10 +121,10 @@ export function CumulativeSpending({
     endDate
   );
 
-  const { data: cumulArrayData, isSuccess } = useCumulativeSpendingArray(
-    startDate.value,
-    endDate.value
-  );
+  // const { data: cumulArrayData, isSuccess } = useCumulativeSpendingArray(
+  //   startDate.value,
+  //   endDate.value
+  // );
 
   const projectionArray = (
     cumulArrayData: number[] | undefined,
@@ -149,10 +175,15 @@ export function CumulativeSpending({
       lastIndex = index;
     }
   };
-
+  
+  const isSuccess = true
+  const cumulArrayData =  [30, 30, 30, 33, 34, 35]
   const expensePoints = cumulArrayData === undefined ? [] : cumulArrayData;
-  const projectedArray = projectionArray(cumulArrayData, selectedCycle.value);
-
+  //const projectedArray = projectionArray(cumulArrayData, selectedCycle.value);
+  const projectedArray2 =  [30, 30, 30, 33, 34, 35,38.5]
+  const projectedArray = buildMidPoints(projectedArray2,1)
+  projectedArray[11]=NaN
+  
   const lastNumberBeforeNaN = findLastNumberBeforeNaN(projectedArray);
 
   const options = getChartOptions(
@@ -173,6 +204,7 @@ export function CumulativeSpending({
 
   const pointRadiusProjection: number[] = [];
   const pointBackgroundColorProjection: string[] = [];
+  const hitRadius: number[] = [];
  
 
   projectedArray.map((dp, indx) => {
@@ -193,7 +225,6 @@ export function CumulativeSpending({
     }
   });
 
-  
   expensePoints.map((dp, indx) => {
     if (indx === 0 || indx === expensePoints.length - 1 || indx === 14) {
       pointRadius.push(2);

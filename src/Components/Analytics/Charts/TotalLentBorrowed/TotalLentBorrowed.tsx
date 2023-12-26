@@ -118,17 +118,6 @@ export function TotalLentBorrowed({
   const pointBackgroundColorTotalLent: string[] = [];
   const pointBackgroundColorTotalLentTotalBorrowed: string[] = [];
 
-  const createConditionForMiddlePoint = (dataArrLen: number, indx: number) => {
-    if (
-      indx === Math.floor(dataArrLen / 2) &&
-      enhancedDatesToNumbers[indx] % 1 === 0
-    ) {
-      return Math.floor(dataArrLen / 2);
-    } else {
-      return Math.floor(dataArrLen / 2 + 1);
-    }
-  };
-
   totalLentExt.map((dp, indx) => {
     if (
       indx === 0 ||
@@ -167,7 +156,7 @@ export function TotalLentBorrowed({
       hitRadius.push(0);
     }
   });
-
+  console.log(hitRadius)
   const isSuccess: boolean = true;
   
   const options = getChartOptions(
