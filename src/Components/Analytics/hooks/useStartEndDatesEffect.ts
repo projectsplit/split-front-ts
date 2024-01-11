@@ -21,5 +21,7 @@ export const useStartAndEndDatesEffect = (
     );
     startDate.value = startAndEndDates[0];
     endDate.value = startAndEndDates[1];
-  }, [selectedTimeCycleIndex.value]);
+    
+  
+  }, [selectedTimeCycleIndex.value,selectedYear.value]);
 };

@@ -17,14 +17,15 @@ import ChartDataLabels from "chartjs-plugin-datalabels";
 import { noData } from "../plugins/noData";
 import Carousel from "../../Carousel/Carousel";
 import { getCarouselItemsBasedOnCycle } from "../../helpers/getCarouselItemsBasedOnCycle";
-import { months, shortWeekdays } from "../../../../constants/dates";
+import { months } from "../../../../constants/dates";
 import { TotalLentBorrowedProps } from "../../../../interfaces";
-import { convertToFullMonthNames, getAllDaysInMonth } from "../../helpers/monthlyDataHelpers";
+import {  getAllDaysInMonth } from "../../helpers/monthlyDataHelpers";
 import { buildMidPoints } from "../../helpers/buildMidPoints";
 import { getChartOptions } from "./options/getChartOptions";
 import { getData } from "./data/getData";
 import { useCycleIndexEffect } from "../../hooks/useCycleIndexEffect";
-import { CycleType } from "../../../../types";
+
+import { buildLabels } from "../../helpers/buildLabels";
 
 ChartJS.register(
   CategoryScale,
@@ -63,37 +64,13 @@ export function TotalLentBorrowed({
     fractalFactor
   );
 
-  const enhanceWeekDays =(arr: string[], num: number): string[] => {
-    return arr.flatMap((day, index) => {
-      if (index < arr.length - 1) {
-        return [day, ...Array(num).fill("")];
-      } else {
-        return [day];
-      }
-    });
-  }
-  const buildLabels = (
-    cycle: CycleType,
-    selectedTimeCycleIndex: number,
-    datesToNumbers: number[],
-    monthsAndDaysArrays: string[][]
-      ) => {
-    switch (cycle) {
-      case CycleType.Monthly:
-        return datesToNumbers.map((num) => num.toString().padStart(2, "0"));
-      case CycleType.Weekly:
-         const toFullMonthNames= convertToFullMonthNames(monthsAndDaysArrays)[selectedTimeCycleIndex];
-         return enhanceWeekDays(toFullMonthNames, fractalFactor)
-      default:
-        return [""];
-    }
-  };
 
   const labels = buildLabels(
     selectedCycle.value,
     selectedTimeCycleIndex.value,
     enhancedDatesToNumbers,
-    monthsAndDaysArrays
+    monthsAndDaysArrays,
+    fractalFactor
   );
 
   //const totalLent = [1, 12, 15, 16, 56, 69, 100, 102, 120, 130, 150, 180, 190, 200, 210.36, 222, 250.36, 310, 400, 420, 450, 500, 540, 690, 940, 952, 1000, 1045.36]
@@ -156,6 +133,7 @@ export function TotalLentBorrowed({
       hitRadius.push(0);
     }
   });
+  
   console.log(hitRadius)
   const isSuccess: boolean = true;
   

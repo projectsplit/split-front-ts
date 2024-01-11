@@ -1,12 +1,10 @@
 import React from "react";
 import { useRedirectToBudget } from "../hooks/useRedirectToBudget";
-import { BudgetInfoResponse } from "../types";
+import useBudgetInfo from "../hooks/useBudgetInfo";
 
-interface RedirectToBudgetProps {
-  data: BudgetInfoResponse | undefined;
-  isLoading:boolean
-}
-export default function RedirectToBudget({ data,isLoading }: RedirectToBudgetProps) {
-  useRedirectToBudget(data, isLoading);
+
+export default function RedirectToBudget() {
+  const { data, isFetching } = useBudgetInfo();
+  useRedirectToBudget(data, isFetching);
   return <></>;
 }

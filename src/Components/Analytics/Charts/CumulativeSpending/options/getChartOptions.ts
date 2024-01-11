@@ -2,17 +2,20 @@ import { Context } from "chartjs-plugin-datalabels/types/context";
 import { roundThousandsAndMillions } from "../../../../../helpers/roundThousandsAndMils";
 import { CycleType } from "../../../../../types";
 import { shortWeekdays } from "../../../../../constants/dates";
+import { enhanceWeekDays } from "../../../helpers/enhanceWeekDays";
 
 export const getChartOptions = (
   isSuccess: boolean,
   cumulArrayData: number[] | undefined,
   selectedCycle: CycleType,
   labels: string[],
-  datesToNumbers: number[],
+  enhancedDatesToNumbers: number[],
   selectedYear: number,
   selectedTimeCycleIndex: number,
   lastNumberBeforeNaN: number | undefined,
-  currentDateIndex: number
+  currentDateIndex: number,
+  hitRadius: number[],
+  fractalFactor: number
 ) => {
   const date = new Date(selectedYear, selectedTimeCycleIndex, 1);
 
@@ -20,17 +23,8 @@ export const getChartOptions = (
 
   const fullMonthName = date.toLocaleDateString("en-US", dateOptions);
 
-  
-  const enhanceWeekDays = (arr: string[], num: number): string[] => {
-    return arr.flatMap((day, index) => {
-      if (index < arr.length - 1) {
-        return [day, ...Array(num).fill("")];
-      } else {
-        return [day];
-      }
-    });
-  };
-  const enhancedWeekDays = enhanceWeekDays(shortWeekdays, 1);
+  const enhancedWeekDays = enhanceWeekDays(shortWeekdays, fractalFactor);
+
   return {
     isSuccess: isSuccess,
     responsive: true,
@@ -38,6 +32,10 @@ export const getChartOptions = (
     maintainAspectRatio: false,
     plugins: {
       legend: {
+        onClick: function(e: Event) {
+          if (e.stopPropagation) 
+              e.stopPropagation();
+        },
         display: isSuccess && cumulArrayData?.length !== 0,
         position: "chartArea",
         align: "center",
@@ -82,7 +80,7 @@ export const getChartOptions = (
                   selectedTimeCycleIndex === new Date().getMonth() &&
                   context.dataIndex === context.dataset.data.length - 1
                 ) {
-                  return `Forecasted Spending: $${value}`;
+                  return `Forecast Spending: $${value}`;
                 }
                 return `Total Spending: $${value}`;
               case CycleType.Weekly:
@@ -113,8 +111,8 @@ export const getChartOptions = (
           // Show numeric value over graph for first, middle, and last data points
           if (
             context.dataIndex === 0 ||
-            context.dataIndex === 14 ||
             context.dataIndex === context.dataset.data.length - 1 ||
+            enhancedDatesToNumbers[context.dataIndex] === 15 ||
             lastNumberBeforeNaN === context.dataIndex
           ) {
             if (value < 0) {
@@ -159,24 +157,28 @@ export const getChartOptions = (
                 // show the x axis for the first and last date of the month
                 if (
                   index === 0 ||
-                  value + 1 === datesToNumbers[datesToNumbers.length - 1]
+                  index === enhancedDatesToNumbers.length - 1
                 ) {
                   return labels[index];
                 }
-                // show the x axis for intervals of 5
-                if (parseFloat(labels[index]) % 5 === 0 && value + 2 !== 31) {
+                // show x axis values for intervals of 5
+
+                if (
+                  parseFloat(labels[index]) % 5 === 0 &&
+                  enhancedDatesToNumbers[index + fractalFactor + 1] !== 31
+                ) {
                   return Math.floor(parseFloat(labels[index]))
                     .toString()
                     .padStart(2, "0");
                 }
-                // hide all other x axis
+                // hide all other x axis values
                 return null;
               case CycleType.Weekly:
                 // shortWeekdays.splice(shortWeekdays.length-2, 0,"")            
                 if (
                   index === 0 ||
                   index === enhancedWeekDays.length - 1 ||
-                  index % 2 === 0 //TODO fractalFactor+1 instead of 2
+                  index % (fractalFactor+1) === 0
                 )
                   return enhancedWeekDays[index];
             }
@@ -195,7 +197,7 @@ export const getChartOptions = (
       point: {
         radius: 3,
         borderWidth: 3,
-        hitRadius: 10,
+        hitRadius: hitRadius,
         hoverRadius: 10,
         pointStyle: "circle",
         pointLabelFontSize: 14,

@@ -148,6 +148,7 @@ export function BarChart({
     ],
   } as any;
 
+
   return (
     <StyledBarChart>
       <Bar options={options} data={data} plugins={[noData, ChartDataLabels]} />
@@ -167,15 +168,3 @@ export function BarChart({
     </StyledBarChart>
   );
 }
-
-
-  // const getRandomNumbers = (length: number, min: number, max: number) => {
-  //   const numbers = [];
-  //   for (let i = 0; i < length; i++) {
-  //     const randomNumber = Math.floor(Math.random() * (max - min + 1)) + min;
-  //     numbers.push(randomNumber);
-  //   }
-  //   return numbers;
-  // };
-
- 

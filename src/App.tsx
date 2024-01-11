@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import "./App.css";
 import "./components/styles/semantic-icons.css";
 import { Routes, Route } from "react-router-dom";
@@ -32,14 +32,11 @@ import GlobalStyles from "./components/styles/global";
 import CurrentBudget from "./components/Budget/CurrentBudget/CurrentBudget";
 import CreateBudget from "./components/Budget/CreateBudget/CreateBudget";
 import RedirectToBudget from "./routes/RedirectToBudget";
-import useBudgetInfo from "./hooks/useBudgetInfo";
 import Analytics from "./components/Analytics/Analytics";
 import { theme } from "./constants/theme";
 
 
 function App() {
-
-  const { data, isFetching } = useBudgetInfo();
 
   return (
     <ThemeProvider theme={theme}>
@@ -63,10 +60,10 @@ function App() {
             </Route>
 
             <Route path="/budget" element={<Budget2 />}>
-              <Route index element={<RedirectToBudget data={data} isLoading={isFetching}/>} />
+              <Route index element={<RedirectToBudget />} />
               <Route path="current" element={<CurrentBudget />} />
               <Route path="create" element={<CreateBudget />} />
-              <Route path="*" element={<RedirectToBudget data={data} isLoading={isFetching}/>} />
+              <Route path="*" element={<RedirectToBudget />} />
             </Route>
 
             <Route path="/analytics/*" element={<RedirectToAnalytics />} />

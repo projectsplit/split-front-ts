@@ -45,25 +45,27 @@ export const getData = (
         return false; 
     }
   }
+  
   return {
     labels: labels,
     datasets: [
       {
         label: "Total Spent",
         data: (() => {
-          switch (selectedCycle.value) {
-            case CycleType.Monthly:
-              return selectedTimeCycleIndex.value === new Date().getMonth()
-                ? projectedArray
-                : cumulArrayData;
-            case CycleType.Weekly:
-              return selectedTimeCycleIndex.value === currentDateIndex
-                ? projectedArray
-                : cumulArrayData;
-            // Add additional cases for other cycle types if needed
-            default:
-              return cumulArrayData; // Default case
-          }
+          return projectedArray
+          // switch (selectedCycle.value) {
+          //   case CycleType.Monthly:
+          //     return selectedTimeCycleIndex.value === new Date().getMonth()
+          //       ? projectedArray
+          //       : cumulArrayData;
+          //   case CycleType.Weekly:
+          //     return selectedTimeCycleIndex.value === currentDateIndex
+          //       ? projectedArray
+          //       : cumulArrayData;//TODO : Need to be removed and leave projected only
+          //   // Add additional cases for other cycle types if needed
+          //   default:
+          //     return cumulArrayData; // Default case
+          // }
         })(),
         borderColor: (ctx: any) => {
           if (
@@ -85,36 +87,8 @@ export const getData = (
         fill: 'start',
         tension: 0.2,
         borderWidth: 2,
-        pointRadius: (() => {
-          switch (selectedCycle.value) {
-            case CycleType.Monthly:
-              return selectedTimeCycleIndex.value === new Date().getMonth()
-                ? pointRadiusProjection
-                : pointRadius;
-            case CycleType.Weekly:
-              return selectedTimeCycleIndex.value === currentDateIndex
-                ? pointRadiusProjection
-                : pointRadius;
-            // Add additional cases for other cycle types if needed
-            default:
-              return pointRadius; // Default case
-          }
-        })(),
-        pointBackgroundColor: (() => {
-          switch (selectedCycle.value) {
-            case CycleType.Monthly:
-              return selectedTimeCycleIndex.value === new Date().getMonth()
-                ? pointBackgroundColorProjection
-                : pointBackgroundColor;
-            case CycleType.Weekly:
-              return selectedTimeCycleIndex.value === currentDateIndex
-                ? pointBackgroundColorProjection
-                : pointBackgroundColor;
-            // Add additional cases for other cycle types if needed
-            default:
-              return pointBackgroundColor; // Default case
-          }
-        })(),
+        pointRadius: pointRadiusProjection,
+        pointBackgroundColor: pointBackgroundColorProjection,
       },
       showForecastLegend(selectedCycle.value)
       ? {

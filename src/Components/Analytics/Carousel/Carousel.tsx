@@ -29,7 +29,7 @@ export default function Carousel({
    
   };
 
-  const displayCarouselItem = (cycle: CycleType, item: any) => {
+  const displayCarouselItem = (cycle: CycleType, item: string[] | string[][]) => {
     switch (cycle) {
       case CycleType.Monthly:
         return item;
@@ -41,7 +41,8 @@ export default function Carousel({
     }
   };
 
- 
+  // const filteredCarouselItems = (carouselItems as string[][]).filter((arr) => arr.length > 0);
+  
   return (
     <StyledCarousel cyclehaschanged={cyclehaschanged}>
       <div className="carousel-container">

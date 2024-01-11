@@ -22,11 +22,12 @@ export  const buildStartAndEndDates = (
         return [startDate, endDate]
 
       case CycleType.Weekly:
-        const currentWeek = allWeeksPerYear[selectedTimeCycleIndex]
-         startDate = formatDateIntoYMD(currentWeek[0])
-         endDate = formatDateIntoYMD(currentWeek[currentWeek.length-1])
-        return  [startDate, endDate]
+          startDate = formatDateIntoYMD(allWeeksPerYear[selectedTimeCycleIndex][0])
+          endDate = formatDateIntoYMD(allWeeksPerYear[selectedTimeCycleIndex][allWeeksPerYear[selectedTimeCycleIndex].length-1])
+         return  [startDate, endDate]
+       
       default:
         return "";
     }
   };
+

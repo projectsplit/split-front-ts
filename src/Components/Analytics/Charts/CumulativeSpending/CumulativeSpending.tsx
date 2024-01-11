@@ -19,8 +19,10 @@ import Carousel from "../../Carousel/Carousel";
 import { CumulativeSpendingProps } from "../../../../interfaces";
 import { useSignal } from "@preact/signals-react";
 import { noData } from "../plugins/noData";
-import { convertToFullMonthNames, getAllDaysInMonth } from "../../helpers/monthlyDataHelpers";
-import { months} from "../../../../constants/dates";
+import {
+  getAllDaysInMonth
+} from "../../helpers/monthlyDataHelpers";
+import { months } from "../../../../constants/dates";
 import { getCarouselItemsBasedOnCycle } from "../../helpers/getCarouselItemsBasedOnCycle";
 import { buildStartAndEndDates } from "../../helpers/buildStartAndEndDates";
 import { getChartOptions } from "./options/getChartOptions";
@@ -53,6 +55,7 @@ export function CumulativeSpending({
   menu,
   selectedTimeCycleIndex,
 }: CumulativeSpendingProps) {
+  const fractalFactor = 1;
 
   const startDate = useSignal<string>(
     buildStartAndEndDates(
@@ -78,38 +81,19 @@ export function CumulativeSpending({
     selectedYear.value
   );
 
-  const datesToNumbers = allDaysInMonth.map((day) => day.getDate());
 
-  const enhanceWeekDays =(arr: string[], num: number): string[] => {
-    return arr.flatMap((day, index) => {
-      if (index < arr.length - 1) {
-        return [day, ...Array(num).fill("")];
-      } else {
-        return [day];
-      }
-    });
-  }
-  const buildLabels = (
-    cycle: CycleType,
-    selectedTimeCycleIndex: number,
-    datesToNumbers: number[],
-    monthsAndDaysArrays: string[][]
-      ) => {
-    switch (cycle) {
-      case CycleType.Monthly:
-        return datesToNumbers.map((num) => num.toString().padStart(2, "0"));
-      case CycleType.Weekly:
-         const toFullMonthNames= convertToFullMonthNames(monthsAndDaysArrays)[selectedTimeCycleIndex];
-         return enhanceWeekDays(toFullMonthNames, 1)
-      default:
-        return [""];
-    }
-  };
+  const enhancedDatesToNumbers = buildMidPoints(
+    allDaysInMonth.map((date) => date.getDate()),
+    fractalFactor
+  );
+
+
   const labels = buildLabels(
     selectedCycle.value,
     selectedTimeCycleIndex.value,
-    datesToNumbers,
-    monthsAndDaysArrays
+    enhancedDatesToNumbers,
+    monthsAndDaysArrays,
+    fractalFactor
   );
 
   useStartAndEndDatesEffect(
@@ -121,16 +105,20 @@ export function CumulativeSpending({
     endDate
   );
 
-  // const { data: cumulArrayData, isSuccess } = useCumulativeSpendingArray(
-  //   startDate.value,
-  //   endDate.value
-  // );
+ 
+
+  const { data: cumulArrayData, isSuccess } = useCumulativeSpendingArray(
+    startDate.value,
+    endDate.value
+  );
 
   const projectionArray = (
     cumulArrayData: number[] | undefined,
     cycle: CycleType
   ) => {
     if (cumulArrayData === undefined) return [];
+    if (cumulArrayData.length===0) return [];
+
     const enhancedCumulArray = [...cumulArrayData];
     let upLimit: number;
     //const now = new Date();
@@ -148,8 +136,20 @@ export function CumulativeSpending({
       enhancedCumulArrayLength = enhancedCumulArray?.length;
     }
     const forecastValue = calculateForcastValue(cumulArrayData, upLimit);
+
     enhancedCumulArray.push(forecastValue);
-    return enhancedCumulArray;
+    const enhancedCumulArrayWithMidPoints = buildMidPoints(
+      enhancedCumulArray,
+      1
+    );
+
+    const hasNaN = enhancedCumulArrayWithMidPoints.some(Number.isNaN);
+    if (!hasNaN)
+      enhancedCumulArrayWithMidPoints[
+        enhancedCumulArrayWithMidPoints.length - 2
+      ] = NaN;
+
+    return enhancedCumulArrayWithMidPoints;
   };
 
   const calculateForcastValue = (
@@ -175,65 +175,74 @@ export function CumulativeSpending({
       lastIndex = index;
     }
   };
-  
-  const isSuccess = true
-  const cumulArrayData =  [30, 30, 30, 33, 34, 35]
+
+  // const isSuccess = true;
+  // const cumulArrayData =  [30, 30, 30, 33, 34,35]
+  // const cumulArrayData = [
+  //   1, 12, 15, 16, 56, 69, 100, 102, 120, 130, 150, 180, 190, 200, 210.36, 222,
+  //   250.36, 310, 400, 420, 450, 500, 540, 690, 940, 952, 1000, 1045.36, 1200,
+  // ];
   const expensePoints = cumulArrayData === undefined ? [] : cumulArrayData;
-  //const projectedArray = projectionArray(cumulArrayData, selectedCycle.value);
-  const projectedArray2 =  [30, 30, 30, 33, 34, 35,38.5]
-  const projectedArray = buildMidPoints(projectedArray2,1)
-  projectedArray[11]=NaN
-  
+  const projectedArray = projectionArray(cumulArrayData, selectedCycle.value);
+  //const projectedArray2 =  [30, 30, 30, 33, 34, 35,38.5]
+  //const projectedArray = buildMidPoints(projectedArray2,1)
+  //projectedArray[11]=NaN
+
   const lastNumberBeforeNaN = findLastNumberBeforeNaN(projectedArray);
+
+  const pointRadius: number[] = [];
+  const pointBackgroundColor: string[] = [];
+
+  const pointRadiusProjection: number[] = [];
+  const pointBackgroundColorProjection: string[] = [];
+  const hitRadius: number[] = [];
+
+  projectedArray.map((dp, indx) => {
+    if (
+      indx === 0 ||
+      indx === projectedArray.length - 1 ||
+      enhancedDatesToNumbers[indx] === 15 ||
+      indx === lastNumberBeforeNaN
+    ) {
+      pointRadiusProjection.push(2);
+      pointBackgroundColorProjection.push("#A12BFF");
+    } else {
+      pointRadiusProjection.push(0);
+      pointBackgroundColorProjection.push("transparent");
+    }
+    if (enhancedDatesToNumbers[indx] % 1 === 0) {
+      hitRadius.push(10);
+    } else {
+      hitRadius.push(0);
+    }
+  });
+  if (projectedArray.some((p) => isNaN(p))) {
+    pointBackgroundColorProjection[projectedArray.length - 1] = "grey";
+  }
+
+  // expensePoints.map((dp, indx) => {
+  //   if (indx === 0 || indx === expensePoints.length - 1 || indx === 14) {
+  //     pointRadius.push(2);
+  //     pointBackgroundColor.push("#A12BFF");
+  //   } else {
+  //     pointRadius.push(0);
+  //     pointBackgroundColor.push("transparent");
+  //   }
+  // });
 
   const options = getChartOptions(
     isSuccess,
     cumulArrayData,
     selectedCycle.value,
     labels,
-    datesToNumbers,
+    enhancedDatesToNumbers,
     selectedYear.value,
     selectedTimeCycleIndex.value,
     lastNumberBeforeNaN,
-    currentDateIndex
+    currentDateIndex,
+    hitRadius,
+    fractalFactor
   );
-
-  const pointRadius: number[] = [];
-  const pointBackgroundColor: string[] = [];
- 
-
-  const pointRadiusProjection: number[] = [];
-  const pointBackgroundColorProjection: string[] = [];
-  const hitRadius: number[] = [];
- 
-
-  projectedArray.map((dp, indx) => {
-    if (
-      indx === 0 ||
-      indx === expensePoints.length - 1 ||
-      indx === 14 ||
-      indx === lastNumberBeforeNaN
-    ) {
-      pointRadiusProjection.push(2);
-      pointBackgroundColorProjection.push("#A12BFF");
-    } else if (indx === projectedArray.length - 1) {
-      pointRadiusProjection.push(2);
-      pointBackgroundColorProjection.push("grey");
-    } else {
-      pointRadiusProjection.push(0);
-      pointBackgroundColorProjection.push("transparent");
-    }
-  });
-
-  expensePoints.map((dp, indx) => {
-    if (indx === 0 || indx === expensePoints.length - 1 || indx === 14) {
-      pointRadius.push(2);
-      pointBackgroundColor.push("#A12BFF");
-    } else {
-      pointRadius.push(0);
-      pointBackgroundColor.push("transparent");
-    }
-  });
 
   const data = getData(
     labels,
@@ -249,6 +258,7 @@ export function CumulativeSpending({
     isSuccess
   );
 
+ 
   return (
     <StyledCumulativeSpending>
       <Line options={options} data={data} plugins={[noData, ChartDataLabels]} />
