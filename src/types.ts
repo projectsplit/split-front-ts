@@ -108,6 +108,11 @@ export type SpendingInfoResponse = {
   currency: string;
 };
 
+export type GetTotalLentTotalBorrowedResponse = {
+  totalBorrowed: number[];
+  totalLent: number[];
+};
+
 export type Currency = {
   symbol: string;
   name: string;

@@ -105,8 +105,6 @@ export function CumulativeSpending({
     endDate
   );
 
- 
-
   const { data: cumulArrayData, isSuccess } = useCumulativeSpendingArray(
     startDate.value,
     endDate.value

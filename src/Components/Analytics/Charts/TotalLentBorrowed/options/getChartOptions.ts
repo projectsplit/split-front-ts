@@ -18,7 +18,7 @@ export const getChartOptions = (
   fractalFactor: number
 ) => {
   const date = new Date(selectedYear, selectedTimeCycleIndex, 1);
- 
+
   const dateOptions: Intl.DateTimeFormatOptions = { month: "long" };
 
   const fullMonthName = date.toLocaleDateString("en-US", dateOptions);
@@ -26,6 +26,7 @@ export const getChartOptions = (
   const enhancedWeekDays = enhanceWeekDays(shortWeekdays, fractalFactor);
 
   return {
+    isSuccess: isSuccess,
     responsive: true,
     maintainAspectRatio: false,
     plugins: {
@@ -111,27 +112,21 @@ export const getChartOptions = (
         },
         padding: 5,
         formatter: (value: number, context: Context) => {
+
           // Show price label for first, middle, and last data points
           if (
             context.dataIndex === 0 ||
             context.dataIndex === context.dataset.data.length - 1 ||
             enhancedDatesToNumbers[context.dataIndex] === 15
           ) {
+            if (
+              enhancedDatesToNumbers[context.dataIndex] === 15 &&
+              (enhancedDatesToNumbers[context.dataset.data.length - 1] === 14 ||
+                enhancedDatesToNumbers[context.dataset.data.length - 1] === 16) //condition to not show 15th and 16th consecutive data points
+            )
+              return "";
             return "$" + roundThousandsAndMillions(value.toString());
-            // } else if (
-            //   context.dataIndex === Math.floor(context.dataset.data.length / 2)
 
-            // ) {
-            //   if (enhancedDatesToNumbers[context.dataIndex] % 1 === 0) {
-            //     return "$" + roundThousandsAndMillions(value.toString());
-            //   } else {
-            //     return (
-            //       "$" +
-            //       roundThousandsAndMillions(
-            //         context.dataset.data[context.dataIndex + 1]?.toString()
-            //       )
-            //     );
-            //   }
           } else {
             return null;
           }

@@ -7,11 +7,13 @@ export const noData = {
         chartArea: { top, left, width, height },
       } = chart;
       ctx.save();
-      //console.log(data.datasets[0].data)
+      console.log( chart.config.options.isSuccess,
+        data.datasets[0].data.length === 0)
       if (
         chart.config.options.isSuccess &&
         data.datasets[0].data.length === 0
       ) {
+       
         ctx.fillStyle = "#0E0E10";
         ctx.fillRect(left, top, width, height);
 

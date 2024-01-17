@@ -19,14 +19,17 @@ import Carousel from "../../Carousel/Carousel";
 import { getCarouselItemsBasedOnCycle } from "../../helpers/getCarouselItemsBasedOnCycle";
 import { months } from "../../../../constants/dates";
 import { TotalLentBorrowedProps } from "../../../../interfaces";
-import {  getAllDaysInMonth } from "../../helpers/monthlyDataHelpers";
+import { getAllDaysInMonth } from "../../helpers/monthlyDataHelpers";
 import { buildMidPoints } from "../../helpers/buildMidPoints";
 import { getChartOptions } from "./options/getChartOptions";
 import { getData } from "./data/getData";
 import { useCycleIndexEffect } from "../../hooks/useCycleIndexEffect";
-
+import { useStartAndEndDatesEffect } from "../../hooks/useStartEndDatesEffect";
 import { buildLabels } from "../../helpers/buildLabels";
-
+import { useSignal } from "@preact/signals-react";
+import { buildStartAndEndDates } from "../../helpers/buildStartAndEndDates";
+import useTotalLentBorrowedArrays from "../../../../hooks/useTotalLentBorrowedArrays";
+//TODO fast click to the left by choosing weekly. Legends are flashing
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -48,11 +51,26 @@ export function TotalLentBorrowed({
   menu,
   selectedTimeCycleIndex,
 }: TotalLentBorrowedProps) {
-
-
-  const fractalFactor = 4
+  const fractalFactor = 4;
 
   useCycleIndexEffect(selectedCycle, selectedTimeCycleIndex, currentDateIndex);
+
+  const startDate = useSignal<string>(
+    buildStartAndEndDates(
+      selectedCycle.value,
+      selectedTimeCycleIndex.value,
+      selectedYear.value,
+      allWeeksPerYear
+    )[0]
+  );
+  const endDate = useSignal<string>(
+    buildStartAndEndDates(
+      selectedCycle.value,
+      selectedTimeCycleIndex.value,
+      selectedYear.value,
+      allWeeksPerYear
+    )[1]
+  );
 
   const allDaysInMonth = getAllDaysInMonth(
     selectedTimeCycleIndex.value + 1,
@@ -64,7 +82,6 @@ export function TotalLentBorrowed({
     fractalFactor
   );
 
-
   const labels = buildLabels(
     selectedCycle.value,
     selectedTimeCycleIndex.value,
@@ -75,21 +92,42 @@ export function TotalLentBorrowed({
 
   //const totalLent = [1, 12, 15, 16, 56, 69, 100, 102, 120, 130, 150, 180, 190, 200, 210.36, 222, 250.36, 310, 400, 420, 450, 500, 540, 690, 940, 952, 1000, 1045.36]
   // const totalBorrowed = [
-  //   1, 12, 15, 16, 56, 69, 100, 102, 120, 130, 150, 180, 190, 200, 210.36, 222,
-  //   250.36, 310, 400, 420, 450, 500, 540, 690, 940, 952, 1000, 1045.36,
-  // ];
+  //   1, 12, 15, 16, 56, 69, 100, 102, 120, 130, 150, 180, 190, 200, 210.36,
+  //   218.36,];
   // const totalLent = [
-  //   2, 5, 10, 75, 80, 80, 100, 100, 100, 110, 110, 120, 130, 145, 200, 250,
-  //   250.36, 300, 312, 400, 500, 500, 520, 610, 620, 1200, 1300, 1445.36,
-  // ];
+  //   2, 5, 10, 75, 80, 80, 100, 100, 100, 110, 110, 120, 130, 145, 240,
+  // 245];
 
-  const totalLent = [ 2, 50, 100, 750, 800, 800, 1000]
-  const totalBorrowed =[7, 150, 10, 15, 25, 35, 150]
+  useStartAndEndDatesEffect(
+    selectedCycle,
+    selectedTimeCycleIndex,
+    selectedYear,
+    allWeeksPerYear,
+    startDate,
+    endDate
+  );
 
-  const totalLentExt = buildMidPoints(totalLent,fractalFactor);
-  const totalBorrowedExt = buildMidPoints(totalBorrowed,fractalFactor);
+  const totalLent2 = [2, 50, 100, 750, 800, 800, 1000];
+  const totalBorrowed2 = [7, 150, 10, 15, 25, 35, 150];
 
- 
+  const { data: totalLentBorrowed, isSuccess } = useTotalLentBorrowedArrays(
+    startDate.value,
+    endDate.value
+  );
+
+  const totalLent =
+    totalLentBorrowed?.totalLent === undefined
+      ? []
+      : totalLentBorrowed.totalLent;
+  const totalBorrowed =
+    totalLentBorrowed?.totalBorrowed === undefined
+      ? []
+      : totalLentBorrowed.totalBorrowed;
+
+  const totalLentExt = buildMidPoints(totalLent, fractalFactor).filter((element) => element !== undefined);
+  const totalBorrowedExt = buildMidPoints(totalBorrowed, fractalFactor).filter((element) => element !== undefined);
+
+
   const pointRadius: number[] = [];
   const hitRadius: number[] = []; //determines which cicles will be highlited on hover.
   const pointBackgroundColorTotalLent: string[] = [];
@@ -99,16 +137,24 @@ export function TotalLentBorrowed({
     if (
       indx === 0 ||
       indx === totalLentExt.length - 1 ||
-      enhancedDatesToNumbers[indx] === 15//createConditionForMiddlePoint(totalLentExt.length, indx)
-      
+      enhancedDatesToNumbers[indx] === 15 //createConditionForMiddlePoint(totalLentExt.length, indx)
     ) {
-      pointRadius.push(2);
-      pointBackgroundColorTotalLent.push("#317E24");
+      if (
+        enhancedDatesToNumbers[indx] === 15 &&
+        (enhancedDatesToNumbers[totalLentExt.length - 1] === 14 ||
+          enhancedDatesToNumbers[totalLentExt.length - 1] === 16) //condition to not show 15th and 16th consecutive data points
+      ) {
+        pointRadius.push(0);
+        pointBackgroundColorTotalLent.push("transparent");
+      } else {
+        pointRadius.push(2);
+        pointBackgroundColorTotalLent.push("#317E24");
+      }
     } else {
       pointRadius.push(0);
       pointBackgroundColorTotalLent.push("transparent");
     }
-    if ( enhancedDatesToNumbers[indx] % 1 === 0) {
+    if (enhancedDatesToNumbers[indx] % 1 === 0) {
       hitRadius.push(10);
     } else {
       hitRadius.push(0);
@@ -121,22 +167,28 @@ export function TotalLentBorrowed({
       indx === totalLentExt.length - 1 ||
       enhancedDatesToNumbers[indx] === 15
     ) {
-      pointRadius.push(2);
-      pointBackgroundColorTotalLentTotalBorrowed.push("#FF3D3D");
+      if (
+        enhancedDatesToNumbers[indx] === 15 &&
+        (enhancedDatesToNumbers[totalLentExt.length - 1] === 14 ||
+          enhancedDatesToNumbers[totalLentExt.length - 1] === 16) //condition to not show 15th and 16th consecutive data points
+      ) {
+        pointRadius.push(0);
+        pointBackgroundColorTotalLent.push("transparent");
+      } else {
+        pointRadius.push(2);
+        pointBackgroundColorTotalLentTotalBorrowed.push("#FF3D3D");
+      }
     } else {
       pointRadius.push(0);
       pointBackgroundColorTotalLentTotalBorrowed.push("transparent");
     }
-    if ( enhancedDatesToNumbers[indx] % 1 === 0) {
+    if (enhancedDatesToNumbers[indx] % 1 === 0) {
       hitRadius.push(10);
     } else {
       hitRadius.push(0);
     }
   });
-  
-  console.log(hitRadius)
-  const isSuccess: boolean = true;
-  
+
   const options = getChartOptions(
     isSuccess,
     totalLentExt,

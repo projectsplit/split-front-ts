@@ -9,6 +9,7 @@ import {
   BudgetType,
   BudgetInfoResponse,
   SpendingInfoResponse,
+  GetTotalLentTotalBorrowedResponse,
 } from "../types";
 import { signOut } from "../util/signOut";
 
@@ -93,6 +94,15 @@ const getCumulativeSpendingArray = async (startDate: string, endDate: string): P
   return response.data;
 };
 
+const getTotalLentBorrowedArrays = async (startDate: string, endDate: string): Promise<GetTotalLentTotalBorrowedResponse> => {
+  const response = await apiHttpClient.get<GetTotalLentTotalBorrowedResponse>(
+    `/analytics/totallentborrowed?startDate=${startDate}&endDate=${endDate}`
+  );
+
+return response.data
+};
+
+
 const getGroupsTotalAmounts = async () => {
   const response = await apiHttpClient.get<GroupsTotalAmountsResponse>(
     `/group/total-amounts`
@@ -118,5 +128,6 @@ export const api = {
   getSpendingInfo,
   createBudget,
   deleteBudget,
-  getCumulativeSpendingArray
+  getCumulativeSpendingArray,
+  getTotalLentBorrowedArrays
 };
