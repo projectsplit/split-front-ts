@@ -25,20 +25,34 @@ export const getChartOptions = (
 
   const enhancedWeekDays = enhanceWeekDays(shortWeekdays, fractalFactor);
 
+
+
   return {
+    animation: {
+      duration: 500,
+      onProgress: function(animation:any) { //clears the top left part of the canvas where animation of datalabel is not shown correctly when moving from 30 to 31 datapoints
+        const chartInstance = animation.chart;
+        const ctx = chartInstance.ctx;
+        const width = chartInstance.width;
+        const height = chartInstance.height;
+        const topLeftWidth = width * 0.1; 
+        const topLeftHeight = height * 0.1; 
+        // Clear the canvas
+        ctx.clearRect(0, 0, topLeftWidth, topLeftHeight);
+      }
+    },
     isSuccess: isSuccess,
     responsive: true,
 
     maintainAspectRatio: false,
     plugins: {
       legend: {
-        onClick: function(e: Event) {
-          if (e.stopPropagation) 
-              e.stopPropagation();
+        onClick: function (e: Event) {
+          if (e.stopPropagation)
+            e.stopPropagation();
         },
         display: isSuccess && cumulArrayData?.length !== 0,
         position: "chartArea",
-        align: "center",
         labels: {
           usePointStyle: false, // use a square instead of a rectangle
           boxWidth: 10, // set the width of the square
@@ -74,6 +88,7 @@ export const getChartOptions = (
           },
           label: (context: any) => {
             const value = context.parsed.y;
+
             switch (selectedCycle) {
               case CycleType.Monthly:
                 if (
@@ -92,7 +107,7 @@ export const getChartOptions = (
                 }
                 return `Total Spending: $${value}`;
               default:
-                return `Total Spending: $${value}`; 
+                return `Total Spending: $${value}`;
             }
           },
         },
@@ -108,6 +123,7 @@ export const getChartOptions = (
         align: "top",
         padding: 10,
         formatter: (value: number, context: Context) => {
+
           // Show numeric value over graph for first, middle, and last data points
           if (
             context.dataIndex === 0 ||
@@ -178,7 +194,7 @@ export const getChartOptions = (
                 if (
                   index === 0 ||
                   index === enhancedWeekDays.length - 1 ||
-                  index % (fractalFactor+1) === 0
+                  index % (fractalFactor + 1) === 0
                 )
                   return enhancedWeekDays[index];
             }
@@ -190,7 +206,7 @@ export const getChartOptions = (
         display: false,
         grid: {
           display: false,
-        },
+        }
       },
     },
     elements: {

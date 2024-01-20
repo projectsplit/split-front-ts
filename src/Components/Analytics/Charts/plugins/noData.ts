@@ -7,8 +7,6 @@ export const noData = {
         chartArea: { top, left, width, height },
       } = chart;
       ctx.save();
-      console.log( chart.config.options.isSuccess,
-        data.datasets[0].data.length === 0)
       if (
         chart.config.options.isSuccess &&
         data.datasets[0].data.length === 0

@@ -26,18 +26,47 @@ export const getChartOptions = (
   const enhancedWeekDays = enhanceWeekDays(shortWeekdays, fractalFactor);
 
   return {
+    transitions: {
+      show: {
+        animations: {
+          x: {
+            from: 0
+          },
+          y: {
+            from: 0
+          }
+        }
+      },
+      hide: {
+        animations: {
+          x: {
+            to: 0
+          },
+          y: {
+            to: 0
+          }
+        }
+      }
+    },
     isSuccess: isSuccess,
     responsive: true,
     maintainAspectRatio: false,
     plugins: {
       legend: {
-        position: "chartArea",
+        position: "top",
+        align:"start",
         labels: {
           usePointStyle: false, // use a square instead of a rectangle
           boxWidth: 10, // set the width of the square
           boxHeight: 10, // set the height of the square
           color: "#DDDDDD", // set the color of the square
         },
+        onHover:((event:any)=>{
+          event.chart.canvas.style.cursor="pointer"
+        }),
+        onLeave:((event:any)=>{
+          event.chart.canvas.style.cursor="default"
+        })
       },
       title: {
         display: false,
