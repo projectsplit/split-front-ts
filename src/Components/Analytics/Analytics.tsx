@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { StyledAnalytics } from "./Analytics.styled";
 import TopBarWithBackButton from "../../layouts/TopBarWithBackButton/TopBarWithBackButton";
 import { useNavigate } from "react-router-dom";
@@ -21,6 +21,7 @@ import AnalyticsTimePeriodSelectionAnimation from "../MenuAnimations/AnalyticsTi
 import PeriodOption from "./Charts/PeriodOption/PeriodOption";
 import { initialiseSelectedTimeCycle } from "./helpers/initialiseSelectedTimeCycle";
 
+
 export default function Analytics() {
   const [selectedChart, setSelectedChart] =
     useState<string>("cumulativeSpending");
@@ -39,12 +40,18 @@ export default function Analytics() {
     allWeeksPerYear,
     wksToDateString,
     monthsAndDaysArrays,
-    currentDateIndex,
+    currentWeekIndex,
   ] = useWeeklyDatesMemo(selectedYear);
 
-  const selectedTimeCycleIndex = useSignal<number>(
-    initialiseSelectedTimeCycle(selectedCycle.value, currentDateIndex)
+
+  const selectedTimeCycleIndex =
+   useSignal<number>(
+    initialiseSelectedTimeCycle(selectedCycle.value, currentWeekIndex, selectedYear.value)
   );
+
+  useEffect(() => {
+    selectedTimeCycleIndex.value = initialiseSelectedTimeCycle(selectedCycle.value, currentWeekIndex, selectedYear.value)
+  }, [selectedYear.value, selectedCycle.value])
 
   return (
     <StyledAnalytics>
@@ -96,7 +103,7 @@ export default function Analytics() {
             <CumulativeSpending
               selectedCycle={selectedCycle}
               selectedYear={selectedYear}
-              currentDateIndex={currentDateIndex}
+              currentWeekIndex={currentWeekIndex}
               monthsAndDaysArrays={monthsAndDaysArrays}
               cyclehaschanged={cyclehaschanged}
               allWeeksPerYear={allWeeksPerYear}
@@ -108,7 +115,7 @@ export default function Analytics() {
             <BarChart
               selectedCycle={selectedCycle}
               selectedYear={selectedYear}
-              currentDateIndex={currentDateIndex}
+              currentWeekIndex={currentWeekIndex}
               monthsAndDaysArrays={monthsAndDaysArrays}
               cyclehaschanged={cyclehaschanged}
               allWeeksPerYear={allWeeksPerYear}
@@ -120,7 +127,7 @@ export default function Analytics() {
             <TotalLentBorrowed
               selectedCycle={selectedCycle}
               selectedYear={selectedYear}
-              currentDateIndex={currentDateIndex}
+              currentWeekIndex={currentWeekIndex}
               monthsAndDaysArrays={monthsAndDaysArrays}
               cyclehaschanged={cyclehaschanged}
               allWeeksPerYear={allWeeksPerYear}
@@ -142,7 +149,7 @@ export default function Analytics() {
       </AnalyticsCycleSelectionAnimation>
 
       <AnalyticsYearSelectionAnimation menu={menu} header="Select Year">
-        <Years menu={menu} selectedYear={selectedYear} />
+        <Years menu={menu} selectedYear={selectedYear} selectedTimeCycleIndex={selectedTimeCycleIndex} />
       </AnalyticsYearSelectionAnimation>
 
       <AnalyticsTimePeriodSelectionAnimation
@@ -160,6 +167,8 @@ export default function Analytics() {
           monthsAndDaysArrays={monthsAndDaysArrays}
         />
       </AnalyticsTimePeriodSelectionAnimation>
+
+      
     </StyledAnalytics>
   );
 }

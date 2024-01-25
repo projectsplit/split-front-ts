@@ -1,5 +1,6 @@
+import { months } from "../../../constants/dates";
 import { CycleType } from "../../../types";
-import { enhanceWeekDays } from "./enhanceWeekDays";
+import { enhanceStringArray } from "./enhanceStringArray";
 import { convertToFullMonthNames } from "./monthlyDataHelpers";
 
 export const buildLabels = (
@@ -7,15 +8,18 @@ export const buildLabels = (
   selectedTimeCycleIndex: number,
   datesToNumbers: number[],
   monthsAndDaysArrays: string[][],
-  fractalFactor:number
+  fractalFactor: number
 ) => {
+
   switch (cycle) {
     case CycleType.Monthly:
       return datesToNumbers.map((num) => num.toString().padStart(2, "0"));
     case CycleType.Weekly:
       const toFullMonthNames =
         convertToFullMonthNames(monthsAndDaysArrays)[selectedTimeCycleIndex];
-      return enhanceWeekDays(toFullMonthNames, fractalFactor);
+      return enhanceStringArray(toFullMonthNames, fractalFactor);
+    case CycleType.Annually:
+      return enhanceStringArray(months.map((month) => month), fractalFactor);
     default:
       return [""];
   }

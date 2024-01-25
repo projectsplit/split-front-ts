@@ -44,7 +44,7 @@ ChartJS.register(
 export function BarChart({
   selectedCycle,
   selectedYear,
-  currentDateIndex,
+  currentWeekIndex,
   monthsAndDaysArrays,
   cyclehaschanged,
   allWeeksPerYear,
@@ -97,7 +97,7 @@ export function BarChart({
 
   const labels = labelBuilder(selectedCycle.value);
 
-  useCycleIndexEffect(selectedCycle, selectedTimeCycleIndex, currentDateIndex);
+  useCycleIndexEffect(selectedCycle, selectedTimeCycleIndex, currentWeekIndex,selectedYear.value);
 
   useStartAndEndDatesEffect(
     selectedCycle,
@@ -163,6 +163,7 @@ export function BarChart({
           selectedCycle={selectedCycle}
           cyclehaschanged={cyclehaschanged}
           menu={menu}
+          selectedYear={selectedYear}
         />
       </div>
     </StyledBarChart>

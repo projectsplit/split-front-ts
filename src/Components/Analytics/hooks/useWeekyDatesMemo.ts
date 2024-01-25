@@ -9,7 +9,7 @@ export const useWeeklyDatesMemo = (selectedYear:Signal<number>): [Date[][], stri
     const allWeeksPerYear = generateAllWeeksPerYear(selectedYear.value);
     const wksToDateString = weeksToDateString(allWeeksPerYear);
     const monthsAndDaysArrays = dateStringToMonthAndDay(wksToDateString);
-    const currentDateIndex = findIndexForCurrentDate(
+    const currentWeekIndex = findIndexForCurrentDate(
       generateAllWeeksPerYear(new Date().getFullYear()),
       new Date(currentDate.setHours(0, 0, 0, 0))
     );
@@ -18,7 +18,7 @@ export const useWeeklyDatesMemo = (selectedYear:Signal<number>): [Date[][], stri
       allWeeksPerYear,
       wksToDateString,
       monthsAndDaysArrays,
-      currentDateIndex,
+      currentWeekIndex,
     ];
   }, [selectedYear.value]);
 };

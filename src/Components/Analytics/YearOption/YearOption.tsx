@@ -3,19 +3,10 @@ import { StyledYearOption } from "./YearOption.styled";
 import { YearOptionProps } from "../../../interfaces";
 import CategoryButton from "../../CategoryButton/CategoryButton";
 import { useTheme } from "styled-components";
+import { generateYearsArray } from "../helpers/generateYearsArray";
 
-export default function YearOption({ selectedYear, menu }: YearOptionProps) {
+export default function YearOption({ selectedYear, menu,selectedTimeCycleIndex }: YearOptionProps) {
   const theme = useTheme();
-
-  function generateYearsArray(): number[] {
-    const currentYear: number = new Date().getFullYear();
-    const startYear: number = 1930;
-
-    return Array.from(
-      { length: currentYear - startYear + 1 },
-      (_, index) => startYear + index
-    );
-  }
 
   const allYears: number[] = generateYearsArray().reverse();
 
@@ -26,6 +17,7 @@ export default function YearOption({ selectedYear, menu }: YearOptionProps) {
           selected={year === selectedYear.value}
           onClick={() => {
             selectedYear.value = year;
+            // selectedTimeCycleIndex.value = allYears.reverse().indexOf(year)
             menu.value = null;
           }}
           backgroundcoloronselect={theme?.colors.clicked}

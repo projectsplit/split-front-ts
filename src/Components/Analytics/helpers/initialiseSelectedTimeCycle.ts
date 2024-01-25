@@ -1,14 +1,19 @@
 import { CycleType } from "../../../types";
+import { generateYearsArray } from "./generateYearsArray";
 
 export const initialiseSelectedTimeCycle = (
   cycle: CycleType,
-  currentDateIndex: number
+  currentWeekIndex: number,
+  selectedYear:number
 ) => {
+
   switch (cycle) {
     case CycleType.Monthly:
       return new Date().getMonth(); //start by displaying current month if user selects month
     case CycleType.Weekly:
-      return currentDateIndex; //start by displaying current week if user selects week
+      return currentWeekIndex; //start by displaying current week if user selects week
+    case CycleType.Annually:
+      return generateYearsArray().indexOf(selectedYear); //start by displaying current year if user slects annual
     default:
       return 0;
   }

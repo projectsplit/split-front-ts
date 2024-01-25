@@ -1,6 +1,7 @@
 import { Signal } from "@preact/signals-react";
 import { CycleType } from "../../../../../types";
 import { ChartDataset } from 'chart.js/auto';
+import { generateYearsArray } from "../../../helpers/generateYearsArray";
 
 export const getData = (
   labels: string[],
@@ -13,7 +14,8 @@ export const getData = (
   pointRadius: number[],
   pointBackgroundColorProjection: string[],
   pointBackgroundColor: string[],
-  isSuccess:boolean
+  isSuccess:boolean,
+  selectedYear:number
 ) => {
   const gradient = document
     .createElement("canvas")
@@ -29,18 +31,19 @@ export const getData = (
 
   };
 
- // console.log(projectedArray, cumulArrayData)
-  
   const showForecastLegend = (cycle:CycleType)=>{
     switch (cycle) {
       case CycleType.Monthly:
         return selectedTimeCycleIndex.value === new Date().getMonth() && isSuccess && cumulArrayData?.length !== 0
           ? true
           : false;
-      case CycleType.Weekly:
+      case CycleType.Weekly :
         return selectedTimeCycleIndex.value === currentDateIndex && isSuccess && cumulArrayData?.length !== 0
           ? true
           : false;
+      case CycleType.Annually:
+        const currentYear =new Date().getFullYear()
+        return selectedTimeCycleIndex.value === generateYearsArray().indexOf(currentYear) && isSuccess && cumulArrayData?.length !== 0
       default:
         return false; 
     }
@@ -70,7 +73,9 @@ export const getData = (
         borderColor: (ctx: any) => {
           if (
             selectedTimeCycleIndex.value === new Date().getMonth() ||
-            selectedTimeCycleIndex.value === currentDateIndex
+            selectedTimeCycleIndex.value === currentDateIndex ||
+            selectedTimeCycleIndex.value === generateYearsArray().indexOf(selectedYear)
+
           ) {
             return ctx.chart.data.datasets[0].data.length - 1 === ctx.dataIndex
               ? "grey"

@@ -10,15 +10,18 @@ export default function Carousel({
   selectedTimeCycleIndex,
   selectedCycle,
   cyclehaschanged,
-  menu
+  menu,
+  selectedYear
 }: CarouselProps) {
-
 
   const nextItem = () => {
     cyclehaschanged.value = false;
     selectedTimeCycleIndex.value =
       (selectedTimeCycleIndex.value + 1) % carouselItems.length;
-   
+
+    if (selectedCycle.value === CycleType.Annually)
+      selectedYear.value = parseInt(carouselItems[selectedTimeCycleIndex.value] as string, 10)
+
   };
 
   const prevItem = () => {
@@ -26,7 +29,10 @@ export default function Carousel({
     selectedTimeCycleIndex.value =
       (selectedTimeCycleIndex.value - 1 + carouselItems.length) %
       carouselItems.length;
-   
+
+    if (selectedCycle.value === CycleType.Annually)
+      selectedYear.value = parseInt(carouselItems[selectedTimeCycleIndex.value] as string, 10)
+      
   };
 
   const displayCarouselItem = (cycle: CycleType, item: string[] | string[][]) => {
@@ -36,13 +42,13 @@ export default function Carousel({
       case CycleType.Weekly:
         if (item.length === 1) return item[0];
         return item[0] + "- " + item[item.length - 1];
+      case CycleType.Annually:
+        return item;
       default:
         return 0;
     }
   };
 
-  // const filteredCarouselItems = (carouselItems as string[][]).filter((arr) => arr.length > 0);
-  
   return (
     <StyledCarousel cyclehaschanged={cyclehaschanged}>
       <div className="carousel-container">
@@ -54,7 +60,9 @@ export default function Carousel({
           style={{ transform: `translateX(${-selectedTimeCycleIndex.value * 100}%)` }}
         >
           {carouselItems.map((item: any, index: number) => (
-            <div key={index} className="carousel-item" onClick={()=>(menu.value = "timePeriod")}>
+            <div key={index} className="carousel-item" 
+              onClick={() => (selectedCycle.value === CycleType.Annually ? 
+              menu.value = "year" : menu.value = "timePeriod")}>
               {displayCarouselItem(selectedCycle.value, item)}
             </div>
           ))}

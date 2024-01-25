@@ -9,10 +9,25 @@ export default function CycleOption({
   cyclehaschanged,
 }: CycleOptionProps) {
   return (
-    <StyledCycleOption>
+    <StyledCycleOption>  
       <div
         onClick={() => {
-          selectedCycle.value === CycleType.Weekly
+          selectedCycle.value === CycleType.Weekly || selectedCycle.value === CycleType.Monthly
+            ? (cyclehaschanged.value = true)
+            : (cyclehaschanged.value = false);
+          selectedCycle.value = CycleType.Annually;
+          menu.value = null;
+        }}
+        className={`item ${
+          selectedCycle.value === CycleType.Annually ? "clicked" : ""
+        }`}
+      >
+        Annually
+      </div>
+
+      <div
+        onClick={() => {
+          selectedCycle.value === CycleType.Weekly || selectedCycle.value === CycleType.Annually
             ? (cyclehaschanged.value = true)
             : (cyclehaschanged.value = false);
           selectedCycle.value = CycleType.Monthly;
@@ -26,7 +41,7 @@ export default function CycleOption({
       </div>
       <div
         onClick={() => {
-          selectedCycle.value === CycleType.Monthly
+          selectedCycle.value === CycleType.Monthly || selectedCycle.value === CycleType.Annually
             ? (cyclehaschanged.value = true)
             : (cyclehaschanged.value = false);
           selectedCycle.value = CycleType.Weekly;
@@ -38,6 +53,7 @@ export default function CycleOption({
       >
         Weekly
       </div>
+
     </StyledCycleOption>
   );
 }

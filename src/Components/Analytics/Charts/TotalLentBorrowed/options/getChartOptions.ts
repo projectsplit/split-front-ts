@@ -2,7 +2,7 @@ import { Context } from "chartjs-plugin-datalabels/types/context";
 import { roundThousandsAndMillions } from "../../../../../helpers/roundThousandsAndMils";
 import { CycleType } from "../../../../../types";
 import { shortWeekdays } from "../../../../../constants/dates";
-import { enhanceWeekDays } from "../../../helpers/enhanceWeekDays";
+import { enhanceStringArray } from "../../../helpers/enhanceStringArray";
 
 export const getChartOptions = (
   isSuccess: boolean,
@@ -13,7 +13,7 @@ export const getChartOptions = (
   enhancedDatesToNumbers: number[],
   selectedYear: number,
   selectedTimeCycleIndex: number,
-  currentDateIndex: number,
+  currentWeekIndex: number,
   hitRadius: number[],
   fractalFactor: number
 ) => {
@@ -23,7 +23,7 @@ export const getChartOptions = (
 
   const fullMonthName = date.toLocaleDateString("en-US", dateOptions);
 
-  const enhancedWeekDays = enhanceWeekDays(shortWeekdays, fractalFactor);
+  const enhancedWeekDays = enhanceStringArray(shortWeekdays, fractalFactor);
 
   return {
     transitions: {

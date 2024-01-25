@@ -20,7 +20,7 @@ import { getCarouselItemsBasedOnCycle } from "../../helpers/getCarouselItemsBase
 import { months } from "../../../../constants/dates";
 import { TotalLentBorrowedProps } from "../../../../interfaces";
 import { getAllDaysInMonth } from "../../helpers/monthlyDataHelpers";
-import { buildMidPoints } from "../../helpers/buildMidPoints";
+import { enhanceNumberArray } from "../../helpers/enhanceNumberArray";
 import { getChartOptions } from "./options/getChartOptions";
 import { getData } from "./data/getData";
 import { useCycleIndexEffect } from "../../hooks/useCycleIndexEffect";
@@ -44,7 +44,7 @@ ChartJS.register(
 export function TotalLentBorrowed({
   selectedCycle,
   selectedYear,
-  currentDateIndex,
+  currentWeekIndex,
   monthsAndDaysArrays,
   cyclehaschanged,
   allWeeksPerYear,
@@ -53,7 +53,7 @@ export function TotalLentBorrowed({
 }: TotalLentBorrowedProps) {
   const fractalFactor = 4;
 
-  useCycleIndexEffect(selectedCycle, selectedTimeCycleIndex, currentDateIndex);
+  useCycleIndexEffect(selectedCycle, selectedTimeCycleIndex, currentWeekIndex,selectedYear.value);
 
   const startDate = useSignal<string>(
     buildStartAndEndDates(
@@ -77,7 +77,7 @@ export function TotalLentBorrowed({
     selectedYear.value
   );
 
-  const enhancedDatesToNumbers = buildMidPoints(
+  const enhancedDatesToNumbers = enhanceNumberArray(
     allDaysInMonth.map((date) => date.getDate()),
     fractalFactor
   );
@@ -124,8 +124,8 @@ export function TotalLentBorrowed({
       ? []
       : totalLentBorrowed.totalBorrowed;
 
-  const totalLentExt = buildMidPoints(totalLent, fractalFactor).filter((element) => element !== undefined);
-  const totalBorrowedExt = buildMidPoints(totalBorrowed, fractalFactor).filter((element) => element !== undefined);
+  const totalLentExt = enhanceNumberArray(totalLent, fractalFactor).filter((element) => element !== undefined);
+  const totalBorrowedExt = enhanceNumberArray(totalBorrowed, fractalFactor).filter((element) => element !== undefined);
 
 
   const pointRadius: number[] = [];
@@ -198,7 +198,7 @@ export function TotalLentBorrowed({
     enhancedDatesToNumbers,
     selectedYear.value,
     selectedTimeCycleIndex.value,
-    currentDateIndex,
+    currentWeekIndex,
     hitRadius,
     fractalFactor
   );
@@ -226,6 +226,7 @@ export function TotalLentBorrowed({
           selectedCycle={selectedCycle}
           cyclehaschanged={cyclehaschanged}
           menu={menu}
+          selectedYear={selectedYear}
         />
       </div>
     </StyledTotalLentBorrowed>

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -32,7 +32,8 @@ import { useCycleIndexEffect } from "../../hooks/useCycleIndexEffect";
 import { useStartAndEndDatesEffect } from "../../hooks/useStartEndDatesEffect";
 import { CycleType } from "../../../../types";
 import { deCumulArray } from "../../helpers/deCumulArray";
-import { buildMidPoints } from "../../helpers/buildMidPoints";
+import { enhanceNumberArray } from "../../helpers/enhanceNumberArray";
+import { generateYearsArray } from "../../helpers/generateYearsArray";
 
 ChartJS.register(
   CategoryScale,
@@ -48,7 +49,7 @@ ChartJS.register(
 export function CumulativeSpending({
   selectedCycle,
   selectedYear,
-  currentDateIndex,
+  currentWeekIndex,
   monthsAndDaysArrays,
   cyclehaschanged,
   allWeeksPerYear,
@@ -57,6 +58,9 @@ export function CumulativeSpending({
 }: CumulativeSpendingProps) {
   const fractalFactor = 1;
 
+  
+  //useCycleIndexEffect(selectedCycle, selectedTimeCycleIndex, currentWeekIndex, selectedYear.value);
+  
   const startDate = useSignal<string>(
     buildStartAndEndDates(
       selectedCycle.value,
@@ -65,6 +69,7 @@ export function CumulativeSpending({
       allWeeksPerYear
     )[0]
   );
+
   const endDate = useSignal<string>(
     buildStartAndEndDates(
       selectedCycle.value,
@@ -72,28 +77,6 @@ export function CumulativeSpending({
       selectedYear.value,
       allWeeksPerYear
     )[1]
-  );
-
-  useCycleIndexEffect(selectedCycle, selectedTimeCycleIndex, currentDateIndex);
-
-  const allDaysInMonth = getAllDaysInMonth(
-    selectedTimeCycleIndex.value + 1,
-    selectedYear.value
-  );
-
-
-  const enhancedDatesToNumbers = buildMidPoints(
-    allDaysInMonth.map((date) => date.getDate()),
-    fractalFactor
-  );
-
-
-  const labels = buildLabels(
-    selectedCycle.value,
-    selectedTimeCycleIndex.value,
-    enhancedDatesToNumbers,
-    monthsAndDaysArrays,
-    fractalFactor
   );
 
   useStartAndEndDatesEffect(
@@ -105,6 +88,26 @@ export function CumulativeSpending({
     endDate
   );
 
+  const allDaysInMonth = getAllDaysInMonth(
+    selectedTimeCycleIndex.value + 1,
+    selectedYear.value
+  );
+
+  const enhancedDatesToNumbers = enhanceNumberArray(
+    allDaysInMonth.map((date) => date.getDate()),
+    fractalFactor
+  );
+
+  const labels = buildLabels(
+    selectedCycle.value,
+    selectedTimeCycleIndex.value,
+    enhancedDatesToNumbers,
+    monthsAndDaysArrays,
+    fractalFactor
+  );
+
+
+
   const { data: cumulArrayData, isSuccess } = useCumulativeSpendingArray(
     startDate.value,
     endDate.value
@@ -115,18 +118,18 @@ export function CumulativeSpending({
     cycle: CycleType
   ) => {
     if (cumulArrayData === undefined) return [];
-    if (cumulArrayData.length===0) return [];
+    if (cumulArrayData.length === 0) return [];
 
     const enhancedCumulArray = [...cumulArrayData];
-    let upLimit: number;
+    let upLimit = 0;
     //const now = new Date();
-    upLimit = getAllDaysInMonth(
-      // now.getMonth() + 1,
-      // now.getFullYear()
+    if (cycle === CycleType.Monthly) upLimit = getAllDaysInMonth(
       selectedTimeCycleIndex.value + 1,
       selectedYear.value
     ).length;
     if (cycle === CycleType.Weekly) upLimit = 7;
+    if (cycle === CycleType.Annually) upLimit = 12;
+
     let enhancedCumulArrayLength = enhancedCumulArray?.length;
 
     while (enhancedCumulArrayLength < upLimit - 1) {
@@ -136,7 +139,7 @@ export function CumulativeSpending({
     const forecastValue = calculateForcastValue(cumulArrayData, upLimit);
 
     enhancedCumulArray.push(forecastValue);
-    const enhancedCumulArrayWithMidPoints = buildMidPoints(
+    const enhancedCumulArrayWithMidPoints = enhanceNumberArray(
       enhancedCumulArray,
       1
     );
@@ -175,7 +178,7 @@ export function CumulativeSpending({
   };
 
   // const isSuccess = true;
-  // const cumulArrayData =  [30, 30, 30, 33, 34,35]
+  // const cumulArrayData = [30, 30, 30, 33, 34,]
   // const cumulArrayData = [
   //   1, 12, 15, 16, 56, 69, 100, 102, 120, 130, 150, 180, 190, 200, 210.36, 222,
   //   250.36, 310, 400, 420, 450, 500, 540, 690, 940, 952, 1000, 1045.36, 1200,
@@ -199,7 +202,7 @@ export function CumulativeSpending({
     if (
       indx === 0 ||
       indx === projectedArray.length - 1 ||
-      enhancedDatesToNumbers[indx] === 15 ||
+      enhancedDatesToNumbers[indx] === 15 || //does not affect annual or weekly as they are 12 and 7 rsptctvly
       indx === lastNumberBeforeNaN
     ) {
       pointRadiusProjection.push(2);
@@ -237,7 +240,7 @@ export function CumulativeSpending({
     selectedYear.value,
     selectedTimeCycleIndex.value,
     lastNumberBeforeNaN,
-    currentDateIndex,
+    currentWeekIndex,
     hitRadius,
     fractalFactor
   );
@@ -248,15 +251,16 @@ export function CumulativeSpending({
     selectedTimeCycleIndex,
     projectedArray,
     expensePoints,
-    currentDateIndex,
+    currentWeekIndex,
     pointRadiusProjection,
     pointRadius,
     pointBackgroundColorProjection,
     pointBackgroundColor,
-    isSuccess
+    isSuccess,
+    selectedYear.value
   );
 
- 
+
   return (
     <StyledCumulativeSpending>
       <Line options={options} data={data} plugins={[noData, ChartDataLabels]} />
@@ -271,6 +275,7 @@ export function CumulativeSpending({
           selectedCycle={selectedCycle}
           cyclehaschanged={cyclehaschanged}
           menu={menu}
+          selectedYear={selectedYear}
         />
       </div>
     </StyledCumulativeSpending>

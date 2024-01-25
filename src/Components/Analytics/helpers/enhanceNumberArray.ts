@@ -1,4 +1,4 @@
-export const buildMidPoints = (dataArray: number[], numberOfMidpoints: number) => {
+export const enhanceNumberArray = (dataArray: number[], numberOfMidpoints: number) => {
   const enhancedData = [];
 
   for (let i = 0; i < dataArray.length - 1; i++) {

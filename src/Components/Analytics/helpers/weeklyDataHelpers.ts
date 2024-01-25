@@ -7,7 +7,7 @@
 // **         First week of month is the one with the first Thursday
 // ** @returns {Date} date for Monday at start of required week
 
-const getMonthWeek = (year: number, week: number) => {
+export const getMonthWeek = (year: number, week: number) => {
   // Set date to 4th of month
   let d = new Date(year, 0, 4);
 
@@ -75,6 +75,7 @@ export function findIndexForCurrentDate(
 
   return foundIndex;
 }
+
 
 
 export const weeksToDateString = (weeks: Date[][]) => {
