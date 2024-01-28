@@ -4,10 +4,12 @@ import { CycleType } from "../../../../../types";
 import { months, shortWeekdays } from "../../../../../constants/dates";
 import { enhanceStringArray } from "../../../helpers/enhanceStringArray";
 import { generateYearsArray } from "../../../helpers/generateYearsArray";
+import { isCurrentPeriod } from "../../../helpers/isCurrentPeriod";
+import { swapMonthDayToDayMonth } from "../../../helpers/swapMonthDayToDayMonth";
 
 export const getChartOptions = (
   isSuccess: boolean,
-  cumulArrayData: number[] | undefined,
+  expensePoints: number[],
   selectedCycle: CycleType,
   labels: string[],
   enhancedDatesToNumbers: number[],
@@ -38,8 +40,8 @@ export const getChartOptions = (
         const ctx = chartInstance.ctx;
         const width = chartInstance.width;
         const height = chartInstance.height;
-        const topLeftWidth = width * 0.025;
-        const topLeftHeight = height * 0.025;
+        const topLeftWidth = width * 0.03;
+        const topLeftHeight = height * 0.03;
         // Clear the canvas
         ctx.clearRect(0, 0, topLeftWidth, topLeftHeight);
       }
@@ -54,9 +56,9 @@ export const getChartOptions = (
           if (e.stopPropagation)
             e.stopPropagation();
         },
-        display: isSuccess && cumulArrayData?.length !== 0,
+        display: isSuccess && expensePoints?.length !== 0,
         position: "top",
-        align:"start",
+        align: "start",
         labels: {
           usePointStyle: false, // use a square instead of a rectangle
           boxWidth: 10, // set the width of the square
@@ -88,7 +90,7 @@ export const getChartOptions = (
                 selectedYear.toString()
               );
             if (selectedCycle === CycleType.Weekly)
-              return labels[index] + " " + selectedYear.toString();
+              return swapMonthDayToDayMonth(labels)[index] + " " + selectedYear.toString();
             if (selectedCycle === CycleType.Annually)
               return labels[index] + " " + selectedYear.toString();
           },
@@ -101,28 +103,28 @@ export const getChartOptions = (
                   selectedTimeCycleIndex === new Date().getMonth() &&
                   context.dataIndex === context.dataset.data.length - 1
                 ) {
-                  return `Forecast Spending: $${value}`;
+                  return value >= 0 ? `Forecast Spending: $${value}` : `Forecast Receipts: $${-value}`;
                 }
-                return `Total Spending: $${value}`;
+                return value >= 0 ? `Total Spent: $${value}` : `Total Received: $${-value}`;
               case CycleType.Weekly:
                 if (
                   selectedTimeCycleIndex === currentWeekIndex &&
                   context.dataIndex === context.dataset.data.length - 1
                 ) {
-                  return `Forecast Spending: $${value}`;
+                  return value >= 0 ? `Forecast Spending: $${value}` : `Forecast Receipts: $${-value}`;
                 }
-                return `Total Spending: $${value}`;
+                return value >= 0 ? `Total Spent: $${value}` : `Total Received: $${-value}`;
               case CycleType.Annually:
                 if (
                   selectedTimeCycleIndex === generateYearsArray().indexOf(selectedYear) &&
                   context.dataIndex === context.dataset.data.length - 1
                 ) {
-                  return `Forecast Spending: $${value}`;
+                  return value >= 0 ? `Forecast Spending: $${value}` : `Forecast Receipts: $${-value}`;
                 }
-                return `Total Spending: $${value}`;
+                return value >= 0 ? `Total Spent: $${value}` : `Total Received: $${-value}`;
 
               default:
-                return `Total Spending: $${value}`;
+                return value >= 0 ? `Total Spent: $${value}` : `Total Received: $${-value}`;
             }
           },
         },
@@ -143,7 +145,8 @@ export const getChartOptions = (
           if (
             context.dataIndex === 0 ||
             context.dataIndex === context.dataset.data.length - 1 ||
-            enhancedDatesToNumbers[context.dataIndex] === 15 ||
+            (enhancedDatesToNumbers[context.dataIndex] === 15
+              && !isCurrentPeriod(selectedCycle, selectedTimeCycleIndex, isSuccess, expensePoints, currentWeekIndex)) ||
             lastNumberBeforeNaN === context.dataIndex
           ) {
             if (value < 0) {

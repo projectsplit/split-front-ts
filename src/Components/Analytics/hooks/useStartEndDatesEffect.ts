@@ -20,7 +20,6 @@ export const useStartAndEndDatesEffect = (
       selectedYear.value,
       allWeeksPerYear
     );
-
     startDate.value = startAndEndDates[0];
     endDate.value = startAndEndDates[1];
   }, [selectedTimeCycleIndex.value, selectedYear.value]);

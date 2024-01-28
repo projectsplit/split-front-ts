@@ -53,7 +53,7 @@ export function TotalLentBorrowed({
 }: TotalLentBorrowedProps) {
   const fractalFactor = 4;
 
-  useCycleIndexEffect(selectedCycle, selectedTimeCycleIndex, currentWeekIndex,selectedYear.value);
+  //useCycleIndexEffect(selectedCycle, selectedTimeCycleIndex, currentWeekIndex,selectedYear.value);
 
   const startDate = useSignal<string>(
     buildStartAndEndDates(

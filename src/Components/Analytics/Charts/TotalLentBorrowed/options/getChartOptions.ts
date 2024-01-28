@@ -1,8 +1,9 @@
 import { Context } from "chartjs-plugin-datalabels/types/context";
 import { roundThousandsAndMillions } from "../../../../../helpers/roundThousandsAndMils";
 import { CycleType } from "../../../../../types";
-import { shortWeekdays } from "../../../../../constants/dates";
+import { months, shortWeekdays } from "../../../../../constants/dates";
 import { enhanceStringArray } from "../../../helpers/enhanceStringArray";
+import { swapMonthDayToDayMonth } from "../../../helpers/swapMonthDayToDayMonth";
 
 export const getChartOptions = (
   isSuccess: boolean,
@@ -24,6 +25,10 @@ export const getChartOptions = (
   const fullMonthName = date.toLocaleDateString("en-US", dateOptions);
 
   const enhancedWeekDays = enhanceStringArray(shortWeekdays, fractalFactor);
+
+  const abbreviatedMonths = months.map((month) => month.slice(0, 3))
+
+  const enhancedAbbreviatedMonths = enhanceStringArray(abbreviatedMonths, fractalFactor);
 
   return {
     transitions: {
@@ -54,18 +59,18 @@ export const getChartOptions = (
     plugins: {
       legend: {
         position: "top",
-        align:"start",
+        align: "start",
         labels: {
           usePointStyle: false, // use a square instead of a rectangle
           boxWidth: 10, // set the width of the square
           boxHeight: 10, // set the height of the square
           color: "#DDDDDD", // set the color of the square
         },
-        onHover:((event:any)=>{
-          event.chart.canvas.style.cursor="pointer"
+        onHover: ((event: any) => {
+          event.chart.canvas.style.cursor = "pointer"
         }),
-        onLeave:((event:any)=>{
-          event.chart.canvas.style.cursor="default"
+        onLeave: ((event: any) => {
+          event.chart.canvas.style.cursor = "default"
         })
       },
       title: {
@@ -89,6 +94,8 @@ export const getChartOptions = (
                 selectedYear.toString()
               );
             if (selectedCycle === CycleType.Weekly)
+              return swapMonthDayToDayMonth(labels)[index] + " " + selectedYear.toString();
+            if (selectedCycle === CycleType.Annually)
               return labels[index] + " " + selectedYear.toString();
           },
           label: (context: any) => {
@@ -121,19 +128,19 @@ export const getChartOptions = (
             if (
               context.dataset.label === "Total Lent" &&
               totalLentExt[context.dataIndex] >
-                totalBorrowedExt[context.dataIndex]
+              totalBorrowedExt[context.dataIndex]
             ) {
               return "top";
             } else if (
               context.dataset.label === "Total Lent" &&
               totalLentExt[context.dataIndex] <
-                totalBorrowedExt[context.dataIndex]
+              totalBorrowedExt[context.dataIndex]
             )
               return "bottom";
             else if (
               context.dataset.label === "Total Borrowed" &&
               totalLentExt[context.dataIndex] <
-                totalBorrowedExt[context.dataIndex]
+              totalBorrowedExt[context.dataIndex]
             ) {
               return "top";
             } else return "bottom";
@@ -202,14 +209,24 @@ export const getChartOptions = (
                     .padStart(2, "0");
                 }
                 // hide all other x axis values
-                return null;
+                break;
               case CycleType.Weekly:
                 if (
                   index === 0 ||
                   index === enhancedWeekDays.length - 1 ||
                   index % 5 === 0
-                )
-                  return enhancedWeekDays[index];
+                ) { return enhancedWeekDays[index]; } break;
+
+              case CycleType.Annually:
+
+                if (
+                  index === 0 ||
+                  index === enhancedAbbreviatedMonths.length - 1 ||
+                  index % (fractalFactor + 1) === 0
+                ) {
+                  return enhancedAbbreviatedMonths[index];
+                }
+                break;
             }
           },
         },

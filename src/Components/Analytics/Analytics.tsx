@@ -51,7 +51,9 @@ export default function Analytics() {
 
   useEffect(() => {
     selectedTimeCycleIndex.value = initialiseSelectedTimeCycle(selectedCycle.value, currentWeekIndex, selectedYear.value)
+ 
   }, [selectedYear.value, selectedCycle.value])
+
 
   return (
     <StyledAnalytics>

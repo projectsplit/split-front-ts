@@ -16,6 +16,7 @@ export default function PeriodOption({
   return item[0] + "- " + item[item.length - 1]
   }
 
+ 
   return (
     <StyledPeriodOption>
       {selectedCycle.value === CycleType.Monthly
@@ -23,7 +24,7 @@ export default function PeriodOption({
             <div
               key={index}
               onClick={() => {
-               
+             
                 selectedTimeCycleIndex.value = index;
                 menu.value = null;
               }}
@@ -39,7 +40,7 @@ export default function PeriodOption({
               <div
               key={index}
               onClick={() => {
-               
+                
                 selectedTimeCycleIndex.value = index;
                 menu.value = null;
               }}

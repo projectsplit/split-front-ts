@@ -12,20 +12,21 @@ export const buildStartAndEndDates = (
   let startDate: string;
   let endDate: string
 
-
   switch (cycle) {
     case CycleType.Monthly:
       const allDaysInMonth = getAllDaysInMonth(
         selectedTimeCycleIndex + 1,
         selectedYear
       );
+
       startDate = formatDateIntoYMD(allDaysInMonth[0])
       endDate = formatDateIntoYMD(allDaysInMonth[allDaysInMonth.length - 1]);
       return [startDate, endDate]
 
     case CycleType.Weekly:
-      startDate = formatDateIntoYMD(allWeeksPerYear[selectedTimeCycleIndex][0])
-      endDate = formatDateIntoYMD(allWeeksPerYear[selectedTimeCycleIndex][allWeeksPerYear[selectedTimeCycleIndex].length - 1])
+
+      startDate = formatDateIntoYMD(getDateFromWeeksArray(allWeeksPerYear, selectedTimeCycleIndex, 0))
+      endDate = formatDateIntoYMD(getDateFromWeeksArray(allWeeksPerYear, selectedTimeCycleIndex, 1))
       return [startDate, endDate]
 
     case CycleType.Annually:
@@ -38,5 +39,17 @@ export const buildStartAndEndDates = (
     default:
       return "";
   }
+};
+
+const getDateFromWeeksArray = (allWeeksPerYear: Date[][], selectedTimeCycleIndex: number, index: number) => {
+  if (allWeeksPerYear[selectedTimeCycleIndex] != undefined) {
+    if (index === 0) {
+      return allWeeksPerYear[selectedTimeCycleIndex][index]
+    } else {
+      index = allWeeksPerYear[selectedTimeCycleIndex].length - 1
+      return allWeeksPerYear[selectedTimeCycleIndex][index]
+    }
+  }
+  return new Date()
 };
 

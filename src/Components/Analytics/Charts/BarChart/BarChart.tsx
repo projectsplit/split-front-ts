@@ -17,7 +17,7 @@ import Carousel from "../../Carousel/Carousel";
 import { getCarouselItemsBasedOnCycle } from "../../helpers/getCarouselItemsBasedOnCycle";
 import { months, shortWeekdays } from "../../../../constants/dates";
 import { BarChartProps } from "../../../../interfaces";
-import { convertToFullMonthNames, getAllDaysInMonth } from "../../helpers/monthlyDataHelpers";
+import {  getAllDaysInMonth } from "../../helpers/monthlyDataHelpers";
 import { createGroupedLabels } from "../../helpers/createGroupedLabels";
 import { getChartOptions } from "./options/getChartOptions";
 import { groupExpensesPerWeek } from "../../helpers/groupExpensesPerWeek";
@@ -29,6 +29,7 @@ import useCumulativeSpendingArray from "../../../../hooks/useCumulativeSpendingA
 import { noData } from "../plugins/noData";
 import { CycleType } from "../../../../types";
 import { deCumulArray } from "../../helpers/deCumulArray";
+import { horizontalLine } from "../plugins/horizontalLine";
 
 ChartJS.register(
   CategoryScale,
@@ -90,6 +91,8 @@ export function BarChart({
         return createGroupedLabels(datesToNumbers);
       case CycleType.Weekly:
         return shortWeekdays;
+      case CycleType.Annually:
+        return months.map(m=>m.slice(0,3))
       default:
         return [];
     }
@@ -97,7 +100,7 @@ export function BarChart({
 
   const labels = labelBuilder(selectedCycle.value);
 
-  useCycleIndexEffect(selectedCycle, selectedTimeCycleIndex, currentWeekIndex,selectedYear.value);
+  //useCycleIndexEffect(selectedCycle, selectedTimeCycleIndex, currentWeekIndex,selectedYear.value);
 
   useStartAndEndDatesEffect(
     selectedCycle,
@@ -120,18 +123,20 @@ export function BarChart({
   );
 
 
-  const expenseDataBuilder = (cycle: CycleType,expenseDataPoints: number[]) => {
+  const expenseDataGrouping = (cycle: CycleType,expenseDataPoints: number[]) => {
     switch (cycle) {
       case CycleType.Monthly:
         return groupExpensesPerWeek(expenseDataPoints);
       case CycleType.Weekly:
+        return expenseDataPoints;
+      case CycleType.Annually:
         return expenseDataPoints;
       default:
         return [];
     }
   };
 
-  const expenseData = expenseDataBuilder(selectedCycle.value,expenseDataPoints);
+  const expenseData = expenseDataGrouping(selectedCycle.value,expenseDataPoints);
 
   const data = {
     labels: labels,
@@ -140,10 +145,7 @@ export function BarChart({
         label: "cumulative spending",
         data: expenseData,
         backgroundColor: "rgba(153, 30, 251, 0.5)",
-        borderWidth: 2,
-        datalabels: {
-          anchor: "end",
-        },
+        borderWidth: 2
       },
     ],
   } as any;
@@ -151,7 +153,7 @@ export function BarChart({
 
   return (
     <StyledBarChart>
-      <Bar options={options} data={data} plugins={[noData, ChartDataLabels]} />
+      <Bar options={options} data={data} plugins={[noData, ChartDataLabels,horizontalLine]} />
       <div className="periodOptions">
         <Carousel
           carouselItems={getCarouselItemsBasedOnCycle(

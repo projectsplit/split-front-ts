@@ -15,8 +15,8 @@ export const buildLabels = (
     case CycleType.Monthly:
       return datesToNumbers.map((num) => num.toString().padStart(2, "0"));
     case CycleType.Weekly:
-      const toFullMonthNames =
-        convertToFullMonthNames(monthsAndDaysArrays)[selectedTimeCycleIndex];
+      const toFullMonthNames = getFullMonthNames(monthsAndDaysArrays, selectedTimeCycleIndex);
+      //convertToFullMonthNames(monthsAndDaysArrays)[selectedTimeCycleIndex];
       return enhanceStringArray(toFullMonthNames, fractalFactor);
     case CycleType.Annually:
       return enhanceStringArray(months.map((month) => month), fractalFactor);
@@ -24,3 +24,11 @@ export const buildLabels = (
       return [""];
   }
 };
+
+const getFullMonthNames = (monthsAndDaysArrays: string[][], index: number) => {
+  if (convertToFullMonthNames(monthsAndDaysArrays)[index] === undefined) {
+    index = 0
+    return convertToFullMonthNames(monthsAndDaysArrays)[index]
+  }
+  return convertToFullMonthNames(monthsAndDaysArrays)[index]
+}

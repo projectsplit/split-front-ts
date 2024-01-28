@@ -33,7 +33,8 @@ import { useStartAndEndDatesEffect } from "../../hooks/useStartEndDatesEffect";
 import { CycleType } from "../../../../types";
 import { deCumulArray } from "../../helpers/deCumulArray";
 import { enhanceNumberArray } from "../../helpers/enhanceNumberArray";
-import { generateYearsArray } from "../../helpers/generateYearsArray";
+import { isCurrentPeriod } from "../../helpers/isCurrentPeriod";
+import { horizontalLine } from "../plugins/horizontalLine";
 
 ChartJS.register(
   CategoryScale,
@@ -58,9 +59,9 @@ export function CumulativeSpending({
 }: CumulativeSpendingProps) {
   const fractalFactor = 1;
 
-  
+
   //useCycleIndexEffect(selectedCycle, selectedTimeCycleIndex, currentWeekIndex, selectedYear.value);
-  
+
   const startDate = useSignal<string>(
     buildStartAndEndDates(
       selectedCycle.value,
@@ -180,14 +181,10 @@ export function CumulativeSpending({
   // const isSuccess = true;
   // const cumulArrayData = [30, 30, 30, 33, 34,]
   // const cumulArrayData = [
-  //   1, 12, 15, 16, 56, 69, 100, 102, 120, 130, 150, 180, 190, 200, 210.36, 222,
-  //   250.36, 310, 400, 420, 450, 500, 540, 690, 940, 952, 1000, 1045.36, 1200,
+  //   1, 12, 15, 16, 56, 69, 100, 102, 120, 130, 150, 180, 190, 200, 210.36, 222
   // ];
   const expensePoints = cumulArrayData === undefined ? [] : cumulArrayData;
   const projectedArray = projectionArray(cumulArrayData, selectedCycle.value);
-  //const projectedArray2 =  [30, 30, 30, 33, 34, 35,38.5]
-  //const projectedArray = buildMidPoints(projectedArray2,1)
-  //projectedArray[11]=NaN
 
   const lastNumberBeforeNaN = findLastNumberBeforeNaN(projectedArray);
 
@@ -202,7 +199,7 @@ export function CumulativeSpending({
     if (
       indx === 0 ||
       indx === projectedArray.length - 1 ||
-      enhancedDatesToNumbers[indx] === 15 || //does not affect annual or weekly as they are 12 and 7 rsptctvly
+      (enhancedDatesToNumbers[indx] === 15 && !isCurrentPeriod(selectedCycle.value, selectedTimeCycleIndex.value, isSuccess, expensePoints, currentWeekIndex)) || //does not affect annual or weekly as they are 12 and 7 rsptctvly
       indx === lastNumberBeforeNaN
     ) {
       pointRadiusProjection.push(2);
@@ -217,23 +214,13 @@ export function CumulativeSpending({
       hitRadius.push(0);
     }
   });
-  if (projectedArray.some((p) => isNaN(p))) {
-    pointBackgroundColorProjection[projectedArray.length - 1] = "grey";
-  }
 
-  // expensePoints.map((dp, indx) => {
-  //   if (indx === 0 || indx === expensePoints.length - 1 || indx === 14) {
-  //     pointRadius.push(2);
-  //     pointBackgroundColor.push("#A12BFF");
-  //   } else {
-  //     pointRadius.push(0);
-  //     pointBackgroundColor.push("transparent");
-  //   }
-  // });
+  pointBackgroundColorProjection[projectedArray.length - 1] = "grey";
+
 
   const options = getChartOptions(
     isSuccess,
-    cumulArrayData,
+    expensePoints,
     selectedCycle.value,
     labels,
     enhancedDatesToNumbers,

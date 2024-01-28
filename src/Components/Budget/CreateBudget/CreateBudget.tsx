@@ -184,6 +184,7 @@ export default function CreateBudget() {
         budgettype={budgettype}
         currency={currency}
       />
+      
     </StyledCreateBudget>
   );
 }

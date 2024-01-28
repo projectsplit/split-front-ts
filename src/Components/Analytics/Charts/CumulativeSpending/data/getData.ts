@@ -2,6 +2,7 @@ import { Signal } from "@preact/signals-react";
 import { CycleType } from "../../../../../types";
 import { ChartDataset } from 'chart.js/auto';
 import { generateYearsArray } from "../../../helpers/generateYearsArray";
+import { isCurrentPeriod } from "../../../helpers/isCurrentPeriod";
 
 export const getData = (
   labels: string[],
@@ -9,13 +10,13 @@ export const getData = (
   selectedTimeCycleIndex: Signal<number>,
   projectedArray: number[],
   cumulArrayData: number[],
-  currentDateIndex:number,
+  currentWeekIndex: number,
   pointRadiusProjection: number[],
   pointRadius: number[],
   pointBackgroundColorProjection: string[],
   pointBackgroundColor: string[],
-  isSuccess:boolean,
-  selectedYear:number
+  isSuccess: boolean,
+  selectedYear: number
 ) => {
   const gradient = document
     .createElement("canvas")
@@ -26,29 +27,12 @@ export const getData = (
   linearGradient.addColorStop(1, "rgba(217, 217, 217, 0)");
 
   const skipped = (ctx: any, value: any) => {
-   
-   return ctx.p0.skip || ctx.p1.skip ? value : undefined;
+
+    return ctx.p0.skip || ctx.p1.skip ? value : undefined;
 
   };
 
-  const showForecastLegend = (cycle:CycleType)=>{
-    switch (cycle) {
-      case CycleType.Monthly:
-        return selectedTimeCycleIndex.value === new Date().getMonth() && isSuccess && cumulArrayData?.length !== 0
-          ? true
-          : false;
-      case CycleType.Weekly :
-        return selectedTimeCycleIndex.value === currentDateIndex && isSuccess && cumulArrayData?.length !== 0
-          ? true
-          : false;
-      case CycleType.Annually:
-        const currentYear =new Date().getFullYear()
-        return selectedTimeCycleIndex.value === generateYearsArray().indexOf(currentYear) && isSuccess && cumulArrayData?.length !== 0
-      default:
-        return false; 
-    }
-  }
-  
+
   return {
     labels: labels,
     datasets: [
@@ -73,7 +57,7 @@ export const getData = (
         borderColor: (ctx: any) => {
           if (
             selectedTimeCycleIndex.value === new Date().getMonth() ||
-            selectedTimeCycleIndex.value === currentDateIndex ||
+            selectedTimeCycleIndex.value === currentWeekIndex ||
             selectedTimeCycleIndex.value === generateYearsArray().indexOf(selectedYear)
 
           ) {
@@ -90,19 +74,19 @@ export const getData = (
         spanGaps: true,
         backgroundColor: linearGradient,
         fill: 'start',
-        tension: 0.2,
+        tension: 0,
         borderWidth: 2,
         pointRadius: pointRadiusProjection,
         pointBackgroundColor: pointBackgroundColorProjection,
       },
-      showForecastLegend(selectedCycle.value)
-      ? {
+      isCurrentPeriod(selectedCycle.value, selectedTimeCycleIndex.value, isSuccess, cumulArrayData, currentWeekIndex)//show forecast legend
+        ? {
           label: "Forecast",
           data: [],
           borderColor: "grey",
           borderWidth: 2
         }
         : null, // Set to null if the condition is not met
-      ].filter(Boolean) as ChartDataset<'line', number[]>[],
+    ].filter(Boolean) as ChartDataset<'line', number[]>[],
   };
 };

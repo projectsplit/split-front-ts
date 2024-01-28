@@ -2,6 +2,8 @@ import { Context } from "chartjs-plugin-datalabels/types/context";
 import { roundThousandsAndMillions } from "../../../../../helpers/roundThousandsAndMils";
 import { CycleType } from "../../../../../types";
 import { convertToFullMonthNames } from "../../../helpers/monthlyDataHelpers";
+import { swapMonthDayToDayMonth } from "../../../helpers/swapMonthDayToDayMonth";
+import { months } from "../../../../../constants/dates";
 
 export const getChartOptions = (
   isSuccess: boolean,
@@ -18,13 +20,6 @@ export const getChartOptions = (
   const dateOptions: Intl.DateTimeFormatOptions = { month: "long" };
 
   const fullMonthName = date.toLocaleDateString("en-US", dateOptions);
-  
-  function transformDateArray(dateArray: string[]): string[] {
-    return dateArray.map((dateString) => {
-      const [month, day] = dateString.split(' ');
-      return `${day} ${month}`;
-    });
-  }
 
   return {
     isSuccess: isSuccess,
@@ -39,7 +34,11 @@ export const getChartOptions = (
         text: "Chart.js Line Chart",
       },
       tooltip: {
-        yAlign: "top",
+        yAlign: (ctx: any) => {
+          // Adjust yAlign based on data value
+          if(ctx.tooltip.dataPoints[0].raw>0) return 'top'
+          return 'bottom'
+        },
         displayColors: false,
         enabled: true,
         callbacks: {
@@ -49,12 +48,17 @@ export const getChartOptions = (
               case CycleType.Monthly:
                 return labels[index] + " " + fullMonthName + " " + selectedYear;
               case CycleType.Weekly:
-                return transformDateArray(convertToFullMonthNames(monthsAndDaysArrays)[selectedTimeCycleIndex])[index]+ " " +selectedYear;
+                return swapMonthDayToDayMonth(convertToFullMonthNames(monthsAndDaysArrays)[selectedTimeCycleIndex])[index] + " " + selectedYear;
+              case CycleType.Annually:
+                return months[index] + " " + selectedYear;
             }
           },
           label: (context: any) => {
             const value = context.parsed.y;
-            return `Total spent:` + ` ` + `${currency}` + `${value}`;
+            return value >= 0 ?
+              `Total spent:` + ` ` + `${currency}` + `${value}`
+              :
+              `Total received:` + ` ` + `${currency}` + `${-value}`;
           },
         },
       },
@@ -62,23 +66,39 @@ export const getChartOptions = (
         display: true,
         color: "white",
         font: {
-          size: 14,
+          size: 12, //TODO adjust based on screen size
           weight: "bold",
         },
-        align: "top",
+        anchor: (context: any) => {
+          const anchor = []
+          if (context.dataset.data[context.dataIndex] >= 0) {
+            anchor.push('end')
+          } else {
+            anchor.push('start')
+          }
+          return anchor;
+        },
+        align: (context: any) => {
+          const align = []
+          if (context.dataset.data[context.dataIndex] >= 0) {
+            align.push('top')
+          } else {
+            align.push('bottom')
+          }
+          return align;
+        },
+
         padding: -10,
-        formatter: (value:any) => {
-          // Check if the value is negative
+        formatter: (value: any) => {
           if (value < 0) {
             // If negative, format within parentheses
             return "($" + Math.abs(Number(roundThousandsAndMillions(value))) + ")";
-          } 
-          if (value >= 0) {
+          }
+          if (value > 0) {
             // If non-negative, format normally
             return "$" + roundThousandsAndMillions(value);
           }
-          // if(value===0)
-          // return ""
+          if (value === 0) return ""
         },
       },
     },
@@ -99,7 +119,7 @@ export const getChartOptions = (
           color: "#DDDDDD",
           font: {
             weight: "bold",
-            size: 20,
+            size: 20, //TODO adjust based on screen size
           },
           callback: (index: number, value: number) => {
             return labels[index];
@@ -107,6 +127,7 @@ export const getChartOptions = (
         },
       },
       y: {
+
         offset: true,
         display: false,
 
