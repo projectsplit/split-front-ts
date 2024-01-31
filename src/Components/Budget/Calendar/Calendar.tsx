@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { StyledCalendar } from "./Calendar.styled";
 import { CalendarProps } from "../../../interfaces";
-import { BudgetType } from "../../../types";
+import { Frequency } from "../../../types";
 
 export default function Calendar({
   children,
@@ -15,7 +15,7 @@ export default function Calendar({
 
   return (
     <StyledCalendar as="div" budgettype={budgettype}>
-      {budgettype.value == BudgetType.Monthly
+      {budgettype.value == Frequency.Monthly
         ? children.map((row: any, rowIndex: any) => (
             <div key={rowIndex} className="calendar-row">
               {row.map((day: string, dayIndex: number) => (

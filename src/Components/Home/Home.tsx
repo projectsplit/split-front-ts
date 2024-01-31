@@ -14,7 +14,7 @@ import { createUserPendingTransactionsFromTotals } from "../../helpers/createUse
 import { GroupsTotalAmountsResponse } from "../../types";
 import Spinner from "../Spinner/Spinner";
 import { useTheme } from "styled-components";
-import { BudgetInfoMessage } from "../../helpers/BudgetInfoMessage";
+import { BudgetInfoMessage } from "../BudgetMessages/BudgetInfoMessage";
 import useBudgetInfo from "../../hooks/useBudgetInfo";
 
 export default function Home() {

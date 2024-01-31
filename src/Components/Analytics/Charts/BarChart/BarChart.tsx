@@ -21,13 +21,10 @@ import {  getAllDaysInMonth } from "../../helpers/monthlyDataHelpers";
 import { createGroupedLabels } from "../../helpers/createGroupedLabels";
 import { getChartOptions } from "./options/getChartOptions";
 import { groupExpensesPerWeek } from "../../helpers/groupExpensesPerWeek";
-import { useCycleIndexEffect } from "../../hooks/useCycleIndexEffect";
-import { useSignal } from "@preact/signals-react";
-import { buildStartAndEndDates } from "../../helpers/buildStartAndEndDates";
 import { useStartAndEndDatesEffect } from "../../hooks/useStartEndDatesEffect";
 import useCumulativeSpendingArray from "../../../../hooks/useCumulativeSpendingArray";
 import { noData } from "../plugins/noData";
-import { CycleType } from "../../../../types";
+import { Frequency } from "../../../../types";
 import { deCumulArray } from "../../helpers/deCumulArray";
 import { horizontalLine } from "../plugins/horizontalLine";
 
@@ -45,35 +42,21 @@ ChartJS.register(
 export function BarChart({
   selectedCycle,
   selectedYear,
-  currentWeekIndex,
   monthsAndDaysArrays,
   cyclehaschanged,
   allWeeksPerYear,
   menu,
   selectedTimeCycleIndex,
+  startDate,
+  endDate,
+  currency
 }: BarChartProps) {
 
-  const startDate = useSignal<string>(
-    buildStartAndEndDates(
-      selectedCycle.value,
-      selectedTimeCycleIndex.value,
-      selectedYear.value,
-      allWeeksPerYear
-    )[0]
-  );
-
-  const endDate = useSignal<string>(
-    buildStartAndEndDates(
-      selectedCycle.value,
-      selectedTimeCycleIndex.value,
-      selectedYear.value,
-      allWeeksPerYear
-    )[1]
-  );
 
   const { data: cumulArrayData, isSuccess } = useCumulativeSpendingArray(
     startDate.value,
-    endDate.value
+    endDate.value,
+    currency
   );
 
   const expenseDataPoints = deCumulArray(cumulArrayData); //getRandomNumbers(31, -500, 1000); // This is supposed to be the total amount spent per calendar day
@@ -85,13 +68,13 @@ export function BarChart({
 
   const datesToNumbers = allDaysInMonth.map((day) => day.getDate());
 
-  const labelBuilder = (cycle: CycleType) => {
+  const labelBuilder = (cycle: Frequency) => {
     switch (cycle) {
-      case CycleType.Monthly:
+      case Frequency.Monthly:
         return createGroupedLabels(datesToNumbers);
-      case CycleType.Weekly:
+      case Frequency.Weekly:
         return shortWeekdays;
-      case CycleType.Annually:
+      case Frequency.Annually:
         return months.map(m=>m.slice(0,3))
       default:
         return [];
@@ -116,20 +99,19 @@ export function BarChart({
     monthsAndDaysArrays,
     selectedCycle.value,
     labels,
-    datesToNumbers,
     selectedYear.value,
     selectedTimeCycleIndex.value,
-    "USD"
+    currency
   );
 
 
-  const expenseDataGrouping = (cycle: CycleType,expenseDataPoints: number[]) => {
+  const expenseDataGrouping = (cycle: Frequency,expenseDataPoints: number[]) => {
     switch (cycle) {
-      case CycleType.Monthly:
+      case Frequency.Monthly:
         return groupExpensesPerWeek(expenseDataPoints);
-      case CycleType.Weekly:
+      case Frequency.Weekly:
         return expenseDataPoints;
-      case CycleType.Annually:
+      case Frequency.Annually:
         return expenseDataPoints;
       default:
         return [];
@@ -137,7 +119,7 @@ export function BarChart({
   };
 
   const expenseData = expenseDataGrouping(selectedCycle.value,expenseDataPoints);
-
+  
   const data = {
     labels: labels,
     datasets: [

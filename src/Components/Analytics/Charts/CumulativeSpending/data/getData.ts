@@ -1,12 +1,12 @@
 import { Signal } from "@preact/signals-react";
-import { CycleType } from "../../../../../types";
+import { Frequency } from "../../../../../types";
 import { ChartDataset } from 'chart.js/auto';
 import { generateYearsArray } from "../../../helpers/generateYearsArray";
 import { isCurrentPeriod } from "../../../helpers/isCurrentPeriod";
 
 export const getData = (
   labels: string[],
-  selectedCycle: Signal<CycleType>,
+  selectedCycle: Signal<Frequency>,
   selectedTimeCycleIndex: Signal<number>,
   projectedArray: number[],
   cumulArrayData: number[],

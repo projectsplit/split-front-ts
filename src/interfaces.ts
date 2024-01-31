@@ -1,5 +1,5 @@
 import { CSSProperties, MouseEventHandler } from "react";
-import { BudgetInfoResponse, BudgetType, CycleType } from "./types";
+import { BudgetInfoResponse, Frequency } from "./types";
 import { Signal } from "@preact/signals-react";
 
 export interface InputProps
@@ -29,7 +29,7 @@ export interface SpendingCycleProps {
   menu: Signal<React.SetStateAction<string | null>>;
   submitBudgetErrors: Signal<any[]>;
   calendarDay: Signal<string>;
-  budgettype: Signal<BudgetType>;
+  budgettype: Signal<Frequency>;
   isStale: boolean;
   openCalendar: Signal<boolean>;
   hasSwitchedBudgetType: Signal<boolean>;
@@ -63,8 +63,7 @@ export interface InfoBoxAnimationProps extends MenuAnimationBackgroundProps {}
 
 export interface CurrencyOptionsAnimationProps
   extends MenuAnimationBackgroundProps {
-  currency: Signal<React.SetStateAction<string>>;
-  budgettype: Signal<BudgetType>;
+  clickHandler: (curr: string) => void
 }
 
 export interface SubmitButtonProps
@@ -98,7 +97,7 @@ export interface OptionsButtonProps {
 
 export interface CalendarProps {
   children: any;
-  budgettype: Signal<BudgetType>;
+  budgettype: Signal<Frequency>;
   calendarDay: Signal<string>;
 }
 
@@ -123,7 +122,7 @@ export interface RecommendationMessageProps {
   offBudgetAmount: string;
   style?: CSSProperties;
   closeButton: boolean;
-  budgetType?: BudgetType;
+  budgetType?: Frequency;
 }
 
 export interface OverspentMessageProps {
@@ -134,7 +133,7 @@ export interface OverspentMessageProps {
   overspentBy: string;
   style?: CSSProperties;
   closeButton: boolean;
-  budgetType?: BudgetType;
+  budgetType?: Frequency;
 }
 
 export interface OnTrackMessageProps {
@@ -143,7 +142,7 @@ export interface OnTrackMessageProps {
   amount: string;
   style?: CSSProperties;
   closeButton: boolean;
-  budgetType?: BudgetType;
+  budgetType?: Frequency;
 }
 
 export interface SimpleOnTrackMessageProps {
@@ -199,9 +198,7 @@ export interface BottomMenuProps {
 export interface MiddleScreenMenuProps extends BottomMenuProps {}
 
 export interface CurrencyOptionProps {
-  menu: Signal<React.SetStateAction<string | null>>;
-  currency: Signal<React.SetStateAction<string>>;
-  budgettype: Signal<BudgetType>;
+  clickHandler: (curr: string) => void
 }
 
 export interface SpendingCycleInfoProps {
@@ -228,7 +225,7 @@ export interface TopBarWithBackButtonProps {
 }
 
 export interface CumulativeSpendingProps {
-  selectedCycle: Signal<CycleType>;
+  selectedCycle: Signal<Frequency>;
   selectedYear: Signal<number>;
   currentWeekIndex: number;
   monthsAndDaysArrays: string[][];
@@ -236,6 +233,9 @@ export interface CumulativeSpendingProps {
   allWeeksPerYear: Date[][];
   menu:Signal<string | null>;
   selectedTimeCycleIndex: Signal<number>;
+  startDate: Signal<string>;
+  endDate:Signal<string>;
+  currency:string;
 
 }
 
@@ -245,7 +245,7 @@ export interface TotalLentBorrowedProps extends CumulativeSpendingProps {
 }
 
 export interface CycleOptionProps {
-  selectedCycle: Signal<CycleType>;
+  selectedCycle: Signal<Frequency>;
   menu: Signal<React.SetStateAction<string | null>>;
   cyclehaschanged: Signal<boolean>;
 }
@@ -257,14 +257,14 @@ export interface YearOptionProps {
 }
 
 export interface CumulativeSpendingProps {
-  selectedCycle: Signal<CycleType>;
+  selectedCycle: Signal<Frequency>;
   selectedYear: Signal<number>;
 }
 
 export interface CarouselProps {
   carouselItems: string[] | string[][];
   selectedTimeCycleIndex: Signal<number>;
-  selectedCycle: Signal<CycleType>;
+  selectedCycle: Signal<Frequency>;
   cyclehaschanged: Signal<boolean>;
   menu:Signal<string | null>;
   selectedYear:Signal<number>;
@@ -272,7 +272,7 @@ export interface CarouselProps {
 
 export interface PeriodOptionProps {
   menu:Signal<string | null>;
-  selectedCycle: Signal<CycleType>;
+  selectedCycle: Signal<Frequency>;
   selectedTimeCycleIndex: Signal<number>;
   monthsAndDaysArrays:string[][];
 }

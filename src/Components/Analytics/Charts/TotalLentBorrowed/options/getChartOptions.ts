@@ -1,22 +1,24 @@
 import { Context } from "chartjs-plugin-datalabels/types/context";
 import { roundThousandsAndMillions } from "../../../../../helpers/roundThousandsAndMils";
-import { CycleType } from "../../../../../types";
+import { Frequency } from "../../../../../types";
 import { months, shortWeekdays } from "../../../../../constants/dates";
 import { enhanceStringArray } from "../../../helpers/enhanceStringArray";
 import { swapMonthDayToDayMonth } from "../../../helpers/swapMonthDayToDayMonth";
+import getSymbolFromCurrency from "currency-symbol-map";
 
 export const getChartOptions = (
   isSuccess: boolean,
   totalLentExt: number[] | undefined,
   totalBorrowedExt: number[] | undefined,
-  selectedCycle: CycleType,
+  selectedCycle: Frequency,
   labels: string[],
   enhancedDatesToNumbers: number[],
   selectedYear: number,
   selectedTimeCycleIndex: number,
   currentWeekIndex: number,
   hitRadius: number[],
-  fractalFactor: number
+  fractalFactor: number,
+  currency:string
 ) => {
   const date = new Date(selectedYear, selectedTimeCycleIndex, 1);
 
@@ -29,6 +31,8 @@ export const getChartOptions = (
   const abbreviatedMonths = months.map((month) => month.slice(0, 3))
 
   const enhancedAbbreviatedMonths = enhanceStringArray(abbreviatedMonths, fractalFactor);
+  
+  const currencySymbol = getSymbolFromCurrency(currency)
 
   return {
     transitions: {
@@ -85,7 +89,7 @@ export const getChartOptions = (
         callbacks: {
           title: (context: Context[]) => {
             const index = context[0].dataIndex;
-            if (selectedCycle === CycleType.Monthly)
+            if (selectedCycle === Frequency.Monthly)
               return (
                 labels[index] +
                 " " +
@@ -93,17 +97,17 @@ export const getChartOptions = (
                 " " +
                 selectedYear.toString()
               );
-            if (selectedCycle === CycleType.Weekly)
+            if (selectedCycle === Frequency.Weekly)
               return swapMonthDayToDayMonth(labels)[index] + " " + selectedYear.toString();
-            if (selectedCycle === CycleType.Annually)
+            if (selectedCycle === Frequency.Annually)
               return labels[index] + " " + selectedYear.toString();
           },
           label: (context: any) => {
             const value = context.parsed.y;
             if (context.dataset.label === "Total Lent") {
-              return `Total Lent:` + ` ` + `${"currency"}` + `${value}`;
+              return `Total Lent:` + ` ` + `${currencySymbol}` + `${value}`;
             } else {
-              return `Total Borrowed:` + ` ` + `${"currency"}` + `${value}`;
+              return `Total Borrowed:` + ` ` + `${currencySymbol}` + `${value}`;
             }
           },
         },
@@ -161,7 +165,7 @@ export const getChartOptions = (
                 enhancedDatesToNumbers[context.dataset.data.length - 1] === 16) //condition to not show 15th and 16th consecutive data points
             )
               return "";
-            return "$" + roundThousandsAndMillions(value.toString());
+            return `${currencySymbol}` + roundThousandsAndMillions(value.toString());
 
           } else {
             return null;
@@ -190,7 +194,7 @@ export const getChartOptions = (
           },
           callback: (index: number, value: number) => {
             switch (selectedCycle) {
-              case CycleType.Monthly:
+              case Frequency.Monthly:
                 // show x axis values for the first and last date of the month
                 if (
                   index === 0 ||
@@ -210,14 +214,14 @@ export const getChartOptions = (
                 }
                 // hide all other x axis values
                 break;
-              case CycleType.Weekly:
+              case Frequency.Weekly:
                 if (
                   index === 0 ||
                   index === enhancedWeekDays.length - 1 ||
                   index % 5 === 0
                 ) { return enhancedWeekDays[index]; } break;
 
-              case CycleType.Annually:
+              case Frequency.Annually:
 
                 if (
                   index === 0 ||

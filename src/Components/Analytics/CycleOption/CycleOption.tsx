@@ -1,7 +1,7 @@
 import React from "react";
 import { StyledCycleOption } from "./CycleOption.styled";
 import { CycleOptionProps } from "../../../interfaces";
-import { CycleType } from "../../../types";
+import { Frequency } from "../../../types";
 
 export default function CycleOption({
   selectedCycle,
@@ -12,14 +12,14 @@ export default function CycleOption({
     <StyledCycleOption>  
       <div
         onClick={() => {
-          selectedCycle.value === CycleType.Weekly || selectedCycle.value === CycleType.Monthly
+          selectedCycle.value === Frequency.Weekly || selectedCycle.value === Frequency.Monthly
             ? (cyclehaschanged.value = true)
             : (cyclehaschanged.value = false);
-          selectedCycle.value = CycleType.Annually;
+          selectedCycle.value = Frequency.Annually;
           menu.value = null;
         }}
         className={`item ${
-          selectedCycle.value === CycleType.Annually ? "clicked" : ""
+          selectedCycle.value === Frequency.Annually ? "clicked" : ""
         }`}
       >
         Annually
@@ -27,28 +27,28 @@ export default function CycleOption({
 
       <div
         onClick={() => {
-          selectedCycle.value === CycleType.Weekly || selectedCycle.value === CycleType.Annually
+          selectedCycle.value === Frequency.Weekly || selectedCycle.value === Frequency.Annually
             ? (cyclehaschanged.value = true)
             : (cyclehaschanged.value = false);
-          selectedCycle.value = CycleType.Monthly;
+          selectedCycle.value = Frequency.Monthly;
           menu.value = null;
         }}
         className={`item ${
-          selectedCycle.value === CycleType.Monthly ? "clicked" : ""
+          selectedCycle.value === Frequency.Monthly ? "clicked" : ""
         }`}
       >
         Monthly
       </div>
       <div
         onClick={() => {
-          selectedCycle.value === CycleType.Monthly || selectedCycle.value === CycleType.Annually
+          selectedCycle.value === Frequency.Monthly || selectedCycle.value === Frequency.Annually
             ? (cyclehaschanged.value = true)
             : (cyclehaschanged.value = false);
-          selectedCycle.value = CycleType.Weekly;
+          selectedCycle.value = Frequency.Weekly;
           menu.value = null;
         }}
         className={`item ${
-          selectedCycle.value === CycleType.Weekly ? "clicked" : ""
+          selectedCycle.value === Frequency.Weekly ? "clicked" : ""
         }`}
       >
         Weekly

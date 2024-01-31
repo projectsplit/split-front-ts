@@ -1,13 +1,13 @@
-import { CycleType } from "../../../types";
+import { Frequency } from "../../../types";
 import { generateYearsArray } from "./generateYearsArray";
 
-export const getCarouselItemsBasedOnCycle = (cycle: CycleType, months: string[], monthsAndDays: string[][]) => {
+export const getCarouselItemsBasedOnCycle = (cycle: Frequency, months: string[], monthsAndDays: string[][]) => {
   switch (cycle) {
-    case CycleType.Monthly:
+    case Frequency.Monthly:
       return months;
-    case CycleType.Weekly:
+    case Frequency.Weekly:
       return monthsAndDays;
-    case CycleType.Annually:
+    case Frequency.Annually:
       return generateYearsArray().map(year => year.toString());
     default:
       return [""];

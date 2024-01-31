@@ -6,7 +6,7 @@ import {
   GetGroupResponse,
   GroupsTotalAmountsResponse,
   CreateBudgetRequest,
-  BudgetType,
+  Frequency,
   BudgetInfoResponse,
   SpendingInfoResponse,
   GetTotalLentTotalBorrowedResponse,
@@ -73,33 +73,32 @@ const getUserGroups = async (
 };
 
 const getBudgetInfo = async (): Promise<BudgetInfoResponse> => {
- 
+
   const response = await apiHttpClient.get<BudgetInfoResponse>(
     `/budget/budgetinfo`
   );
   return response.data;
 };
 
-const getSpendingInfo = async (budgetType: BudgetType, currency:string): Promise<SpendingInfoResponse> => {
+const getSpendingInfo = async (budgetType: Frequency, currency: string): Promise<SpendingInfoResponse> => {
   const response = await apiHttpClient.get<SpendingInfoResponse>(
     `/budget/spendinginfo?budgettype=${budgetType}&currency=${currency}`
   );
   return response.data;
 };
 
-const getCumulativeSpendingArray = async (startDate: string, endDate: string): Promise<number[]> => {
+const getCumulativeSpendingArray = async (startDate: string, endDate: string, currency: string): Promise<number[]> => {
   const response = await apiHttpClient.get<number[]>(
-    `/analytics/cumulativespending?startDate=${startDate}&endDate=${endDate}`
+    `/analytics/cumulativespending?startDate=${startDate}&endDate=${endDate}&currency=${currency}`
   );
   return response.data;
 };
 
-const getTotalLentBorrowedArrays = async (startDate: string, endDate: string): Promise<GetTotalLentTotalBorrowedResponse> => {
+const getTotalLentBorrowedArrays = async (startDate: string, endDate: string, currency: string): Promise<GetTotalLentTotalBorrowedResponse> => {
   const response = await apiHttpClient.get<GetTotalLentTotalBorrowedResponse>(
-    `/analytics/totallentborrowed?startDate=${startDate}&endDate=${endDate}`
+    `/analytics/totallentborrowed?startDate=${startDate}&endDate=${endDate}&currency=${currency}`
   );
-
-return response.data
+  return response.data
 };
 
 

@@ -6,7 +6,7 @@ import { getWeekday } from "../../../../helpers/getWeekDay";
 import { getOrdinalSuffix } from "../../../../helpers/getOrdinalSuffix";
 import CalendarOptionsButton from "../../CalendarOptionButton/CalendarOptionsButton";
 import Calendar from "../../Calendar/Calendar";
-import { BudgetType } from "../../../../types";
+import { Frequency } from "../../../../types";
 import { SpendingCycleProps } from "../../../../interfaces";
 import { useQueryClient } from "@tanstack/react-query";
 
@@ -37,7 +37,7 @@ SpendingCycleProps) {
   );
   const budgetInfoQueryKey = ["budget"];
 
-  const calendarTypeHandler = (budgetType: BudgetType) => {
+  const calendarTypeHandler = (budgetType: Frequency) => {
     if (calendarDay.value !== "" && budgetType === budgettype.value) {
       // setBudgetType(budgetType);
       budgettype.value = budgetType;
@@ -74,12 +74,12 @@ SpendingCycleProps) {
           )}
         >
           {calendarDay.value === "" ? (
-            budgettype.value === BudgetType.Monthly ? (
+            budgettype.value === Frequency.Monthly ? (
               "Monthly"
             ) : (
               "Weekly"
             )
-          ) : budgettype.value === BudgetType.Monthly ? (
+          ) : budgettype.value === Frequency.Monthly ? (
             <div className="monthlyPropmt">
               Monthly on the {calendarDay.value}{" "}
               <sup className="sup">{getOrdinalSuffix(calendarDay.value)}</sup>
@@ -104,17 +104,17 @@ SpendingCycleProps) {
         <div className="categoryButtons">
           <CalendarOptionsButton
             onClick={() => {
-              calendarTypeHandler(BudgetType.Monthly);
+              calendarTypeHandler(Frequency.Monthly);
             }}
-            isactive={budgettype.value === BudgetType.Monthly}
+            isactive={budgettype.value === Frequency.Monthly}
           >
             Monthly
           </CalendarOptionsButton>
           <CalendarOptionsButton
             onClick={() => {
-              calendarTypeHandler(BudgetType.Weekly);
+              calendarTypeHandler(Frequency.Weekly);
             }}
-            isactive={budgettype.value === BudgetType.Weekly}
+            isactive={budgettype.value === Frequency.Weekly}
           >
             Weekly
           </CalendarOptionsButton>
@@ -126,7 +126,7 @@ SpendingCycleProps) {
           budgettype={budgettype}
           calendarDay={calendarDay}
         >
-          {budgettype.value === BudgetType.Monthly ? monthDaysArray : daysArray}
+          {budgettype.value === Frequency.Monthly ? monthDaysArray : daysArray}
         </Calendar>
       )}
     </StyledSpendingCycle>

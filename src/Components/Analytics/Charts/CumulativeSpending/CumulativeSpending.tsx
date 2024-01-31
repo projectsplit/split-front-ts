@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -17,24 +17,21 @@ import useCumulativeSpendingArray from "../../../../hooks/useCumulativeSpendingA
 import { StyledCumulativeSpending } from "./CumulativeSpending.styled";
 import Carousel from "../../Carousel/Carousel";
 import { CumulativeSpendingProps } from "../../../../interfaces";
-import { useSignal } from "@preact/signals-react";
 import { noData } from "../plugins/noData";
 import {
   getAllDaysInMonth
 } from "../../helpers/monthlyDataHelpers";
 import { months } from "../../../../constants/dates";
 import { getCarouselItemsBasedOnCycle } from "../../helpers/getCarouselItemsBasedOnCycle";
-import { buildStartAndEndDates } from "../../helpers/buildStartAndEndDates";
 import { getChartOptions } from "./options/getChartOptions";
 import { getData } from "./data/getData";
 import { buildLabels } from "../../helpers/buildLabels";
-import { useCycleIndexEffect } from "../../hooks/useCycleIndexEffect";
 import { useStartAndEndDatesEffect } from "../../hooks/useStartEndDatesEffect";
-import { CycleType } from "../../../../types";
+import { Frequency } from "../../../../types";
 import { deCumulArray } from "../../helpers/deCumulArray";
 import { enhanceNumberArray } from "../../helpers/enhanceNumberArray";
 import { isCurrentPeriod } from "../../helpers/isCurrentPeriod";
-import { horizontalLine } from "../plugins/horizontalLine";
+
 
 ChartJS.register(
   CategoryScale,
@@ -56,29 +53,11 @@ export function CumulativeSpending({
   allWeeksPerYear,
   menu,
   selectedTimeCycleIndex,
+  startDate,
+  endDate,
+  currency
 }: CumulativeSpendingProps) {
   const fractalFactor = 1;
-
-
-  //useCycleIndexEffect(selectedCycle, selectedTimeCycleIndex, currentWeekIndex, selectedYear.value);
-
-  const startDate = useSignal<string>(
-    buildStartAndEndDates(
-      selectedCycle.value,
-      selectedTimeCycleIndex.value,
-      selectedYear.value,
-      allWeeksPerYear
-    )[0]
-  );
-
-  const endDate = useSignal<string>(
-    buildStartAndEndDates(
-      selectedCycle.value,
-      selectedTimeCycleIndex.value,
-      selectedYear.value,
-      allWeeksPerYear
-    )[1]
-  );
 
   useStartAndEndDatesEffect(
     selectedCycle,
@@ -107,16 +86,15 @@ export function CumulativeSpending({
     fractalFactor
   );
 
-
-
   const { data: cumulArrayData, isSuccess } = useCumulativeSpendingArray(
     startDate.value,
-    endDate.value
+    endDate.value,
+    currency
   );
 
   const projectionArray = (
     cumulArrayData: number[] | undefined,
-    cycle: CycleType
+    cycle: Frequency
   ) => {
     if (cumulArrayData === undefined) return [];
     if (cumulArrayData.length === 0) return [];
@@ -124,12 +102,12 @@ export function CumulativeSpending({
     const enhancedCumulArray = [...cumulArrayData];
     let upLimit = 0;
     //const now = new Date();
-    if (cycle === CycleType.Monthly) upLimit = getAllDaysInMonth(
+    if (cycle === Frequency.Monthly) upLimit = getAllDaysInMonth(
       selectedTimeCycleIndex.value + 1,
       selectedYear.value
     ).length;
-    if (cycle === CycleType.Weekly) upLimit = 7;
-    if (cycle === CycleType.Annually) upLimit = 12;
+    if (cycle === Frequency.Weekly) upLimit = 7;
+    if (cycle === Frequency.Annually) upLimit = 12;
 
     let enhancedCumulArrayLength = enhancedCumulArray?.length;
 
@@ -178,10 +156,10 @@ export function CumulativeSpending({
     }
   };
 
-  // const isSuccess = true;
+  //const isSuccess = true;
   // const cumulArrayData = [30, 30, 30, 33, 34,]
   // const cumulArrayData = [
-  //   1, 12, 15, 16, 56, 69, 100, 102, 120, 130, 150, 180, 190, 200, 210.36, 222
+  //   1, 12, 15, 16, 56, 69, 100, 102, 120, 130, 150, 180, 190, 200, 210.36, 222,222,222,222,222,222,222,222,222,222,230,250,260
   // ];
   const expensePoints = cumulArrayData === undefined ? [] : cumulArrayData;
   const projectedArray = projectionArray(cumulArrayData, selectedCycle.value);
@@ -229,7 +207,8 @@ export function CumulativeSpending({
     lastNumberBeforeNaN,
     currentWeekIndex,
     hitRadius,
-    fractalFactor
+    fractalFactor,
+    currency
   );
 
   const data = getData(

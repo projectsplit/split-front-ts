@@ -3,7 +3,7 @@ import { StyledCarousel } from "./Carousel.styled";
 import { SlArrowLeft } from "react-icons/sl";
 import { SlArrowRight } from "react-icons/sl";
 import { CarouselProps } from "../../../interfaces";
-import { CycleType } from "../../../types";
+import { Frequency } from "../../../types";
 
 export default function Carousel({
   carouselItems,
@@ -19,7 +19,7 @@ export default function Carousel({
     selectedTimeCycleIndex.value =
       (selectedTimeCycleIndex.value + 1) % carouselItems.length;
 
-    if (selectedCycle.value === CycleType.Annually)
+    if (selectedCycle.value === Frequency.Annually)
       selectedYear.value = parseInt(carouselItems[selectedTimeCycleIndex.value] as string, 10)
 
   };
@@ -30,19 +30,19 @@ export default function Carousel({
       (selectedTimeCycleIndex.value - 1 + carouselItems.length) %
       carouselItems.length;
 
-    if (selectedCycle.value === CycleType.Annually)
+    if (selectedCycle.value === Frequency.Annually)
       selectedYear.value = parseInt(carouselItems[selectedTimeCycleIndex.value] as string, 10)
       
   };
 
-  const displayCarouselItem = (cycle: CycleType, item: string[] | string[][]) => {
+  const displayCarouselItem = (cycle: Frequency, item: string[] | string[][]) => {
     switch (cycle) {
-      case CycleType.Monthly:
+      case Frequency.Monthly:
         return item;
-      case CycleType.Weekly:
+      case Frequency.Weekly:
         if (item.length === 1) return item[0];
         return item[0] + "- " + item[item.length - 1];
-      case CycleType.Annually:
+      case Frequency.Annually:
         return item;
       default:
         return 0;
@@ -61,7 +61,7 @@ export default function Carousel({
         >
           {carouselItems.map((item: any, index: number) => (
             <div key={index} className="carousel-item" 
-              onClick={() => (selectedCycle.value === CycleType.Annually ? 
+              onClick={() => (selectedCycle.value === Frequency.Annually ? 
               menu.value = "year" : menu.value = "timePeriod")}>
               {displayCarouselItem(selectedCycle.value, item)}
             </div>

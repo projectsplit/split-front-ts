@@ -1,21 +1,21 @@
-import { CycleType } from "../../../types";
+import { Frequency } from "../../../types";
 import { generateYearsArray } from "./generateYearsArray";
 
 export const isCurrentPeriod = (
-    cycle: CycleType,
+    cycle: Frequency,
     selectedTimeCycleIndex: number,
     isSuccess: boolean,
     cumulArrayData: number[],
     currentWeekIndex: number) => {
 
     switch (cycle) {
-        case CycleType.Monthly:
+        case Frequency.Monthly:
             return selectedTimeCycleIndex === new Date().getMonth() && isSuccess && cumulArrayData?.length !== 0
 
-        case CycleType.Weekly:
+        case Frequency.Weekly:
             return selectedTimeCycleIndex === currentWeekIndex && isSuccess && cumulArrayData?.length !== 0
 
-        case CycleType.Annually:
+        case Frequency.Annually:
             const currentYear = new Date().getFullYear()
             return selectedTimeCycleIndex === generateYearsArray().indexOf(currentYear) && isSuccess && cumulArrayData?.length !== 0
 

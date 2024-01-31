@@ -1,9 +1,9 @@
-import OnTrackMessage from "../components/BudgetMessages/OnTrackMessage/OnTrackMessage";
-import OverspentMessage from "../components/BudgetMessages/OverspentMessage/OverspentMessage";
-import ReceivedMoreThanSpentMessage from "../components/BudgetMessages/ReceivedMoreThanSpentMessage/ReceivedMoreThanSpentMessage";
-import Recommendation from "../components/BudgetMessages/Recommendation/Recommendation";
-import SimpleOnTrackMessage from "../components/BudgetMessages/SimpleOnTrackMessage/SimpleOnTrackMessage";
-import { BudgetInfoResponse } from "../types";
+import OnTrackMessage from "./OnTrackMessage/OnTrackMessage";
+import OverspentMessage from "./OverspentMessage/OverspentMessage";
+import ReceivedMoreThanSpentMessage from "./ReceivedMoreThanSpentMessage/ReceivedMoreThanSpentMessage";
+import Recommendation from "./Recommendation/Recommendation";
+import SimpleOnTrackMessage from "./SimpleOnTrackMessage/SimpleOnTrackMessage";
+import { BudgetInfoResponse } from "../../types";
 import { DefaultTheme } from "styled-components";
 
 export const BudgetInfoMessage = (

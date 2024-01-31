@@ -5,8 +5,7 @@ import { CurrencyOptionsAnimationProps } from "../../interfaces";
 
 export default function CurrencyOptionsAnimation({
   menu,
-  currency,
-  budgettype,
+  clickHandler
 }: CurrencyOptionsAnimationProps) {
   return (
     <CSSTransition
@@ -16,9 +15,7 @@ export default function CurrencyOptionsAnimation({
       unmountOnExit
     >
       <CurrencyOptions
-        menu={menu}
-        currency={currency}
-        budgettype={budgettype}
+        clickHandler={clickHandler}
       />
     </CSSTransition>
   );

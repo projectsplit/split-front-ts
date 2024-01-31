@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { BudgetInfoResponse, BudgetType } from "../types";
+import { BudgetInfoResponse, Frequency } from "../types";
 import { api } from "../apis/api";
 
 const useBudgetInfo = () => {

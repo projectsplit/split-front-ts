@@ -1,8 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
-import { SpendingInfoResponse, BudgetType } from "../types";
+import { SpendingInfoResponse, Frequency } from "../types";
 import { api } from "../apis/api";
 
-const useSpendingInfo = (budgetType: BudgetType, currency: string) => {
+const useSpendingInfo = (budgetType: Frequency, currency: string) => {
   return useQuery<SpendingInfoResponse>({
     queryKey: ["spending", budgetType, currency],
     queryFn: () => api.getSpendingInfo(budgetType, currency),

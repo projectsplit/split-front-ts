@@ -1,16 +1,17 @@
 import { Context } from "chartjs-plugin-datalabels/types/context";
 import { roundThousandsAndMillions } from "../../../../../helpers/roundThousandsAndMils";
-import { CycleType } from "../../../../../types";
+import { Frequency } from "../../../../../types";
 import { convertToFullMonthNames } from "../../../helpers/monthlyDataHelpers";
 import { swapMonthDayToDayMonth } from "../../../helpers/swapMonthDayToDayMonth";
 import { months } from "../../../../../constants/dates";
+import getSymbolFromCurrency from "currency-symbol-map";
 
 export const getChartOptions = (
   isSuccess: boolean,
   monthsAndDaysArrays: string[][],
-  selectedCycle: CycleType,
+  selectedCycle: Frequency,
   labels: string[],
-  datesToNumbers: number[],
+
   selectedYear: number,
   selectedTimeCycleIndex: number,
   currency: string
@@ -21,6 +22,8 @@ export const getChartOptions = (
 
   const fullMonthName = date.toLocaleDateString("en-US", dateOptions);
 
+  const currencySymbol = getSymbolFromCurrency(currency)
+  
   return {
     isSuccess: isSuccess,
     responsive: true,
@@ -36,7 +39,7 @@ export const getChartOptions = (
       tooltip: {
         yAlign: (ctx: any) => {
           // Adjust yAlign based on data value
-          if(ctx.tooltip.dataPoints[0].raw>0) return 'top'
+          if (ctx.tooltip.dataPoints[0].raw > 0) return 'top'
           return 'bottom'
         },
         displayColors: false,
@@ -45,20 +48,20 @@ export const getChartOptions = (
           title: (context: Context[]) => {
             const index = context[0].dataIndex;
             switch (selectedCycle) {
-              case CycleType.Monthly:
+              case Frequency.Monthly:
                 return labels[index] + " " + fullMonthName + " " + selectedYear;
-              case CycleType.Weekly:
+              case Frequency.Weekly:
                 return swapMonthDayToDayMonth(convertToFullMonthNames(monthsAndDaysArrays)[selectedTimeCycleIndex])[index] + " " + selectedYear;
-              case CycleType.Annually:
+              case Frequency.Annually:
                 return months[index] + " " + selectedYear;
             }
           },
           label: (context: any) => {
             const value = context.parsed.y;
             return value >= 0 ?
-              `Total spent:` + ` ` + `${currency}` + `${value}`
+              `Total spent:` + ` ` + `${currencySymbol}` + `${value}`
               :
-              `Total received:` + ` ` + `${currency}` + `${-value}`;
+              `Total received:` + ` ` + `${currencySymbol}` + `${-value}`;
           },
         },
       },
@@ -92,11 +95,11 @@ export const getChartOptions = (
         formatter: (value: any) => {
           if (value < 0) {
             // If negative, format within parentheses
-            return "($" + Math.abs(Number(roundThousandsAndMillions(value))) + ")";
+            return `(${currencySymbol}${Math.abs(Number(roundThousandsAndMillions(value.toString())))})`
           }
           if (value > 0) {
             // If non-negative, format normally
-            return "$" + roundThousandsAndMillions(value);
+            return `${currencySymbol}` + roundThousandsAndMillions(value.toString());
           }
           if (value === 0) return ""
         },

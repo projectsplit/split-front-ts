@@ -72,12 +72,18 @@ export type UserPendingTransaction = {
   currency: string;
 };
 
-export enum BudgetType {
-  Weekly,
-  Monthly,
-}
+// export enum BudgetType {
+//   Weekly,
+//   Monthly,
+// }
 
-export enum CycleType {
+// export enum CycleType {
+//   Weekly,
+//   Monthly,
+//   Annually,
+// }
+
+export enum Frequency {
   Weekly,
   Monthly,
   Annually,
@@ -86,7 +92,7 @@ export enum CycleType {
 export type CreateBudgetRequest = {
   amount: string;
   currency: string;
-  budgetType: BudgetType;
+  budgetType: Frequency;
   day: string | null;
 };
 
@@ -97,7 +103,7 @@ export type BudgetInfoResponse = {
   totalAmountSpent?: string;
   goal?: string;
   currency?: string;
-  budgetType?: BudgetType;
+  budgetType?: Frequency;
   startDate?: any;
   endDate?: any;
 };

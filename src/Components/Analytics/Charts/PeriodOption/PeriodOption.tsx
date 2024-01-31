@@ -2,7 +2,7 @@ import React from "react";
 import { StyledPeriodOption } from "./StyledPeriodOption";
 import { months } from "../../../../constants/dates";
 import { PeriodOptionProps } from "../../../../interfaces";
-import { CycleType } from "../../../../types";
+import { Frequency } from "../../../../types";
 
 export default function PeriodOption({
   selectedCycle,
@@ -19,7 +19,7 @@ export default function PeriodOption({
  
   return (
     <StyledPeriodOption>
-      {selectedCycle.value === CycleType.Monthly
+      {selectedCycle.value === Frequency.Monthly
         ? months.map((month: string, index: number) => (
             <div
               key={index}

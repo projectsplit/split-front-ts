@@ -3,27 +3,13 @@ import { StyledCurrencyOptions } from "./CurrencyOptions.styled";
 import { CurrencyOptionProps } from "../../../interfaces";
 import { currencyData } from "../../../helpers/openExchangeRates";
 import { Currency } from "../../../types";
-import { useQueryClient } from "@tanstack/react-query";
 
 export default function CurrencyOptions({
-  menu,
-  currency,
-  budgettype,
+  clickHandler
 }: CurrencyOptionProps) {
   const [searchItem, setSearchItem] = useState<string>("");
   const [filteredCurrencies, setFilteredCurrencies] =
     useState<Currency[]>(currencyData);
-
-  const queryClient = useQueryClient();
-
-  const handldeClick = (curr: string) => {
-    //setCurrency(currency);
-    currency.value = curr;
-    localStorage.setItem("budgetCurrency", curr);
-    queryClient.invalidateQueries(["spending", budgettype, curr]);
-    queryClient.getQueryData(["spending", budgettype, curr]);
-    menu.value = null;
-  };
 
   const handleInputChange = (e: any) => {
     const searchTerm = e.target.value;
@@ -59,12 +45,11 @@ export default function CurrencyOptions({
       {filteredCurrencies.map((currency, index) => (
         <div
           key={index}
-          className={`currencyOption ${
-            localStorage.getItem("budgetCurrency") == currency.symbol
+          className={`currencyOption ${localStorage.getItem("budgetCurrency") == currency.symbol
               ? "clicked"
               : ""
-          }`}
-          onClick={() => handldeClick(currency.symbol)}
+            }`}
+          onClick={() => clickHandler(currency.symbol)}
         >
           <div className={currency.flagClass} />
           <div className="currency">

@@ -5,7 +5,7 @@ import { currencyMask } from "../../../helpers/currencyMask";
 import { removeCommas } from "../../../helpers/removeCommas";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
-  BudgetType,
+  Frequency,
   CreateBudgetRequest,
   SpendingInfoResponse,
 } from "../../../types";
@@ -22,7 +22,7 @@ import MenuAnimationBackground from "../../MenuAnimations/MenuAnimationBackgroun
 import CreateBudgetConfirmationAnimation from "../../MenuAnimations/CreateBudgetConfirmationAnimation";
 import InfoBoxAnimation from "../../MenuAnimations/InfoBoxAnimation";
 import CurrencyOptionsAnimation from "../../MenuAnimations/CurrencyOptionsAnimation";
-import { useSignal } from "@preact/signals-react";
+import { Signal, useSignal } from "@preact/signals-react";
 
 export default function CreateBudget() {
 
@@ -30,7 +30,7 @@ export default function CreateBudget() {
   const displayedAmount = useSignal<string>("");
   const openCalendar = useSignal<boolean>(false);
   const calendarDay = useSignal<string>("");
-  const budgettype = useSignal<BudgetType>(BudgetType.Monthly);
+  const budgettype = useSignal<Frequency>(Frequency.Monthly);
   const hasSwitchedBudgetType = useSignal<boolean>(false);
   const submitBudgetErrors = useSignal<any[]>([]);
   const menu = useSignal<string | null>(null);
@@ -58,7 +58,7 @@ export default function CreateBudget() {
     budgettype.value,
     currency.value
   );
-
+    
   useEffect(() => {
     if (localStorage.getItem("budgetCurrency") === null)
       localStorage.setItem("budgetCurrency", "USD");
@@ -76,7 +76,7 @@ export default function CreateBudget() {
   };
 
   const submitBudget = async () => {
-    if (budgettype.value === BudgetType.Monthly) {
+    if (budgettype.value === Frequency.Monthly) {
       createBudget.mutate({
         amount: amount,
         budgetType: budgettype.value,
@@ -84,7 +84,7 @@ export default function CreateBudget() {
         day: calendarDay.value.toString(),
       });
     }
-    if (budgettype.value === BudgetType.Weekly) {
+    if (budgettype.value === Frequency.Weekly) {
       createBudget.mutate({
         amount: amount,
         budgetType: budgettype.value,
@@ -112,6 +112,16 @@ export default function CreateBudget() {
     } else {
       navigate(`/`);
     }
+  };
+
+
+  const handldeCurrencyOptionsClick = (curr: string) => {
+    //setCurrency(currency);
+    currency.value = curr;
+    localStorage.setItem("budgetCurrency", curr);
+    queryClient.invalidateQueries(["spending", budgettype, curr]);
+    queryClient.getQueryData(["spending", budgettype, curr]);
+    menu.value = null;
   };
 
   return (
@@ -181,10 +191,10 @@ export default function CreateBudget() {
 
       <CurrencyOptionsAnimation
         menu={menu}
-        budgettype={budgettype}
-        currency={currency}
+        clickHandler={handldeCurrencyOptionsClick}
+     
       />
-      
+
     </StyledCreateBudget>
   );
 }

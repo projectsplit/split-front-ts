@@ -50,27 +50,12 @@ export function TotalLentBorrowed({
   allWeeksPerYear,
   menu,
   selectedTimeCycleIndex,
+  currency,
+  endDate,
+  startDate
 }: TotalLentBorrowedProps) {
   const fractalFactor = 4;
 
-  //useCycleIndexEffect(selectedCycle, selectedTimeCycleIndex, currentWeekIndex,selectedYear.value);
-
-  const startDate = useSignal<string>(
-    buildStartAndEndDates(
-      selectedCycle.value,
-      selectedTimeCycleIndex.value,
-      selectedYear.value,
-      allWeeksPerYear
-    )[0]
-  );
-  const endDate = useSignal<string>(
-    buildStartAndEndDates(
-      selectedCycle.value,
-      selectedTimeCycleIndex.value,
-      selectedYear.value,
-      allWeeksPerYear
-    )[1]
-  );
 
   const allDaysInMonth = getAllDaysInMonth(
     selectedTimeCycleIndex.value + 1,
@@ -112,7 +97,8 @@ export function TotalLentBorrowed({
 
   const { data: totalLentBorrowed, isSuccess } = useTotalLentBorrowedArrays(
     startDate.value,
-    endDate.value
+    endDate.value, 
+    currency
   );
 
   const totalLent =
@@ -200,7 +186,8 @@ export function TotalLentBorrowed({
     selectedTimeCycleIndex.value,
     currentWeekIndex,
     hitRadius,
-    fractalFactor
+    fractalFactor,
+    currency
   );
 
   const data = getData(

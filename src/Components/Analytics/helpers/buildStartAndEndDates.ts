@@ -1,10 +1,10 @@
-import { CycleType } from "../../../types";
+import { Frequency } from "../../../types";
 import { formatDateIntoYMD } from "./formatDateIntoYMD";
 import { getAllDaysInMonth } from "./monthlyDataHelpers";
 import { getWeekDates } from "./weeklyDataHelpers"
 
 export const buildStartAndEndDates = (
-  cycle: CycleType,
+  cycle: Frequency,
   selectedTimeCycleIndex: number,
   selectedYear: number,
   allWeeksPerYear: Date[][]
@@ -13,7 +13,7 @@ export const buildStartAndEndDates = (
   let endDate: string
 
   switch (cycle) {
-    case CycleType.Monthly:
+    case Frequency.Monthly:
       const allDaysInMonth = getAllDaysInMonth(
         selectedTimeCycleIndex + 1,
         selectedYear
@@ -23,13 +23,13 @@ export const buildStartAndEndDates = (
       endDate = formatDateIntoYMD(allDaysInMonth[allDaysInMonth.length - 1]);
       return [startDate, endDate]
 
-    case CycleType.Weekly:
+    case Frequency.Weekly:
 
       startDate = formatDateIntoYMD(getDateFromWeeksArray(allWeeksPerYear, selectedTimeCycleIndex, 0))
       endDate = formatDateIntoYMD(getDateFromWeeksArray(allWeeksPerYear, selectedTimeCycleIndex, 1))
       return [startDate, endDate]
 
-    case CycleType.Annually:
+    case Frequency.Annually:
       const startWeekIndex = getWeekDates(selectedYear, 0).length === 0 ? 1 : 0
       const endWeekIndex = getWeekDates(selectedYear, 0).length === 0 ? 53 : 52
       startDate = formatDateIntoYMD(new Date(getWeekDates(selectedYear, startWeekIndex)[0]))

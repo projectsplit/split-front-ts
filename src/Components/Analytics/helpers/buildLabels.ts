@@ -1,10 +1,10 @@
 import { months } from "../../../constants/dates";
-import { CycleType } from "../../../types";
+import { Frequency } from "../../../types";
 import { enhanceStringArray } from "./enhanceStringArray";
 import { convertToFullMonthNames } from "./monthlyDataHelpers";
 
 export const buildLabels = (
-  cycle: CycleType,
+  cycle: Frequency,
   selectedTimeCycleIndex: number,
   datesToNumbers: number[],
   monthsAndDaysArrays: string[][],
@@ -12,13 +12,13 @@ export const buildLabels = (
 ) => {
 
   switch (cycle) {
-    case CycleType.Monthly:
+    case Frequency.Monthly:
       return datesToNumbers.map((num) => num.toString().padStart(2, "0"));
-    case CycleType.Weekly:
+    case Frequency.Weekly:
       const toFullMonthNames = getFullMonthNames(monthsAndDaysArrays, selectedTimeCycleIndex);
       //convertToFullMonthNames(monthsAndDaysArrays)[selectedTimeCycleIndex];
       return enhanceStringArray(toFullMonthNames, fractalFactor);
-    case CycleType.Annually:
+    case Frequency.Annually:
       return enhanceStringArray(months.map((month) => month), fractalFactor);
     default:
       return [""];

@@ -4,10 +4,10 @@ import { BiArrowBack } from "react-icons/bi";
 import { useNavigate } from "react-router-dom";
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { BudgetInfoResponse, BudgetType } from "../../../types";
+import { BudgetInfoResponse, Frequency } from "../../../types";
 
 import ProgressBar from "./../ProgressBar/ProgressBar";
-import { BudgetInfoMessage } from "../../../helpers/BudgetInfoMessage";
+import { BudgetInfoMessage } from "../../BudgetMessages/BudgetInfoMessage";
 import Spinner from "../../Spinner/Spinner";
 import { useTheme } from "styled-components";
 import { CSSTransition } from "react-transition-group";

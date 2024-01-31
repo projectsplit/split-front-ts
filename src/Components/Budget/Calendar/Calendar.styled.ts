@@ -1,15 +1,15 @@
 import styled from "styled-components";
-import { BudgetType } from "../../../types";
+import { Frequency } from "../../../types";
 import { Signal } from "@preact/signals-react";
 
 interface StyledCalendarProps {
-  budgettype: Signal<BudgetType>;
+  budgettype: Signal<Frequency>;
 }
 
 export const StyledCalendar = styled.div<StyledCalendarProps>`
   display: flex;
   flex-direction: ${(props) =>
-    props.budgettype.value === BudgetType.Monthly ? "column" : "row"};
+    props.budgettype.value === Frequency.Monthly ? "column" : "row"};
   padding: 1rem 0.8rem;
   border-radius: 6px;
   gap: 10px;

@@ -1,11 +1,11 @@
 import { useEffect } from "react";
 import { buildStartAndEndDates } from "../helpers/buildStartAndEndDates";
-import { CycleType } from "../../../types";
+import { Frequency } from "../../../types";
 import { Signal } from "@preact/signals-react";
 import { generateYearsArray } from "../helpers/generateYearsArray";
 
 export const useStartAndEndDatesEffect = (
-  selectedCycle: Signal<CycleType>,
+  selectedCycle: Signal<Frequency>,
   selectedTimeCycleIndex: Signal<number>,
   selectedYear: Signal<number>,
   allWeeksPerYear: Date[][],
