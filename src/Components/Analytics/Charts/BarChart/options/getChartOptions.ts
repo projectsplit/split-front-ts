@@ -5,6 +5,7 @@ import { convertToFullMonthNames } from "../../../helpers/monthlyDataHelpers";
 import { swapMonthDayToDayMonth } from "../../../helpers/swapMonthDayToDayMonth";
 import { months } from "../../../../../constants/dates";
 import getSymbolFromCurrency from "currency-symbol-map";
+import { displayCurrencyAndAmount } from "../../../../../helpers/displayCurrencyAndAmount";
 
 export const getChartOptions = (
   isSuccess: boolean,
@@ -59,9 +60,9 @@ export const getChartOptions = (
           label: (context: any) => {
             const value = context.parsed.y;
             return value >= 0 ?
-              `Total spent:` + ` ` + `${currencySymbol}` + `${value}`
+              `Total spent:` + ` ` + `${displayCurrencyAndAmount(value.toString(), currency)}`
               :
-              `Total received:` + ` ` + `${currencySymbol}` + `${-value}`;
+              `Total received:` + ` ` + `${displayCurrencyAndAmount((-value).toString(), currency)}`;
           },
         },
       },
@@ -92,14 +93,14 @@ export const getChartOptions = (
         },
 
         padding: -10,
-        formatter: (value: any) => {
+        formatter: (value: number) => {
           if (value < 0) {
             // If negative, format within parentheses
-            return `(${currencySymbol}${Math.abs(Number(roundThousandsAndMillions(value.toString())))})`
+            return `(${currencySymbol}${roundThousandsAndMillions(value)})`
           }
           if (value > 0) {
             // If non-negative, format normally
-            return `${currencySymbol}` + roundThousandsAndMillions(value.toString());
+            return `${currencySymbol}` + roundThousandsAndMillions(value);
           }
           if (value === 0) return ""
         },
@@ -107,9 +108,9 @@ export const getChartOptions = (
     },
     layout: {
       padding: {
-        right: 20,
+        right: 10,
         top: 20,
-        left: 20,
+        left: 10,
       },
     },
     scales: {

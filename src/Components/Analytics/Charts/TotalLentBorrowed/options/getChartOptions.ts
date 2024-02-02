@@ -5,6 +5,7 @@ import { months, shortWeekdays } from "../../../../../constants/dates";
 import { enhanceStringArray } from "../../../helpers/enhanceStringArray";
 import { swapMonthDayToDayMonth } from "../../../helpers/swapMonthDayToDayMonth";
 import getSymbolFromCurrency from "currency-symbol-map";
+import { displayCurrencyAndAmount } from "../../../../../helpers/displayCurrencyAndAmount";
 
 export const getChartOptions = (
   isSuccess: boolean,
@@ -105,9 +106,9 @@ export const getChartOptions = (
           label: (context: any) => {
             const value = context.parsed.y;
             if (context.dataset.label === "Total Lent") {
-              return `Total Lent:` + ` ` + `${currencySymbol}` + `${value}`;
+              return `Total Lent:` + ` ` + `${displayCurrencyAndAmount(value.toString(), currency)}`;
             } else {
-              return `Total Borrowed:` + ` ` + `${currencySymbol}` + `${value}`;
+              return `Total Borrowed:` + ` ` + `${displayCurrencyAndAmount(value.toString(), currency)}`;
             }
           },
         },
@@ -165,7 +166,7 @@ export const getChartOptions = (
                 enhancedDatesToNumbers[context.dataset.data.length - 1] === 16) //condition to not show 15th and 16th consecutive data points
             )
               return "";
-            return `${currencySymbol}` + roundThousandsAndMillions(value.toString());
+            return `${currencySymbol}` + roundThousandsAndMillions(value);
 
           } else {
             return null;
@@ -175,9 +176,9 @@ export const getChartOptions = (
     },
     layout: {
       padding: {
-        right: 20,
+        right: 25,
         top: 20,
-        left: 20,
+        left: 25,
       },
     },
     scales: {

@@ -23,11 +23,8 @@ import { getAllDaysInMonth } from "../../helpers/monthlyDataHelpers";
 import { enhanceNumberArray } from "../../helpers/enhanceNumberArray";
 import { getChartOptions } from "./options/getChartOptions";
 import { getData } from "./data/getData";
-import { useCycleIndexEffect } from "../../hooks/useCycleIndexEffect";
 import { useStartAndEndDatesEffect } from "../../hooks/useStartEndDatesEffect";
 import { buildLabels } from "../../helpers/buildLabels";
-import { useSignal } from "@preact/signals-react";
-import { buildStartAndEndDates } from "../../helpers/buildStartAndEndDates";
 import useTotalLentBorrowedArrays from "../../../../hooks/useTotalLentBorrowedArrays";
 //TODO fast click to the left by choosing weekly. Legends are flashing
 ChartJS.register(

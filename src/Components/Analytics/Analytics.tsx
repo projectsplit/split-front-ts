@@ -9,7 +9,7 @@ import { MdSsidChart } from "react-icons/md";
 import { CumulativeSpending } from "./Charts/CumulativeSpending/CumulativeSpending";
 import { TotalLentBorrowed } from "./Charts/TotalLentBorrowed/TotalLentBorrowed";
 import { BarChart } from "./Charts/BarChart/BarChart";
-import { Signal, useSignal } from "@preact/signals-react";
+import { useSignal } from "@preact/signals-react";
 import MenuAnimationBackground from "../MenuAnimations/MenuAnimationBackground";
 import CycleOptions from "./CycleOption/CycleOption";
 import Years from "./YearOption/YearOption";
@@ -86,7 +86,7 @@ export default function Analytics() {
       queryClient.invalidateQueries(["cumulativeSpending", startDate, endDate, currency.value]);
       queryClient.getQueryData(["cumulativeSpending", startDate, endDate, currency.value]);
     }
-    if(selectedChart==="totalLentBorrowed"){
+    if (selectedChart === "totalLentBorrowed") {
       queryClient.invalidateQueries(["totalLentBorrowed", startDate, endDate, currency.value]);
       queryClient.getQueryData(["totalLentBorrowed", startDate, endDate, currency.value]);
     }
@@ -229,8 +229,6 @@ export default function Analytics() {
         clickHandler={handldeCurrencyOptionsClick}
 
       />
-
-
     </StyledAnalytics>
   );
 }

@@ -7,6 +7,7 @@ import { generateYearsArray } from "../../../helpers/generateYearsArray";
 import { isCurrentPeriod } from "../../../helpers/isCurrentPeriod";
 import { swapMonthDayToDayMonth } from "../../../helpers/swapMonthDayToDayMonth";
 import getSymbolFromCurrency from "currency-symbol-map";
+import { displayCurrencyAndAmount } from "../../../../../helpers/displayCurrencyAndAmount";
 
 export const getChartOptions = (
   isSuccess: boolean,
@@ -35,6 +36,8 @@ export const getChartOptions = (
   const enhancedAbbreviatedMonths = enhanceStringArray(abbreviatedMonths, fractalFactor);
 
   const currencySymbol = getSymbolFromCurrency(currency)
+
+
 
   return {
     animation: {
@@ -99,7 +102,7 @@ export const getChartOptions = (
               return labels[index] + " " + selectedYear.toString();
           },
           label: (context: any) => {
-            const value = context.parsed.y;
+            const value: number = context.parsed.y;
 
             switch (selectedCycle) {
               case Frequency.Monthly:
@@ -107,28 +110,28 @@ export const getChartOptions = (
                   selectedTimeCycleIndex === new Date().getMonth() &&
                   context.dataIndex === context.dataset.data.length - 1
                 ) {
-                  return value >= 0 ? `Forecast Spending: ${currencySymbol}${value}` : `Forecast Receipts: ${currencySymbol}${-value}`;
+                  return value >= 0 ? `Forecast Spending: ${displayCurrencyAndAmount(value.toString(), currency)}` : `Forecast Receipts: ${displayCurrencyAndAmount((-value).toString(), currency)}`;
                 }
-                return value >= 0 ? `Total Spent: ${currencySymbol}${value}` : `Total Received: ${currencySymbol}${-value}`;
+                return value >= 0 ? `Total Spent: ${displayCurrencyAndAmount(value.toString(), currency)}` : `Total Received: ${displayCurrencyAndAmount((-value).toString(), currency)}`;
               case Frequency.Weekly:
                 if (
                   selectedTimeCycleIndex === currentWeekIndex &&
                   context.dataIndex === context.dataset.data.length - 1
                 ) {
-                  return value >= 0 ? `Forecast Spending: ${currencySymbol}${value}` : `Forecast Receipts: ${currencySymbol}${-value}`;
+                  return value >= 0 ? `Forecast Spending: ${displayCurrencyAndAmount(value.toString(), currency)}` : `Forecast Receipts: ${displayCurrencyAndAmount((-value).toString(), currency)}`;
                 }
-                return value >= 0 ? `Total Spent: ${currencySymbol}${value}` : `Total Received: ${currencySymbol}${-value}`;
+                return value >= 0 ? `Total Spent: ${displayCurrencyAndAmount(value.toString(), currency)}` : `Total Received: ${displayCurrencyAndAmount((-value).toString(), currency)}`;
               case Frequency.Annually:
                 if (
                   selectedTimeCycleIndex === generateYearsArray().indexOf(selectedYear) &&
                   context.dataIndex === context.dataset.data.length - 1
                 ) {
-                  return value >= 0 ? `Forecast Spending: ${currencySymbol}${value}` : `Forecast Receipts: ${currencySymbol}${-value}`;
+                  return value >= 0 ? `Forecast Spending: ${displayCurrencyAndAmount(value.toString(), currency)}` : `Forecast Receipts: ${displayCurrencyAndAmount((-value).toString(), currency)}`;
                 }
-                return value >= 0 ? `Total Spent: ${currencySymbol}${value}` : `Total Received: ${currencySymbol}${-value}`;
+                return value >= 0 ? `Total Spent: ${displayCurrencyAndAmount(value.toString(), currency)}` : `Total Received: ${displayCurrencyAndAmount((-value).toString(), currency)}`;
 
               default:
-                return value >= 0 ? `Total Spent: ${currencySymbol}${value}` : `Total Received: ${currencySymbol}${-value}`;
+                return value >= 0 ? `Total Spent: ${displayCurrencyAndAmount(value.toString(), currency)}` : `Total Received: ${displayCurrencyAndAmount((-value).toString(), currency)}`;
             }
           },
         },
@@ -170,10 +173,10 @@ export const getChartOptions = (
             if (value < 0) {
               // If negative, format within parentheses
               return (
-                `(${currencySymbol}${Math.abs(Number(roundThousandsAndMillions(value.toString())))})`
+                `(${currencySymbol}${((roundThousandsAndMillions(value)))})`
               );
             } else {
-              return `${currencySymbol}` + roundThousandsAndMillions(value.toString());
+              return `${currencySymbol}` + roundThousandsAndMillions((value));
             }
           } else {
             return null;
@@ -184,9 +187,9 @@ export const getChartOptions = (
 
     layout: {
       padding: {
-        right: 20,
+        right: 25,
         top: 20,
-        left: 20,
+        left: 25,
       },
     },
     scales: {
