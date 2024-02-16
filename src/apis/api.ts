@@ -72,6 +72,18 @@ const getUserGroups = async (
   return response.data;
 };
 
+const getGroupTransactions = async (
+  limit: number,
+  groupId:string,
+  { pageParam = new Date().toISOString() }
+) => {
+
+  const response = await apiHttpClient.get<any>( //create type for this Fn
+    `/group/getgrouptransactions?last=${pageParam}&limit=${limit}&groupId=${groupId}`
+  );
+  return response.data;
+};
+
 const getBudgetInfo = async (): Promise<BudgetInfoResponse> => {
 
   const response = await apiHttpClient.get<BudgetInfoResponse>(
@@ -128,5 +140,6 @@ export const api = {
   createBudget,
   deleteBudget,
   getCumulativeSpendingArray,
-  getTotalLentBorrowedArrays
+  getTotalLentBorrowedArrays,
+  getGroupTransactions
 };

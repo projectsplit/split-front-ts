@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import TreeAdjustedContainer from "../../TreeAdjustedContainer/TreeAdjustedContainer";
 import { StyledActiveGroups } from "./ActiveGroups.styled";
 import { useInfiniteQuery } from "@tanstack/react-query";
@@ -6,10 +6,14 @@ import { api } from "../../../apis/api";
 import { useEffect } from "react";
 import Spinner from "../../Spinner/Spinner";
 import { TreeItemBuilder } from "../../../helpers/TreeItemBuilder";
+import { useNavigate } from "react-router-dom";
+import { calculateDistanceFromTop } from "../../../helpers/calculateDistanceFromTop";
 
 export default function ActiveGroups() {
-  const heightFromTop = window.innerHeight - (58 + 36 + 18 + 4 + 30);
+  const elRef = useRef<HTMLDivElement>(null);
+  const heightFromTop = window.innerHeight - calculateDistanceFromTop(elRef); //(58 + 36 + 18 + 4 + 30)
   const fittingItems = Math.round(heightFromTop / 81);
+  const navigate = useNavigate();
 
   const {
     // isLoading,
@@ -21,7 +25,7 @@ export default function ActiveGroups() {
     isFetching,
     isFetchingNextPage
   } = useInfiniteQuery(
-    ["groups","active"],
+    ["groups", "active"],
     ({ pageParam }) => api.getUserGroups(fittingItems, { pageParam }),
     {
       getNextPageParam: (lastPage, _pages) => {
@@ -55,7 +59,7 @@ export default function ActiveGroups() {
 
 
   return (
-    <StyledActiveGroups>
+    <StyledActiveGroups ref={elRef}>
       <div className="groupList">
         {isFetching && data === undefined ? (
           <Spinner />
@@ -65,7 +69,7 @@ export default function ActiveGroups() {
             return (
               <div key={element.group.id}>
                 <TreeAdjustedContainer
-                  onClick={() => console.log("goto group")}
+                  onClick={() => navigate(`/groups/active/${element.group.id}/transactions`)}
                   hasarrow={true}
                   items={TreeItemBuilder(element.pendingTransactions)}
                 >
@@ -75,7 +79,7 @@ export default function ActiveGroups() {
             );
           })
         )}
-        {isFetchingNextPage ? <Spinner/> : null}
+        {isFetchingNextPage ? <Spinner /> : null}
       </div>
     </StyledActiveGroups>
   );

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import "./App.css";
 import "./components/styles/semantic-icons.css";
 import { Routes, Route } from "react-router-dom";
@@ -55,9 +55,16 @@ function App() {
               <Route path="active" element={<ActiveGroups />} />
               <Route path="archived" element={<ArchivedGroups />} />
               <Route path="deleted" element={<DeletedGroups />} />
-              <Route path="*" element={<RedirectToActiveGroups />} />
+              {/* <Route path="*" element={<RedirectToActiveGroups />} /> */}
               {/*when it lands on /groups/active/whatever it will again land on active groups*/}
             </Route>
+
+              <Route path="/groups/active/:groupid" element={<Main />}>
+              {/* <Route index element={<RedirectToTransactions />} /> */}
+              <Route path="/groups/active/:groupid/transactions" element={<Transactions />} />
+              <Route path="/groups/active/:groupid/members" element={<Members />} />
+              <Route path="*" element={<RedirectToTransactions />} />
+              </Route>
 
             <Route path="/budget" element={<Budget2 />}>
               <Route index element={<RedirectToBudget />} />
@@ -70,12 +77,12 @@ function App() {
             <Route path="/analytics" element={<Analytics />} />
 
             <Route path="i/:invitationCode" element={<VerifyInvitation />} />
-            <Route path=":groupid" element={<Main />}>
+            {/* <Route path=":groupid" element={<Main />}>
               <Route index element={<RedirectToTransactions />} />
               <Route path="transactions" element={<Transactions />} />
               <Route path="members" element={<Members />} />
               <Route path="*" element={<RedirectToTransactions />} />
-            </Route>
+            </Route> */}
           </Route>
         </Routes>
       </>

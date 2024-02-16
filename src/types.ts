@@ -124,3 +124,12 @@ export type Currency = {
   name: string;
   flagClass: string;
 };
+
+export type Participant={
+  name:string;
+  participationAmount:string;
+}
+export type Payer = {
+  name:string;
+  paymentAmount:string;
+}

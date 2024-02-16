@@ -1,6 +1,8 @@
 import { CSSProperties, MouseEventHandler } from "react";
-import { BudgetInfoResponse, Frequency } from "./types";
+import { BudgetInfoResponse, Frequency, Participant, Payer } from "./types";
 import { Signal } from "@preact/signals-react";
+import React from "react";
+import { StringLiteral } from "typescript";
 
 export interface InputProps
   extends React.InputHTMLAttributes<HTMLInputElement> {
@@ -275,4 +277,21 @@ export interface PeriodOptionProps {
   selectedCycle: Signal<Frequency>;
   selectedTimeCycleIndex: Signal<number>;
   monthsAndDaysArrays:string[][];
+}
+
+export interface PillOptions{
+  title:string;
+  color:string;
+}
+
+export interface ExpenseProps{
+  key?: React.Key;
+  currency:string;
+  description:string;
+  amount:string;
+  expenseTime:string;
+  creationTime:string;
+  lastUpdateTime:string;
+  participants:Participant[]
+  payers: Payer[]
 }
