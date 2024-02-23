@@ -2,13 +2,11 @@ import styled from 'styled-components'
 
 export const StyledColoredLabel = styled.div`
 
-  font-weight: 600;
-  color: ${props => props.color};
-  
-  /* border-radius: 6px;
-  padding: 2px 6px;
-  border-style: solid;
-  border-width: 1px;
-  border-color: ${props => props.color};
-  background-color: ${({ theme }) => theme.colors.body}; */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: 3px;
+  gap: 6px;
+  padding: 0px 8px;
+  box-sizing: border-box;
 `

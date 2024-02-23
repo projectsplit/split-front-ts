@@ -2,10 +2,9 @@ import React, { useState } from 'react'
 import { StyledExpenses } from './Expenses.styled'
 import { useQuery } from '@tanstack/react-query'
 import { api } from '../../apis/api'
-import ExpenseListItem from '../ExpenseListItem/ExpenseListItem'
 import { Expense } from '../../types'
 import ExpenseDetails from '../ExpenseDetails/ExpenseDetails'
-import Label from '../ColoredLabel/ColoredLabel'
+import { ExpenseListItem } from '../ExpenseListItem/ExpenseListItem'
 
 export default function Expenses() {
 
@@ -19,7 +18,7 @@ export default function Expenses() {
 
   const { error, isFetched, isSuccess, data } = useQuery(
     ['getGroupExpenses', groupId],
-    () => (groupId ? api.getGroupExpenses(groupId) : undefined),
+    () => (groupId ? api.getExpensesByGroupId(groupId, 1, 100) : undefined),
     {
       enabled: !!groupId,
       retryOnMount: false,
@@ -34,7 +33,7 @@ export default function Expenses() {
     [date: string]: Expense[]
   }
 
-  const groupByDate = (expenses: Expense[]) => {
+  const groupByDate = (expenses: Expense[]): GroupedExpenses => {
     return expenses.reduce((grouped: GroupedExpenses, expense) => {
       const date = new Date(expense.expenseTime)
       const dateString = date.toLocaleDateString('en-US', { month: 'short', day: '2-digit' }).toUpperCase()
@@ -62,17 +61,17 @@ export default function Expenses() {
 
     return (
       <StyledExpenses>
-        {Object.keys(groupedExpenses).map((date) => (
-          <React.Fragment key={date}>
+        {Object.keys(groupedExpenses).map(date => (
+          <div key={date}>
             <div className='date'>{date}</div>
-            {groupedExpenses[date].map((expense) => (
-              <div key={expense.id} onClick={() => clickExpense(expense.id)}>
-                {selectedExpenseId == expense.id ?
-                  <ExpenseDetails id={expense.id} /> :
-                  <ExpenseListItem expense={expense} />}
-              </div>
-            ))}
-          </React.Fragment>
+            <div className='expense-list'>
+              {groupedExpenses[date].map((expense) => (
+                <div className='expense' key={expense.id} onClick={() => clickExpense(expense.id)}>
+                  {selectedExpenseId == expense.id ? <ExpenseDetails id={expense.id} /> : <ExpenseListItem expense={expense} />}
+                </div>
+              ))}
+            </div>
+          </div>
         ))}
       </StyledExpenses>
     )

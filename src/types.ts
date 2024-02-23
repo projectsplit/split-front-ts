@@ -1,3 +1,5 @@
+import { Dayjs } from "dayjs";
+
 export type OnErrorCallback = (error: any) => void;
 export type OnSuccessCallback = (success: any) => void;
 
@@ -38,12 +40,26 @@ export type Expense = {
   id: string,
   groupId: string,
   description: string,
-  amount: number,
+  amount: string,
   currency: string,
   payers: Payer[],
   participants: Participant[],
   expenseTime: Date,
   labels: Label[],
+  creationTime: Date,
+  lastUpdateTime: Date,
+}
+
+export type ExpenseA = {
+  id: string,
+  groupId: string,
+  amount: string,
+  currency: string,
+  description: string,
+  payers: Payer[],
+  participants: Participant[],
+  expenseTime: Date,
+  labels: string[],
   creationTime: Date,
   lastUpdateTime: Date,
 }
@@ -80,6 +96,12 @@ export interface Label {
   color: string,
 }
 
+export interface GroupLabel {
+  id: string,
+  text: string,
+  color: string,
+}
+
 export type Member = {
   memberId: string,
   permissions: number,
@@ -105,4 +127,111 @@ export type GetExpenseResponse = {
   expenseTime: Date,
   creationTime: Date,
   lastUpdateTime: Date
+}
+
+export interface DayPickerProps {
+  selectedDateTime: Dayjs
+  setSelectedDateTime: React.Dispatch<React.SetStateAction<Dayjs>>
+}
+
+export interface MonthYearPickerProps {
+  selectedDateTime: Dayjs
+  setSelectedDateTime: React.Dispatch<React.SetStateAction<Dayjs>>
+}
+
+export interface ScrollPickerProps {
+  items: string[]
+  selectedIndex: number
+  setSelectedIndex: (index: number) => void
+}
+
+export interface DateTimePickerProps {
+  selectedDateTime: Dayjs
+  setSelectedDateTime: React.Dispatch<React.SetStateAction<Dayjs>>
+  realtimeUpdate: boolean
+  setRealtimeUpdate: React.Dispatch<React.SetStateAction<boolean>>
+}
+
+export interface DateTimeProps {
+  selectedDateTime: Dayjs
+  setSelectedDateTime: React.Dispatch<React.SetStateAction<Dayjs>>
+}
+
+export interface GroupMember {
+  memberId: string
+  name: string
+}
+
+// export interface ExpenseFormProps {
+//   id: string
+//   userMemberId: string
+//   groupId: string
+//   groupMembers: GroupMember[]
+//   grouplabels: Label[]
+//   description: string
+//   amount: string
+//   currency: string
+//   labelIds: string[]
+//   payers: Payer[]
+//   participants: Participant[]
+//   expenseTime: Date
+//   creationTime: Date
+//   lastUpdateTime: Date
+// }
+
+export interface ExpenseFormProps {
+  group: Group
+  expense: ExpenseA | null
+}
+
+export interface UserMember {
+  memberId: string
+  name: string
+  permissions: number
+}
+
+export interface GuestMember {
+  memberId: string
+  name: string
+}
+
+export interface Group {
+  id: string
+  title: string
+  currency: string
+  ownerId: string
+  members: {
+    guests: GuestMember[]
+    users: UserMember[]
+  }
+  labels: Label[]
+  creationTime: Date
+  lastUpdateTime: Date
+}
+
+export interface LabelPickerProps {
+  labels: Record<string, PickerLabel>
+  setLabels: React.Dispatch<React.SetStateAction<Record<string, PickerLabel>>>
+}
+
+export interface PickerMember {
+  id: string
+  name: string
+  amount: string
+  selected: boolean
+  locked: boolean
+  order: number
+}
+
+export interface PickerLabel {
+  id: string
+  text: string
+  color: string
+  selected: boolean
+}
+
+export interface MemberAmountPickerProps {
+  totalAmount: number
+  memberAmounts: Record<string, PickerMember>
+  setMemberAmounts: React.Dispatch<React.SetStateAction<Record<string, PickerMember>>>
 }

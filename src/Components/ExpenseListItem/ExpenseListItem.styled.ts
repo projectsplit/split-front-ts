@@ -5,17 +5,17 @@ export const StyledExpenseListItem = styled.div`
   display: flex;
   flex-direction: column;
   color: white;
-  border-radius: 10px;
-  background: #18181B;
+  background-color: ${({ theme }) => theme.color.background2};
   padding: 10px;
-  gap: 4px;
+  gap: 10px;
   cursor: pointer;
   
   .top {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    font-size: 14px;
+    color: ${({ theme }) => theme.color.text2};
+    font-size: ${({ theme }) => theme.font.small};
     
     .left {
       display: flex;
@@ -23,11 +23,16 @@ export const StyledExpenseListItem = styled.div`
       justify-content: space-between;
       align-items: center;
       gap: 8px;
-      color: #777777;
     
       .time {
-        font-weight: 900;
+        font-weight: 700;
       }
+    }
+    
+    .right {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
     
       .icons {
         display: flex;
@@ -42,26 +47,20 @@ export const StyledExpenseListItem = styled.div`
         .comments {
           display: flex;
           align-items: center;
-          font-weight: 900;
           gap: 1px;
         }
       }
     }
-    
-    .right {
-    }
   }
   
-  .bottom {
+  .middle {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    font-size: 20px;
     
     .left {
       .description {
         font-style: italic;
-        color: ${({ theme }) => theme.colors.whiteText}
       }
     }
     
@@ -69,10 +68,30 @@ export const StyledExpenseListItem = styled.div`
       display: flex;
       flex-direction: row;
       gap: 8px;
-      color: #777777;
-      font-weight: bold;
       
       .amount {
+      }
+      
+      .currency {
+      }
+    }
+  }
+  
+  .bottom {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    
+    .left {
+    }
+    
+    .right {
+      display: flex;
+      flex-direction: row;
+      gap: 8px;
+      
+      .amount {
+        color: ${({ theme }) => theme.color.text2}
       }
       
       .currency {

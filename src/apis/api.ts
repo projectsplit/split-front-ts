@@ -2,7 +2,7 @@ import axios, { AxiosError } from 'axios'
 import { authApi } from './authApi'
 import jwt_decode, { JwtPayload } from 'jwt-decode'
 import { getAccessToken, setAccessToken } from '../util/accessToken'
-import { GetExpenseResponse, GetGroupExpensesResponse, GetGroupResponse } from '../types'
+import { Expense, ExpenseA, GetExpenseResponse, GetGroupExpensesResponse, GetGroupResponse, Group } from '../types'
 import { signOut } from '../util/signOut'
 
 const apiHttpClient = axios.create({
@@ -46,8 +46,18 @@ const isAccessTokenDecodableAndNotExpired = (accessToken: string | null | undefi
 //   (error: AxiosError) => Promise.reject(error)
 // )
 
+const getGroup = async (groupId: string) => {
+  const response = await apiHttpClient.get<Group>(`/group`, { params: { groupId } })
+  return response.data
+}
+
 const getGroupById = async (groupId: string) => {
   const response = await apiHttpClient.get<GetGroupResponse>(`/group/get`, { params: { id: groupId } })
+  return response.data
+}
+
+const getExpensesByGroupId = async (groupId: string, pageNumber: number, pageSize: number) => {
+  const response = await apiHttpClient.get<GetGroupExpensesResponse>(`/expense/getgroupexpenses`, { params: { groupId, pageNumber, pageSize } })
   return response.data
 }
 
@@ -56,13 +66,21 @@ const getGroupExpenses = async (groupId: string) => {
   return response.data
 }
 
-const getExpense = async (expenseId: string) => {
+const getExpenseById = async (expenseId: string) => {
   const response = await apiHttpClient.get<GetExpenseResponse>(`/expense/${expenseId}`,)
   return response.data
 }
 
+const getExpense = async (expenseId: string) => {
+  const response = await apiHttpClient.get<ExpenseA>(`/expense`, { params: { expenseId } })
+  return response.data
+}
+
 export const api = {
+  getExpensesByGroupId,
+  getGroup,
   getGroupById,
   getGroupExpenses,
+  getExpenseById,
   getExpense
 }

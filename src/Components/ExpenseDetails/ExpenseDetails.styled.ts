@@ -5,7 +5,7 @@ export const StyledExpenseDetails = styled.div`
   display: flex;
   flex-direction: column;
   color: ${({ theme }) => theme.colors.whiteText};
-  border-radius: 10px;
+  /* border-radius: 10px; */
   /* border-color: #333333; */
   /* border-style: solid; */
   border-width: 1px;
@@ -20,7 +20,7 @@ export const StyledExpenseDetails = styled.div`
     font-size: 14px;
     
     .time {
-      font-weight: 900;
+      /* font-weight: 900; */
       color: #777777;
     }
     
@@ -29,14 +29,14 @@ export const StyledExpenseDetails = styled.div`
   }
   
   .description {
-    font-style: italic;
+    /* font-style: italic; */
     align-self: center;
     color: ${({ theme }) => theme.colors.whiteText};
     font-size: 20px
   }
   
   .amount {
-    font-style: italic;
+    /* font-style: italic; */
     align-self: center;
     color: ${({ theme }) => theme.colors.whiteText};
     font-size: 24px
@@ -64,10 +64,10 @@ export const StyledExpenseDetails = styled.div`
     .edit {
       color: #BEC28F;
       border-style: solid;
-      border-radius: 10px;
+      /* border-radius: 10px; */
       border-width: 1px;
       font-size: 20px;
-      font-weight: 500;
+      /* font-weight: 500; */
       padding: 2px 14px;
       cursor: pointer;
       user-select: none;
@@ -80,7 +80,7 @@ export const StyledExpenseDetails = styled.div`
       border-radius: 10px;
       border-width: 1px;
       font-size: 20px;
-      font-weight: 500;
+      /* font-weight: 500; */
       padding: 2px 14px;
       cursor: pointer;
       user-select: none;
@@ -89,7 +89,7 @@ export const StyledExpenseDetails = styled.div`
   }
   
   .subtitle {
-    font-style: italic;
+    /* font-style: italic; */
     color: #777777;
     font-size: 12px
   }

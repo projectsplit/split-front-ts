@@ -32,7 +32,7 @@ export const StyledExpenseDetailsParticipants = styled.div`
       font-size: 12px;
       color: #777777;
       text-decoration: underline;
-      font-style: italic;
+      /* font-style: italic; */
     }
   }
   

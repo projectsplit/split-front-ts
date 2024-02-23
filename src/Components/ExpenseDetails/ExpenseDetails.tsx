@@ -14,7 +14,7 @@ export default function ExpenseDetails({ id }: ExpenseDetailsProps) {
 
   const { error, isFetched, isSuccess, data } = useQuery(
     ['getExpense', id],
-    () => api.getExpense(id),
+    () => api.getExpenseById(id),
     {
       enabled: !!id,
       retryOnMount: false,
