@@ -3,7 +3,7 @@ export const getLocaleFromCurrency = (currencyCode: string): string => {
     INR: "ta-IN",
     CNY: "zh-CN",
     USD: "en-US",
-    EUR: "en-EU",
+    EUR: "de-DE",
     JPY: "ja-JP",
     GBP: "en-GB",
     AED: "ar-AE",

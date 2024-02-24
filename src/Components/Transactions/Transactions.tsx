@@ -12,7 +12,7 @@ export default function Transactions() {
   const elRef = useRef<HTMLDivElement>(null);
   const heightFromTop = window.innerHeight - calculateDistanceFromTop(elRef); //(58 + 36 + 18 + 4 + 30)
   const fittingItems = Math.round(heightFromTop / 100);
-
+ 
   const {
     // isLoading,
     // isError,
@@ -23,7 +23,7 @@ export default function Transactions() {
     isFetching,
     isFetchingNextPage
   } = useInfiniteQuery(
-    ["transactions", "active"],
+    ["transactions", "active", params.groupid as string],
     ({ pageParam }) => api.getGroupTransactions(fittingItems, params.groupid as string, { pageParam }),//TODO handle case of undefined groupId
     {
       getNextPageParam: (lastPage, _pages) => {
@@ -33,14 +33,20 @@ export default function Transactions() {
           return transactionTime;
         } else return undefined;
       },
+      refetchOnWindowFocus: false,
+      refetchOnMount: false,
+      staleTime: 9000,
+      enabled: true
     }
   );
 
   useEffect(() => {
     let fetching = false;
     const onScroll = async (event: any) => {
+      const target = event.target as HTMLDivElement;
       const { scrollHeight, scrollTop, clientHeight } =
-        event.target.documentElement;
+        target
+
       if (!fetching && scrollHeight - scrollTop <= clientHeight) {
         fetching = true;
 
@@ -48,10 +54,15 @@ export default function Transactions() {
         fetching = false;
       }
     };
-    document.addEventListener("scroll", onScroll);
+    const scrollableElement = elRef.current;
+    if (scrollableElement) {
+      scrollableElement.addEventListener("scroll", onScroll);
+    }
     return () => {
-      document.removeEventListener("scroll", onScroll);
-    };
+      if (scrollableElement) {
+        scrollableElement.removeEventListener("scroll", onScroll);
+      }
+    }
   }, [fetchNextPage, hasNextPage]);
 
   console.log(data?.pages.flatMap((page) => page))
@@ -62,11 +73,11 @@ export default function Transactions() {
           <Spinner />
         ) : null}
         {data?.pages.flatMap((page) =>
-          page.map((transaction: any, index: number) => {
+          page.map((transaction: any) => {
             return (
               transaction?.transfer === null ?
                 <Expense
-                  key={index}
+                  key={transaction.expense.id}
                   amount={transaction.expense.amount}
                   creationTime={transaction.expense.creationTime}
                   currency={transaction.expense.currency}
@@ -77,7 +88,7 @@ export default function Transactions() {
                   payers={transaction.expense.payers}
                 />
                 :
-                <div key={index}>transfer</div>
+                <div key={transaction.transfer.id}>{transaction.transfer.id}</div>
             );
           })
         )}

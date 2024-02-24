@@ -285,7 +285,7 @@ export interface PillOptions{
 }
 
 export interface ExpenseProps{
-  key?: React.Key;
+
   currency:string;
   description:string;
   amount:string;

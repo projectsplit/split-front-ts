@@ -27,10 +27,12 @@ position: relative;
 .date{
   font-size: 12px;
   font-weight: 600;
+  color: #777777;
   }
 .time{
   font-size: 12px;
   font-weight: 600;
+  color: #777777;
   }
 }
 

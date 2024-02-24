@@ -43,6 +43,7 @@ export default function ActiveGroups() {
     const onScroll = async (event: any) => {
       const { scrollHeight, scrollTop, clientHeight } =
         event.target.documentElement;
+     
       if (!fetching && scrollHeight - scrollTop <= clientHeight) {
         fetching = true;
 

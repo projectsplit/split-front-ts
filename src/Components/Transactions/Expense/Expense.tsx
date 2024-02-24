@@ -4,10 +4,11 @@ import Pill from './Pill/Pill'
 import { ExpenseProps } from '../../../interfaces'
 import dayjs from 'dayjs'
 import calendar from 'dayjs/plugin/calendar'
+import { Participant, Payer } from '../../../types'
+import { displayCurrencyAndAmount } from '../../../helpers/displayCurrencyAndAmount'
 dayjs.extend(calendar)
 
 export default function Expense({
-  key,
   currency,
   description,
   amount,
@@ -25,7 +26,32 @@ export default function Expense({
     lastWeek: 'DD MMM',
     sameElse: 'DD MMM'
   }
-  
+
+  const userSpent = (participants: Participant[]): string => {
+    let spentAmount = "0";
+    participants.map(p => {
+      if (p.userId === localStorage.getItem("userId")) {
+        spentAmount = p.participationAmount
+      }
+    })
+    return spentAmount;
+  }
+
+  const isUserIncluded = (participants: Participant[], payers: Payer[]): boolean => {
+    let isIncluded = false;
+    participants.map(p => {
+      if (p.userId === localStorage.getItem("userId")) {
+        isIncluded = true
+      }
+    })
+    payers.map(p => {
+      if (p.userId === localStorage.getItem("userId")) {
+        isIncluded = true
+      }
+    })
+    return isIncluded
+  }
+
   return (
     <StyledExpese >
       <div className='dateLocationAndCommentsStripe'>
@@ -35,14 +61,12 @@ export default function Expense({
         <div className='time'>
           {dayjs(creationTime).format('HH:mm')}
         </div>
-
       </div>
-
       <div className='descrAndTotalStripe'>
         <div className='description'>"{description}"</div>
         <div className='totalAndAmount'>
           <div className='total'>Total</div>
-          <div className='amount'> {amount}$</div>
+          <div className='amount'> {displayCurrencyAndAmount(amount, currency)}</div>
         </div>
       </div>
 
@@ -54,8 +78,8 @@ export default function Expense({
 
         </div>
         <div className='personalInfo'>
-          <div className='personalQuote'> You spent </div>
-          <div className='amount'>10$</div>
+          <div className='personalQuote'>{isUserIncluded(participants, payers) ? "You spent" : "You are not included"}  </div>
+          <div className='amount'>{isUserIncluded(participants, payers) ? displayCurrencyAndAmount(userSpent(participants), currency) : ""}</div>
         </div>
       </div>
     </StyledExpese>
