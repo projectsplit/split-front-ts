@@ -65,7 +65,7 @@ export default function Transactions() {
     }
   }, [fetchNextPage, hasNextPage]);
 
-  console.log(data?.pages.flatMap((page) => page))
+  //console.log(data?.pages.flatMap((page) => page))
   return (
     <StyledTransactions ref={elRef}>
       <div className="transactionList">
