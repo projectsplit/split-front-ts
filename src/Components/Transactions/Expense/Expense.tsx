@@ -56,10 +56,10 @@ export default function Expense({
     <StyledExpese >
       <div className='dateLocationAndCommentsStripe'>
         <div className='date'>
-          {dayjs(creationTime).calendar(null, calendarConfig)}&nbsp;
+          {dayjs(expenseTime).calendar(null, calendarConfig)}&nbsp;
         </div>
         <div className='time'>
-          {dayjs(creationTime).format('HH:mm')}
+          {dayjs(expenseTime).format('HH:mm')}
         </div>
       </div>
       <div className='descrAndTotalStripe'>

@@ -1,12 +1,8 @@
-import { styled } from "styled-components";
+import styled from "styled-components";
 
-export const StyledTopBarWithBackButton = styled.div`
+export const StyledGroupActionsBar = styled.div`
   display: flex;
-  flex-direction: row;
-  align-items: center;
-  font-size: 20px;
-  justify-content: space-between;
-  margin-right: 30px;
+  flex-direction: column;
 
   .backButtonContainer {
     position: relative;
@@ -32,10 +28,21 @@ export const StyledTopBarWithBackButton = styled.div`
     background-color: rgba(128, 128, 128, 0.3);
     pointer-events: none;
   }
-  .descr {
-    flex: 1;
-    text-align: center;
-    font-size: 20px;
-    font-weight: bold;
+  
+  
+  .addUserButton {
+    cursor: pointer;
+  }
+  .mainContainer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 30px;
+  }
+  .QRandAddUserOptions {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 14px;
   }
 `;

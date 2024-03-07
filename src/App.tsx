@@ -52,18 +52,18 @@ function App() {
             <Route path="/groups" element={<Groups />}>
               <Route index element={<RedirectToActiveGroups />} />
               {/*when the /groups rout is matched, it will render whatever is in the RedirectToActiveGroups*/}
-              <Route path="active" element={<ActiveGroups />} />
-              <Route path="archived" element={<ArchivedGroups />} />
-              <Route path="deleted" element={<DeletedGroups />} />
+                <Route path="active" element={<ActiveGroups />} />
+                <Route path="archived" element={<ArchivedGroups />} />
+                <Route path="deleted" element={<DeletedGroups />} />
               {/* <Route path="*" element={<RedirectToActiveGroups />} /> */}
               {/*when it lands on /groups/active/whatever it will again land on active groups*/}
             </Route>
 
               <Route path="/groups/active/:groupid" element={<Main />}>
               {/* <Route index element={<RedirectToTransactions />} /> */}
-              <Route path="/groups/active/:groupid/transactions" element={<Transactions />} />
-              <Route path="/groups/active/:groupid/members" element={<Members />} />
-              <Route path="*" element={<RedirectToTransactions />} />
+                <Route path="/groups/active/:groupid/transactions" element={<Transactions />} />
+                <Route path="/groups/active/:groupid/members" element={<Members />} />
+                <Route path="*" element={<RedirectToTransactions />} />
               </Route>
 
             <Route path="/budget" element={<Budget2 />}>

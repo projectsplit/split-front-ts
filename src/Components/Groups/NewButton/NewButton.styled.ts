@@ -11,10 +11,10 @@ export const StyledNewButton = styled.div`
   background-color: ${({ theme }) => theme.colors.deepPurple};
   padding-top: 0.5rem;
   padding-bottom: 0.5rem;
-  padding-left: 0.8rem;
-  padding-right: 0.8rem;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
   border-radius: 8px;
   .plus{
-    font-size:20px;
+    font-size:15px;
   }
 `;

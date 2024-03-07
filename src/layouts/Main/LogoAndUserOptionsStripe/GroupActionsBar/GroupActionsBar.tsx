@@ -1,6 +1,6 @@
 import React from "react";
 import { StyledGroupActionsBar } from "./GroupActionsBar.styled";
-import QRscanner from "../../QRscanner/QRscanner";
+import QRscanner from "../../../../components/QRscanner/QRscanner";
 import { BiArrowBack } from "react-icons/bi";
 import { IoMdPersonAdd } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
@@ -15,7 +15,7 @@ export default function GroupActionsBar() {
         <div className="backButtonContainer">
           <BiArrowBack
             className="backButton"
-            onClick={() => navigate("/")}
+            onClick={() => navigate("/groups/active")}
           />
         </div>
         <div className="QRandAddUserOptions">

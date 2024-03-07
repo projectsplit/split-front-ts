@@ -23,7 +23,7 @@ export default function ActiveGroups() {
     hasNextPage,
     fetchNextPage,
     isFetching,
-    isFetchingNextPage
+    isFetchingNextPage,
   } = useInfiniteQuery(
     ["groups", "active"],
     ({ pageParam }) => api.getUserGroups(fittingItems, { pageParam }),
@@ -41,9 +41,9 @@ export default function ActiveGroups() {
   useEffect(() => {
     let fetching = false;
     const onScroll = async (event: any) => {
-      const { scrollHeight, scrollTop, clientHeight } =
-        event.target.documentElement;
-     
+      const target = event.target as HTMLDivElement;
+      const { scrollHeight, scrollTop, clientHeight } = target;
+
       if (!fetching && scrollHeight - scrollTop <= clientHeight) {
         fetching = true;
 
@@ -51,26 +51,29 @@ export default function ActiveGroups() {
         fetching = false;
       }
     };
-
-    document.addEventListener("scroll", onScroll);
+    const scrollableElement = elRef.current;
+    if (scrollableElement) {
+      scrollableElement.addEventListener("scroll", onScroll);
+    }
     return () => {
-      document.removeEventListener("scroll", onScroll);
+      if (scrollableElement) {
+        scrollableElement.removeEventListener("scroll", onScroll);
+      }
     };
   }, [fetchNextPage, hasNextPage]);
 
-
   return (
     <StyledActiveGroups ref={elRef}>
-      <div className="groupList">
-        {isFetching && data === undefined ? (
-          <Spinner />
-        ) : null}
+      {isFetching && data === undefined ? <Spinner /> : null}
+      <div className="groups">
         {data?.pages.flatMap((page) =>
           page.map((element: any) => {
             return (
               <div key={element.group.id}>
                 <TreeAdjustedContainer
-                  onClick={() => navigate(`/groups/active/${element.group.id}/transactions`)}
+                  onClick={() =>
+                    navigate(`/groups/active/${element.group.id}/transactions`)
+                  }
                   hasarrow={true}
                   items={TreeItemBuilder(element.pendingTransactions)}
                 >

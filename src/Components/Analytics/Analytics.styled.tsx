@@ -13,7 +13,7 @@ export const StyledAnalytics = styled.div`
   position: relative;
 
   .buttons {
-    margin-top: 50px;
+    margin-top: 0px;
     display: flex;
     flex-direction: row;
     justify-content: space-between;

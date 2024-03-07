@@ -1,18 +1,34 @@
 import styled from "styled-components";
 
-export const StyledGroupActionsBar = styled.div`
+export const StyledGroupsMainStripe = styled.div`
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  
+  .groupStripe {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    align-items: end;
+    
+    .title {
+      margin-left: 20px;
+      font-size: 20px;
+      font-weight: bold;
+    }
+  }
 
   .backButtonContainer {
     position: relative;
     cursor: pointer;
-    display: inline-block; 
+    display: inline-block;
   }
 
   .backButton {
     cursor: pointer;
     display: block;
+    font-size: 30px;
   }
 
   .backButtonContainer:hover::before {
@@ -26,23 +42,6 @@ export const StyledGroupActionsBar = styled.div`
     border-radius: 50%;
     background-color: rgba(128, 128, 128, 0.3);
     pointer-events: none;
-
   }
 
-  
-  .addUserButton {
-    cursor: pointer;
-  }
-  .mainContainer {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    font-size: 30px;
-  }
-  .QRandAddUserOptions {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 14px;
-  }
 `;

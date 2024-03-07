@@ -5,15 +5,12 @@ export const StyledMainStripe = styled.div`
  flex-direction: row;
  justify-content: space-between;
  margin-top: 15px;
- margin-bottom: 50px;
- 
+ margin-bottom: 8px;
 
 .groupName{
-  display: flex;
-  flex-direction: row;
-  align-items: center;
+
   font-size:25px ;
-  gap:8px;
+
 }
  .options{
   display: flex;

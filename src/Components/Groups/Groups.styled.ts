@@ -1,53 +1,24 @@
 import styled from "styled-components";
 
 export const StyledGroups = styled.div`
+  padding: 14px;
+  overflow: auto;
+  box-sizing: border-box;
+  position: fixed;
+  width: 100%;
+  height: 100vh;
   display: flex;
   flex-direction: column;
-  color: ${({ theme }) => theme.colors.lightColor};
-  box-sizing: border-box;
-  height: 100%;
-  width: 100%;
-  padding: 14px;
-  gap: 20px;
-  /* position: fixed; */
+  background-color: ${({ theme }) => theme.colors.body};
 
   .groupCategories {
     display: flex;
     flex-direction: row;
     justify-content: flex-start;
     gap: 4px;
-  }
-  .groupsLogoStripe {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-  }
-  .groupStripe {
-    display: flex;
-    flex-direction: row;
-    gap: 15px;
-    align-items: end;
-    .groupsName {
-      font-size: 20px;
-      font-weight: bold;
-    }
-  }
-
-  .group {
-    color: ${({ theme }) => theme.colors.deepPurple};
-    font-size: 25px;
-    position: relative;
-  }
-
-  .groupsInfo {
-    font-size: 15px;
-    color: ${({ theme }) => theme.colors.layer6};
-    .owe {
-      color: ${({ theme }) => theme.colors.redish};
-    }
-    .owed {
-      color: ${({ theme }) => theme.colors.green};
-    }
+    margin-top: 10px;
+    box-shadow: 0px 5px 5px -3px ${({ theme }) => theme.colors.body};
+    z-index: 1;
+    padding-bottom: 10px;
   }
 `;

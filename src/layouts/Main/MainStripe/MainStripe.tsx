@@ -8,10 +8,9 @@ export default function MainStripe() {
     <StyledMainStripe>
       <div className="groupName">
         GroupName
-        <i className="angle down icon"/>
       </div>
       <div className='options' >
-        <IoMdPersonAdd className="addUserButton" />
+        
         <FaGear className="optionsButton" />
       </div>
 
