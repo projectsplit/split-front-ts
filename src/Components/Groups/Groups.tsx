@@ -14,6 +14,7 @@ export default function Groups() {
         <CategoryButton to="archived">Archived</CategoryButton>
         <CategoryButton to="deleted">Deleted</CategoryButton>
       </div>
+      <div className="separator"/>
       <Outlet />
     </StyledGroups>
   );

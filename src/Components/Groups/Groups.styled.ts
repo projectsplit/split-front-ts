@@ -17,8 +17,18 @@ export const StyledGroups = styled.div`
     justify-content: flex-start;
     gap: 4px;
     margin-top: 10px;
-    box-shadow: 0px 5px 5px -3px ${({ theme }) => theme.colors.body};
+    margin-bottom: 10px;
+    position: relative;
+  }
+  
+  .separator::after {
+    content: '';
+    position: fixed;
+    left: 0;
+    right: 0;
     z-index: 1;
-    padding-bottom: 10px;
+    height: 1px; /* Adjust thickness as needed */
+    background-color: rgb(54,54,54); /* Your pale line color */
+    
   }
 `;

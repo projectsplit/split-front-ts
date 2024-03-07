@@ -1,17 +1,16 @@
 import styled from "styled-components";
 
 export const StyledActiveGroups = styled.div`
- 
     display: flex;
     flex-direction: column;
-    gap: 10px;
     scrollbar-width: thin;
     overflow:auto;
-
+    
   .groups{
     display: flex;
     flex-direction: column;
     gap: 10px;
+    margin-top: 10px;
   }
 
   .groupsInfo {
