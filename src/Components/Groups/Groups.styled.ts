@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 export const StyledGroups = styled.div`
-  padding: 14px;
+
   overflow: auto;
   box-sizing: border-box;
   position: fixed;
@@ -12,12 +12,12 @@ export const StyledGroups = styled.div`
   background-color: ${({ theme }) => theme.colors.body};
 
   .groupCategories {
+    margin:14px;
     display: flex;
     flex-direction: row;
     justify-content: flex-start;
     gap: 4px;
-    margin-top: 10px;
-    margin-bottom: 10px;
+    margin-top: 0px;
     position: relative;
   }
   

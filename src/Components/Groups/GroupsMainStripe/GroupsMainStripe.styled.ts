@@ -1,11 +1,13 @@
 import styled from "styled-components";
 
 export const StyledGroupsMainStripe = styled.div`
+
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  
+  padding:14px;
+
   .groupStripe {
     display: flex;
     flex-direction: row;

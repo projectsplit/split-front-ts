@@ -5,12 +5,13 @@ export const StyledActiveGroups = styled.div`
     flex-direction: column;
     scrollbar-width: thin;
     overflow:auto;
-    
+    padding: 14px;
+
   .groups{
     display: flex;
     flex-direction: column;
     gap: 10px;
-    margin-top: 10px;
+    /* margin-top: 0px; */
   }
 
   .groupsInfo {

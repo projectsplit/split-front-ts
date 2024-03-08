@@ -7,7 +7,7 @@ export default function MainStripe() {
   return (
     <StyledMainStripe>
       <div className="groupName">
-        GroupName
+        Trip
       </div>
       <div className='options' >
         

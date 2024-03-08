@@ -4,6 +4,7 @@ import CategoryButton from "../CategoryButton/CategoryButton";
 import { Outlet } from "react-router-dom";
 
 import GroupsMainStripe from "./GroupsMainStripe/GroupsMainStripe";
+import Separator from "../Separator/Separator";
 
 export default function Groups() {
   return (
@@ -14,7 +15,7 @@ export default function Groups() {
         <CategoryButton to="archived">Archived</CategoryButton>
         <CategoryButton to="deleted">Deleted</CategoryButton>
       </div>
-      <div className="separator"/>
+      <Separator/>
       <Outlet />
     </StyledGroups>
   );
