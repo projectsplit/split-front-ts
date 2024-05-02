@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-export const StyledLogoAndUserOptionsStripe = styled.div`
+export const StyledMainStripe = styled.div`
   display: flex;
   flex-direction: column;
   color: ${({ theme }) => theme.colors.lightColor};

@@ -3,6 +3,16 @@ import styled from "styled-components";
 export const StyledGroupActionsBar = styled.div`
   display: flex;
   flex-direction: column;
+  padding: 14px;
+  
+  .groupName {
+    margin-right: 25px;
+    margin-left: 25px;
+    font-size: 25px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
 
   .backButtonContainer {
     position: relative;
@@ -28,8 +38,7 @@ export const StyledGroupActionsBar = styled.div`
     background-color: rgba(128, 128, 128, 0.3);
     pointer-events: none;
   }
-  
-  
+
   .addUserButton {
     cursor: pointer;
   }
@@ -39,7 +48,7 @@ export const StyledGroupActionsBar = styled.div`
     justify-content: space-between;
     font-size: 30px;
   }
-  .QRandAddUserOptions {
+  .addUserOptions {
     display: flex;
     flex-direction: row;
     align-items: center;

@@ -1,7 +1,6 @@
 import styled from "styled-components";
 
 export const StyledGroups = styled.div`
-
   overflow: auto;
   box-sizing: border-box;
   position: fixed;
@@ -21,14 +20,4 @@ export const StyledGroups = styled.div`
     position: relative;
   }
   
-  .separator::after {
-    content: '';
-    position: fixed;
-    left: 0;
-    right: 0;
-    z-index: 1;
-    height: 1px; /* Adjust thickness as needed */
-    background-color: rgb(54,54,54); /* Your pale line color */
-    
-  }
 `;

@@ -18,8 +18,8 @@ export default function GroupActionsBar() {
             onClick={() => navigate("/groups/active")}
           />
         </div>
-        <div className="QRandAddUserOptions">
-          <QRscanner />
+        <div className="groupName"> Trip f</div>
+        <div className="addUserOptions">
           <IoMdPersonAdd className="addUserButton" />
         </div>
       </div>

@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { StyledBottomMenu } from "../../../layouts/BottomMenu/BottomMenu.styled";
 
 export const StyledCurrencyOptions = styled(StyledBottomMenu)`
-  overflow: auto; /* or overflow: scroll; or overflow: hidden; */
+  overflow: auto;
   padding: 0;
 
   .headerAndSearchbar {

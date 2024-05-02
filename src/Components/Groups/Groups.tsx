@@ -2,7 +2,6 @@ import React from "react";
 import { StyledGroups } from "./Groups.styled";
 import CategoryButton from "../CategoryButton/CategoryButton";
 import { Outlet } from "react-router-dom";
-
 import GroupsMainStripe from "./GroupsMainStripe/GroupsMainStripe";
 import Separator from "../Separator/Separator";
 

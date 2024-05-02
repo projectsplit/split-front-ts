@@ -1,19 +1,12 @@
 import React from 'react'
-import { StyledMainStripe } from './MainStripe.styled'
-import { IoMdPersonAdd } from 'react-icons/io'
-import { FaGear } from "react-icons/fa6";
 
-export default function MainStripe() {
+import GroupActionsBar from './GroupActionsBar/GroupActionsBar'
+import { StyledMainStripe } from './MainStripe.styled'
+
+export default function LogoAndUserOptionsStripe() {
   return (
     <StyledMainStripe>
-      <div className="groupName">
-        Trip
-      </div>
-      <div className='options' >
-        
-        <FaGear className="optionsButton" />
-      </div>
-
+      <GroupActionsBar/>
     </StyledMainStripe>
   )
 }

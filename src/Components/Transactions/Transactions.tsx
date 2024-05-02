@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import { StyledTransactions } from "./Transactions.styled";
 import Expense from "./Expense/Expense";
 import { useInfiniteQuery } from "@tanstack/react-query";
@@ -6,10 +6,14 @@ import { api } from "../../apis/api";
 import { useParams } from "react-router-dom";
 import { calculateDistanceFromTop } from "../../helpers/calculateDistanceFromTop";
 import Spinner from "../Spinner/Spinner";
+import { FaMagnifyingGlass } from "react-icons/fa6";
+import { useSignal } from "@preact/signals-react";
+import MenuAnimationBackground from "../MenuAnimations/MenuAnimationBackground";
+import SearchTransactionsAnimation from "../MenuAnimations/SearchTransactionsAnimation";
 
 export default function Transactions() {
-  const [currentMonthYear, setCurrentMonthYear] = useState("");
   const params = useParams();
+  const menu = useSignal<string | null>(null);
   const elRef = useRef<HTMLDivElement>(null);
   const heightFromTop = window.innerHeight - calculateDistanceFromTop(elRef); //(58 + 36 + 18 + 4 + 30)
   const fittingItems = Math.round(heightFromTop / 100);
@@ -68,22 +72,6 @@ export default function Transactions() {
     };
   }, [fetchNextPage, hasNextPage]);
 
-  useEffect(() => {
-    const handleScroll = () => {
-      const monthYearElements = document.querySelectorAll(".monthYearSticky");
-      monthYearElements.forEach((element) => {
-        const monthYear = element.textContent; // Access textContent safely
-        if (monthYear && element.getBoundingClientRect().top <= 0) {
-          setCurrentMonthYear(monthYear);
-        }
-      });
-    };
-
-    // Add scroll event listener
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
   const groupedTransactions: { [key: string]: any[] } = {};
 
   data?.pages.flatMap((page: any) =>
@@ -97,25 +85,21 @@ export default function Transactions() {
       if (!groupedTransactions[monthYear]) {
         groupedTransactions[monthYear] = [];
       }
-
       groupedTransactions[monthYear].push(transaction);
     })
   );
-
 
   return (
     <StyledTransactions ref={elRef}>
       {isFetching && data === undefined ? <Spinner /> : null}
       <div className="transactionField">
+        <div className="magnifyingGlass">
+          <FaMagnifyingGlass onClick={() => (menu.value = "search")} />
+        </div>
         {Object.entries(groupedTransactions).map(
           ([monthYear, transactions]) => (
             <div key={monthYear}>
-              {/* Sticky header */}
-              <div
-                className={`monthYearSticky ${
-                  currentMonthYear === monthYear ? "show" : ""
-                }`}
-              >
+              <div className="monthYearSticky">
                 <div className="monthYear">{monthYear}</div>
               </div>
               <div className="transactionList">
@@ -144,6 +128,10 @@ export default function Transactions() {
         )}
         {isFetchingNextPage && <Spinner />}
       </div>
+
+      <MenuAnimationBackground menu={menu} />
+      <SearchTransactionsAnimation menu={menu} />
+      
     </StyledTransactions>
   );
 }

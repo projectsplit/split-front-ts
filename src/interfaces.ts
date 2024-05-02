@@ -2,7 +2,6 @@ import { CSSProperties, MouseEventHandler } from "react";
 import { BudgetInfoResponse, Frequency, Participant, Payer } from "./types";
 import { Signal } from "@preact/signals-react";
 import React from "react";
-import { StringLiteral } from "typescript";
 
 export interface InputProps
   extends React.InputHTMLAttributes<HTMLInputElement> {
@@ -65,7 +64,7 @@ export interface InfoBoxAnimationProps extends MenuAnimationBackgroundProps {}
 
 export interface CurrencyOptionsAnimationProps
   extends MenuAnimationBackgroundProps {
-  clickHandler: (curr: string) => void
+  clickHandler: (curr: string) => void;
 }
 
 export interface SubmitButtonProps
@@ -200,7 +199,7 @@ export interface BottomMenuProps {
 export interface MiddleScreenMenuProps extends BottomMenuProps {}
 
 export interface CurrencyOptionProps {
-  clickHandler: (curr: string) => void
+  clickHandler: (curr: string) => void;
 }
 
 export interface SpendingCycleInfoProps {
@@ -233,18 +232,15 @@ export interface CumulativeSpendingProps {
   monthsAndDaysArrays: string[][];
   cyclehaschanged: Signal<boolean>;
   allWeeksPerYear: Date[][];
-  menu:Signal<string | null>;
+  menu: Signal<string | null>;
   selectedTimeCycleIndex: Signal<number>;
   startDate: Signal<string>;
-  endDate:Signal<string>;
-  currency:string;
-
+  endDate: Signal<string>;
+  currency: string;
 }
 
-export interface BarChartProps extends CumulativeSpendingProps {
-}
-export interface TotalLentBorrowedProps extends CumulativeSpendingProps {
-}
+export interface BarChartProps extends CumulativeSpendingProps {}
+export interface TotalLentBorrowedProps extends CumulativeSpendingProps {}
 
 export interface CycleOptionProps {
   selectedCycle: Signal<Frequency>;
@@ -268,30 +264,49 @@ export interface CarouselProps {
   selectedTimeCycleIndex: Signal<number>;
   selectedCycle: Signal<Frequency>;
   cyclehaschanged: Signal<boolean>;
-  menu:Signal<string | null>;
-  selectedYear:Signal<number>;
+  menu: Signal<string | null>;
+  selectedYear: Signal<number>;
 }
 
 export interface PeriodOptionProps {
-  menu:Signal<string | null>;
+  menu: Signal<string | null>;
   selectedCycle: Signal<Frequency>;
   selectedTimeCycleIndex: Signal<number>;
-  monthsAndDaysArrays:string[][];
+  monthsAndDaysArrays: string[][];
 }
 
-export interface PillOptions{
-  title:string;
-  color:string;
+export interface PillOptions {
+  title: string;
+  color: string;
 }
 
-export interface ExpenseProps{
+export interface ExpenseProps {
+  currency: string;
+  description: string;
+  amount: string;
+  expenseTime: string;
+  creationTime: string;
+  lastUpdateTime: string;
+  participants: Participant[];
+  payers: Payer[];
+}
 
-  currency:string;
-  description:string;
-  amount:string;
-  expenseTime:string;
-  creationTime:string;
-  lastUpdateTime:string;
-  participants:Participant[]
-  payers: Payer[]
+export interface SearchTransactionAnimationProps {
+  menu: Signal<string | null>;
+}
+
+export interface SearchTransactionsProps {
+  menu: Signal<string | null>;
+}
+
+export interface SearchBarProps extends InputProps {
+  value?: string;
+  onFocus?: React.FocusEventHandler<HTMLInputElement>;
+  onBlur?: React.FocusEventHandler<HTMLInputElement>;
+}
+
+export interface SearchCategoryButtonProps {
+  category: string;
+  type: string;
+  onClick: (event: React.MouseEvent<HTMLButtonElement>) => void;
 }
