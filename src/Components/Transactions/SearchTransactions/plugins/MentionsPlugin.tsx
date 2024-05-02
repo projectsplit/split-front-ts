@@ -626,7 +626,7 @@ export default function MentionsPlugin(): JSX.Element | null {
       closeMenu: () => void,
     ) => {
       editor.update(() => {
-        const mentionNode = $createMentionNode(selectedOption.name);
+        const mentionNode = $createMentionNode(selectedOption.name,'segmented');
         if (nodeToReplace) {
           nodeToReplace.replace(mentionNode);
         }

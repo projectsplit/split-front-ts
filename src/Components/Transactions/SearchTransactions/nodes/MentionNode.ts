@@ -6,7 +6,7 @@
  *
  */
 
-import type {Spread} from 'lexical';
+import type {Spread, TextModeType} from 'lexical';
 
 import {
   type DOMConversionMap,
@@ -33,7 +33,7 @@ function convertMentionElement(
   const textContent = domNode.textContent;
 
   if (textContent !== null) {
-    const node = $createMentionNode(textContent);
+    const node = $createMentionNode(textContent,'segmented');
     return {
       node,
     };
@@ -54,7 +54,7 @@ export class MentionNode extends TextNode {
     return new MentionNode(node.__mention, node.__text, node.__key);
   }
   static importJSON(serializedNode: SerializedMentionNode): MentionNode {
-    const node = $createMentionNode(serializedNode.mentionName);
+    const node = $createMentionNode(serializedNode.mentionName,'segmented');
     node.setTextContent(serializedNode.text);
     node.setFormat(serializedNode.format);
     node.setDetail(serializedNode.detail);
@@ -118,10 +118,10 @@ export class MentionNode extends TextNode {
   }
 }
 
-export function $createMentionNode(mentionName: string): MentionNode {
+export function $createMentionNode(mentionName: string, mentionType:TextModeType): MentionNode {
   const mentionNode = new MentionNode(mentionName);
   console.log(mentionNode.__text)
-  mentionNode.setMode('segmented').toggleDirectionless(); // 'normal' | 'token' | 'segmented';
+  mentionNode.setMode(mentionType).toggleDirectionless(); // 'normal' | 'token' | 'segmented';
   return $applyNodeReplacement(mentionNode);
 }
 

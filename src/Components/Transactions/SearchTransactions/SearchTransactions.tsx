@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { SearchTransactionsProps } from "../../../interfaces";
 import { StyledSearchTransactions } from "./SearchTransactions.styled";
 import { IoClose } from "react-icons/io5";
-import { $createTextNode, $getRoot, $getSelection, EditorState } from "lexical";
+import { $createTextNode, $getRoot, $getSelection, EditorState, TextNode } from "lexical";
 
 import { AutoFocusPlugin } from "@lexical/react/LexicalAutoFocusPlugin";
 import { LexicalComposer } from "@lexical/react/LexicalComposer";
@@ -15,8 +15,8 @@ import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext
 import SearchCategoryButton from "./SearchCategoryButton/SearchCategoryButton";
 import { HeadingNode, $createHeadingNode } from "@lexical/rich-text";
 import MentionsPlugin from "./plugins/MentionsPlugin";
-import { MentionNode } from "./nodes/MentionNode";
-
+import { MentionNode,$createMentionNode } from "./nodes/MentionNode";
+import { $createParagraphNode } from "lexical";
 import React from "react";
 
 export default function SearchTransactions({ menu }: SearchTransactionsProps) {
@@ -94,14 +94,28 @@ export default function SearchTransactions({ menu }: SearchTransactionsProps) {
     const onClick = (e: React.MouseEvent): void => {
       editor.update(() => {
         const root = $getRoot();
-        root.append($createHeadingNode("h1").append($createTextNode("Hello")));
+        root.append($createParagraphNode().append($createMentionNode(filter,'normal')));
       });
     };
-
     return <span onClick={onClick}>{filter}</span>;
   };
 
-
+    // const FilterPlugin = (props:{filter:string},nodeToReplace: TextNode | null): JSX.Element => {
+    //   const [editor] = useLexicalComposerContext();
+    //   const {filter} = props;
+    //   const onClick = (e: React.MouseEvent): void => {
+    //     editor.update(() => {
+    //       const mentionNode = $createMentionNode(filter,'segmented');
+    //       if (nodeToReplace) {
+    //         nodeToReplace.replace(mentionNode)
+    //       }
+    //       mentionNode.select();
+ 
+    //     });
+    //   };
+    //   return <span onClick={onClick}>{filter}</span>;
+    // };
+    
   return (
     <StyledSearchTransactions>
       <div className="header">
@@ -127,7 +141,7 @@ export default function SearchTransactions({ menu }: SearchTransactionsProps) {
             <HistoryPlugin />
             <MyOnChangePlugin onChange={onChange} />
             <MentionsPlugin />
-            <FilterPlugin filter="paok" />
+            <FilterPlugin filter="payer" />
           </LexicalComposer>
         </div>
 
