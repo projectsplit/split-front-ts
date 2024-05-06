@@ -24,7 +24,7 @@ export default function SearchTransactions({ menu }: SearchTransactionsProps) {
     { category: string; value: string }[]
   >([]);
   const [editorState, setEditorState] = useState<string>();
-  console.log(editorState)
+  //console.log(editorState)
   const insertCategoryInput = (category: string) => {};
 
   const populateCategoryClick = (categoryValue: string) => {};
@@ -47,7 +47,7 @@ export default function SearchTransactions({ menu }: SearchTransactionsProps) {
     namespace: "MyEditor",
     theme,
     onError,
-    nodes: [HeadingNode, MentionNode],
+    nodes: [HeadingNode, MentionNode]
   };
 
   function MyOnChangePlugin(props: {
@@ -100,21 +100,7 @@ export default function SearchTransactions({ menu }: SearchTransactionsProps) {
     return <span onClick={onClick}>{filter}</span>;
   };
 
-    // const FilterPlugin = (props:{filter:string},nodeToReplace: TextNode | null): JSX.Element => {
-    //   const [editor] = useLexicalComposerContext();
-    //   const {filter} = props;
-    //   const onClick = (e: React.MouseEvent): void => {
-    //     editor.update(() => {
-    //       const mentionNode = $createMentionNode(filter,'segmented');
-    //       if (nodeToReplace) {
-    //         nodeToReplace.replace(mentionNode)
-    //       }
-    //       mentionNode.select();
- 
-    //     });
-    //   };
-    //   return <span onClick={onClick}>{filter}</span>;
-    // };
+
     
   return (
     <StyledSearchTransactions>
@@ -141,7 +127,8 @@ export default function SearchTransactions({ menu }: SearchTransactionsProps) {
             <HistoryPlugin />
             <MyOnChangePlugin onChange={onChange} />
             <MentionsPlugin />
-            <FilterPlugin filter="payer" />
+            <AutoFocusPlugin/>
+            {/* <FilterPlugin filter="payer" /> */}
           </LexicalComposer>
         </div>
 

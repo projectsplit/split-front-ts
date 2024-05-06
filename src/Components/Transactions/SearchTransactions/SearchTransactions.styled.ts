@@ -10,6 +10,11 @@ export const StyledSearchTransactions = styled.div`
   z-index: 3;
   padding: 0;
 
+
+  p {
+    margin: 0; /* Add margin: 0 for all <p> elements */
+  }
+  
   .header {
     padding: 14px;
     display: flex;
@@ -53,6 +58,7 @@ export const StyledSearchTransactions = styled.div`
         top: 0;
         left: 0;
         padding: 0 1px;
+     
       }
       .editor-bold{
         color:yellow;
