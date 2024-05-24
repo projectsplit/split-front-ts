@@ -10,11 +10,10 @@ export const StyledSearchTransactions = styled.div`
   z-index: 3;
   padding: 0;
 
-
   p {
-    margin: 0; /* Add margin: 0 for all <p> elements */
+    margin: 0;
   }
-  
+
   .header {
     padding: 14px;
     display: flex;
@@ -48,7 +47,7 @@ export const StyledSearchTransactions = styled.div`
     padding: 14px;
     .lexicalSearch {
       position: relative;
-    
+
       .contentEditable {
         padding: 0 1px;
         border: 1px solid #ccc;
@@ -58,11 +57,22 @@ export const StyledSearchTransactions = styled.div`
         top: 0;
         left: 0;
         padding: 0 1px;
-     
       }
-      .editor-bold{
-        color:yellow;
+      .editor-bold {
+        color: yellow;
       }
+      .trigger {
+        color: white;
+      }
+      .value {
+      }
+      .container {
+        background-color: blue;
+      }
+      .containerFocused {
+        background-color: blue;
+      }
+      
     }
   }
 `;

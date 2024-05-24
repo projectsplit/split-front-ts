@@ -39,8 +39,8 @@ const DocumentMentionsRegex = {
 
 const PUNC = DocumentMentionsRegex.PUNCTUATION;
 
-//const TRIGGERS = ["@"].join("");
-const TRIGGERS = ["\\w"].join("");
+const TRIGGERS = ["@"].join("");
+//const TRIGGERS = ["\\w"].join("");
 
 // Chars we expect to see in a mention (non-space, non-punctuation).
 const VALID_CHARS = "[^" + TRIGGERS + PUNC + "\\s]";
