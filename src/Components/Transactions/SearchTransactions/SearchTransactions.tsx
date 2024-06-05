@@ -6,6 +6,7 @@ import {
   $createTextNode,
   $getRoot,
   $getSelection,
+  $nodesOfType,
   EditorState,
   TextNode,
 } from "lexical";
@@ -29,10 +30,46 @@ import {
   useBeautifulMentions,
   BeautifulMentionsMenuProps,
   BeautifulMentionsMenuItemProps,
+  BeautifulMentionsItem,
+  BeautifulMentionsItemData,
 } from "lexical-beautiful-mentions";
 import { BeautifulMentionsTheme } from "lexical-beautiful-mentions";
 import React from "react";
 import styled from "styled-components";
+
+interface StyledMenuItemProps {
+  selected?: boolean;
+}
+
+const List = styled.ul`
+  margin: 0;
+  min-width: 18rem;
+  overflow: hidden;
+  padding: 0.25rem;
+  scrollbar-width: none;
+  position: fixed; /* Add fixed position */
+  top: 20%; /* Adjust as necessary */
+  left: 50%; /* Adjust as necessary */
+  transform: translateX(-50%); /* Center horizontally */
+  background-color: white; /* Add background color */
+  z-index: 1000; /* Ensure it is above other elements */
+  border: 1px solid #ccc; /* Optional border for visibility */
+  border-radius: 0.375rem; /* Rounded corners */
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+`;
+
+const StyledMenuItem = styled.li<StyledMenuItemProps>`
+  display: flex;
+  cursor: pointer;
+  user-select: none;
+  align-items: center;
+  border-radius: 0.375rem;
+  padding: 0.375rem 0.5rem;
+  font-size: 1.875rem;
+  outline: none;
+  background-color: ${({ selected }) => (selected ? "blue" : "transparent")};
+  color: ${({ selected }) => (selected ? "white" : "inherit")};
+`;
 
 export default function SearchTransactions({ menu }: SearchTransactionsProps) {
   const [categories, setCategories] = useState<
@@ -40,13 +77,43 @@ export default function SearchTransactions({ menu }: SearchTransactionsProps) {
   >([]);
   const [editorState, setEditorState] = useState<string>();
   const [showOptions, setShowOptions] = useState<boolean>(true);
-  console.log(showOptions)
-  const mentionItems = {
-    "payer:": ["George", "Kristi", "Bibi"],
-  };
+  // const [searchItem, setSearchItem] = useState<string>("");
+  const allNames = [
+    { value: "George", id: 30, prop: "payer" },
+    { value: "Kristi", id: 31, prop: "payer" },
+    { value: "Bibi", id: 32, prop: "payer" },
+    { value: "Alice", id: 33, prop: "participant" },
+    { value: "Bob", id: 34, prop: "participant" },
+    { value: "Charlie", id: 35, prop: "participant" },
+  ];
+  const [filteredResults, setFilteredResults] = useState<
+    {
+      value: string;
+      [key: string]: BeautifulMentionsItemData;
+    }[]
+  >([]);
+
+  const mentionItems: Record<string, BeautifulMentionsItem[]> = {};
+
+  mentionItems["payer:"] = [
+    { value: "George", id: 30, prop: "payer" },
+    { value: "Kristi", id: 31, prop: "payer" },
+    { value: "Bibi", id: 32, prop: "payer" },
+  ];
+  mentionItems["participant:"] = [
+    { value: "Alice", id: 33, prop: "participant" },
+    { value: "Bob", id: 34, prop: "participant" },
+    { value: "Charlie", id: 35, prop: "participant" },
+  ];
 
   const beautifulMentionsTheme: BeautifulMentionsTheme = {
     "payer:": {
+      trigger: "trigger",
+      value: "value",
+      container: "container",
+      containerFocused: "containerFocused",
+    },
+    "participant:": {
       trigger: "trigger",
       value: "value",
       container: "container",
@@ -86,72 +153,82 @@ export default function SearchTransactions({ menu }: SearchTransactionsProps) {
         onChange(editorState);
       });
     }, [editor, onChange]);
+
+    return null;
+  }
+
+  type SerializedLexicalNode = {
+    type: string;
+    [key: string]: any;
+  };
+
+  type SerializedElementNode = SerializedLexicalNode & {
+    children: SerializedLexicalNode[];
+  };
+
+  function isElementNode(
+    node: SerializedLexicalNode
+  ): node is SerializedElementNode {
+    return "children" in node;
+  }
+
+  function findLastTextNode(
+    children: SerializedLexicalNode[]
+  ): SerializedLexicalNode | null {
+    for (let i = children.length - 1; i >= 0; i--) {
+      if (children[i].type === "text") {
+        return children[i];
+      }
+    }
     return null;
   }
 
   function onChange(editorState: EditorState) {
-    // Call toJSON on the EditorState object, which produces a serialization safe string
     const editorStateJSON = editorState.toJSON();
-    // However, we still have a JavaScript object, so we need to convert it to an actual string with JSON.stringify
 
-    setEditorState(JSON.stringify(editorStateJSON));
-    
-  }
+    const searchTerm = editorState.read(() => {
+      const root = $getRoot();
 
-  interface StyledMenuItemProps {
-    selected?: boolean;
-  
+      return root.getTextContent();
+    });
 
-  }
-  const StyledMenuItem = styled.li<StyledMenuItemProps>`
-  
-    display: flex;
-    cursor: pointer;
-    user-select: none;
-    align-items: center;
-    border-radius: 0.375rem;
-    padding: 0.375rem 0.5rem;
-    font-size: 1.875rem;
-    outline: none;
-    background-color: ${({ selected }) => (selected ? "blue" : "transparent")};
-    color: ${({ selected }) => (selected ? "white" : "inherit")};
-  `;
+    const jsonObject = editorState.toJSON().root.children;
 
-  const MenuItem = React.forwardRef<HTMLLIElement, BeautifulMentionsMenuItemProps>(
-    ({ selected, ...props }, ref) => {
-
-      return <StyledMenuItem ref={ref} selected={selected} {...props} />;
+    if (isElementNode(jsonObject[0])) {
+      const children = jsonObject[0].children;
+      const lastTextNode = findLastTextNode(children);
+      if (lastTextNode) {
+        handleInputChange(lastTextNode.text.trimStart());
+      } else {
+        console.log("No text node found.");
+      }
+    } else {
+      console.log(
+        "The node is not an element node and does not have children."
+      );
     }
-  );
+
+    //handleInputChange(searchTerm);
+    //setEditorState(JSON.stringify(editorStateJSON));
+    setEditorState(searchTerm);
+  }
 
 
-
-  const List = styled.ul`
-  margin: 0;
-  min-width: 18rem;
-  overflow: hidden;
-  padding: 0.25rem;
-  scrollbar-width: none;
-  position: fixed; /* Add fixed position */
-  top: 20%; /* Adjust as necessary */
-  left: 50%; /* Adjust as necessary */
-  transform: translateX(-50%); /* Center horizontally */
-  background-color: white; /* Add background color */
-  z-index: 1000; /* Ensure it is above other elements */
-  border: 1px solid #ccc; /* Optional border for visibility */
-  border-radius: 0.375rem; /* Rounded corners */
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); 
-  `;
+  const MenuItem = React.forwardRef<
+    HTMLLIElement,
+    BeautifulMentionsMenuItemProps
+  >(({ selected, ...props }, ref) => {
+    return <StyledMenuItem ref={ref} selected={selected} {...props} />;
+  });
 
   const Menu = React.forwardRef<any, BeautifulMentionsMenuProps>(
     ({ open, ...other }, ref) => {
-
       return <List ref={ref} {...other} />;
     }
   );
 
   const MentionsToolbar = () => {
-    const {insertMention } = useBeautifulMentions();
+    const { insertMention } = useBeautifulMentions();
 
     return (
       <>
@@ -166,9 +243,10 @@ export default function SearchTransactions({ menu }: SearchTransactionsProps) {
               type={"member"}
             />
             <SearchCategoryButton
-              onClick={() =>
-                insertMention({ trigger: "participant:", value: "" })
-              }
+              onClick={() => {
+                insertMention({ trigger: "participant:", value: "" });
+                setShowOptions(false);
+              }}
               category={"participant"}
               type={"member"}
             />
@@ -196,6 +274,50 @@ export default function SearchTransactions({ menu }: SearchTransactionsProps) {
         )}
       </>
     );
+  };
+
+  const OptionsToolBar = () => {
+    const { insertMention } = useBeautifulMentions();
+
+    return (
+      <>
+        {editorState === "" ? (
+          <></>
+        ) : (
+          filteredResults.map((result, index) => (
+            <div key={index}>
+              <div
+                className="result"
+                style={{ display: "flex", flexDirection: "row" }}
+                onClick={() => {
+                  insertMention({
+                    trigger: result.prop + ":",
+                    value: result.value,
+                  });
+
+                  setFilteredResults([]);
+                }}
+              >
+                <div className="resultDescr">{result.prop}:</div>
+                <div className="resultDescr">{result.value}</div>
+              </div>
+            </div>
+          ))
+        )}
+      </>
+    );
+  };
+
+  const handleInputChange = (searchTerm: string) => {
+    if (!searchTerm) {
+      setFilteredResults([]);
+      return;
+    }
+
+    const filtered = allNames.filter((name) =>
+      name.value.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+    setFilteredResults(filtered);
   };
 
   return (
@@ -226,16 +348,16 @@ export default function SearchTransactions({ menu }: SearchTransactionsProps) {
             <MyOnChangePlugin onChange={onChange} />
             {/* <MentionsPlugin /> */}
             <BeautifulMentionsPlugin // 👈 add the mentions plugin
-             items={mentionItems}
-             menuComponent={Menu}
-             menuItemComponent={MenuItem} 
-             onMenuItemSelect={()=>setShowOptions(true)}
-             
-             
+              items={mentionItems}
+              menuComponent={Menu}
+              menuItemComponent={MenuItem}
+              onMenuItemSelect={() => setShowOptions(true)}
+              insertOnBlur={false}
+              //triggers={alphanumericTriggers}
             />
             <MentionsToolbar />
+            <OptionsToolBar />
             <AutoFocusPlugin />
-            {/* <FilterPlugin filter="payer" /> */}
           </LexicalComposer>
         </div>
       </div>
