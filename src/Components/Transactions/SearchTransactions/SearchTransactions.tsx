@@ -4,11 +4,13 @@ import { StyledSearchTransactions } from "./SearchTransactions.styled";
 import { IoClose } from "react-icons/io5";
 import {
   $createTextNode,
+  $getNodeByKey,
   $getRoot,
   $getSelection,
   $nodesOfType,
   EditorState,
   TextNode,
+ 
 } from "lexical";
 
 import { AutoFocusPlugin } from "@lexical/react/LexicalAutoFocusPlugin";
@@ -75,7 +77,8 @@ export default function SearchTransactions({ menu }: SearchTransactionsProps) {
   const [categories, setCategories] = useState<
     { category: string; value: string }[]
   >([]);
-  const [editorState, setEditorState] = useState<string>();
+  const [editorStateString, setEditorStateString] = useState<string>();
+
   const [showOptions, setShowOptions] = useState<boolean>(true);
   // const [searchItem, setSearchItem] = useState<string>("");
   const allNames = [
@@ -166,9 +169,7 @@ export default function SearchTransactions({ menu }: SearchTransactionsProps) {
     children: SerializedLexicalNode[];
   };
 
-  function isElementNode(
-    node: SerializedLexicalNode
-  ): node is SerializedElementNode {
+  function isElementNode(node: SerializedLexicalNode ): node is SerializedElementNode {
     return "children" in node;
   }
 
@@ -193,7 +194,7 @@ export default function SearchTransactions({ menu }: SearchTransactionsProps) {
     });
 
     const jsonObject = editorState.toJSON().root.children;
-
+    console.log(jsonObject)
     if (isElementNode(jsonObject[0])) {
       const children = jsonObject[0].children;
       const lastTextNode = findLastTextNode(children);
@@ -210,7 +211,7 @@ export default function SearchTransactions({ menu }: SearchTransactionsProps) {
 
     //handleInputChange(searchTerm);
     //setEditorState(JSON.stringify(editorStateJSON));
-    setEditorState(searchTerm);
+    setEditorStateString(searchTerm);
   }
 
 
@@ -276,12 +277,27 @@ export default function SearchTransactions({ menu }: SearchTransactionsProps) {
     );
   };
 
+
+  // onClick={() => {
+  //   editor.update(() => {
+  //     const root = $getRoot();
+  //     root.clear();
+  //     insertMention({
+  //       trigger: result.prop + ":",
+  //       value: result.value,
+  //     });
+  //   });
+  // }}
+
+
   const OptionsToolBar = () => {
     const { insertMention } = useBeautifulMentions();
+    const[editor] = useLexicalComposerContext();
 
+    console.log(editor._editorState._nodeMap.entries())
     return (
       <>
-        {editorState === "" ? (
+        {editorStateString === "" ? (
           <></>
         ) : (
           filteredResults.map((result, index) => (
@@ -290,12 +306,31 @@ export default function SearchTransactions({ menu }: SearchTransactionsProps) {
                 className="result"
                 style={{ display: "flex", flexDirection: "row" }}
                 onClick={() => {
-                  insertMention({
-                    trigger: result.prop + ":",
-                    value: result.value,
+                  editor.update(() => {
+                    const nodeMap = editor._editorState._nodeMap;
+                    let lastTextNodeKey = null;
+    
+                    // Find the last text node in the nodeMap
+                    for (let [key, node] of nodeMap.entries()) {
+                      if (node.__type === 'text') {
+                        lastTextNodeKey = key;
+                      }
+                    }
+    
+                    // Remove the last text node
+                    if (lastTextNodeKey) {
+                      const lastTextNode = $getNodeByKey(lastTextNodeKey);
+                      if (lastTextNode) {
+                        lastTextNode.remove();
+                      }
+                    }
+    
+                    // Insert the mention
+                    insertMention({
+                      trigger: result.prop + ":",
+                      value: result.value,
+                    });
                   });
-
-                  setFilteredResults([]);
                 }}
               >
                 <div className="resultDescr">{result.prop}:</div>
