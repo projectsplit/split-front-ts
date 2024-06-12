@@ -135,3 +135,18 @@ export type Payer = {
   paymentAmount: string;
   userId: string;
 }
+
+export type SerializedLexicalNode = {
+  type: string;
+  [key: string]: any;
+};
+
+export type SerializedElementNode = SerializedLexicalNode & {
+  children: SerializedLexicalNode[];
+};
+
+export type allNames= {
+  value: string;
+  id: number;
+  prop: string;
+}[]

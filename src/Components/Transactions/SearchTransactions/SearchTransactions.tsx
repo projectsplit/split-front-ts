@@ -1,77 +1,31 @@
-import { CSSProperties, forwardRef, useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { SearchTransactionsProps } from "../../../interfaces";
 import { StyledSearchTransactions } from "./SearchTransactions.styled";
 import { IoClose } from "react-icons/io5";
-import {
-  $createTextNode,
-  $getNodeByKey,
-  $getRoot,
-  $getSelection,
-  $nodesOfType,
-  EditorState,
-  TextNode,
- 
-} from "lexical";
-
+import { $getRoot, EditorState } from "lexical";
 import { AutoFocusPlugin } from "@lexical/react/LexicalAutoFocusPlugin";
 import { LexicalComposer } from "@lexical/react/LexicalComposer";
 import { RichTextPlugin } from "@lexical/react/LexicalRichTextPlugin";
-import { PlainTextPlugin } from "@lexical/react/LexicalPlainTextPlugin";
 import { ContentEditable } from "@lexical/react/LexicalContentEditable";
 import { HistoryPlugin } from "@lexical/react/LexicalHistoryPlugin";
 import LexicalErrorBoundary from "@lexical/react/LexicalErrorBoundary";
-import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
-import SearchCategoryButton from "./SearchCategoryButton/SearchCategoryButton";
-import { HeadingNode, $createHeadingNode } from "@lexical/rich-text";
-import MentionsPlugin from "./plugins/MentionsPlugin";
-import { MentionNode, $createMentionNode } from "./nodes/MentionNode";
-import { $createParagraphNode } from "lexical";
+import { HeadingNode } from "@lexical/rich-text";
 import {
   BeautifulMentionsPlugin,
   BeautifulMentionNode,
-  useBeautifulMentions,
-  BeautifulMentionsMenuProps,
-  BeautifulMentionsMenuItemProps,
   BeautifulMentionsItem,
   BeautifulMentionsItemData,
 } from "lexical-beautiful-mentions";
 import { BeautifulMentionsTheme } from "lexical-beautiful-mentions";
 import React from "react";
-import styled from "styled-components";
-
-interface StyledMenuItemProps {
-  selected?: boolean;
-}
-
-const List = styled.ul`
-  margin: 0;
-  min-width: 18rem;
-  overflow: hidden;
-  padding: 0.25rem;
-  scrollbar-width: none;
-  position: fixed; /* Add fixed position */
-  top: 20%; /* Adjust as necessary */
-  left: 50%; /* Adjust as necessary */
-  transform: translateX(-50%); /* Center horizontally */
-  background-color: white; /* Add background color */
-  z-index: 1000; /* Ensure it is above other elements */
-  border: 1px solid #ccc; /* Optional border for visibility */
-  border-radius: 0.375rem; /* Rounded corners */
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-`;
-
-const StyledMenuItem = styled.li<StyledMenuItemProps>`
-  display: flex;
-  cursor: pointer;
-  user-select: none;
-  align-items: center;
-  border-radius: 0.375rem;
-  padding: 0.375rem 0.5rem;
-  font-size: 1.875rem;
-  outline: none;
-  background-color: ${({ selected }) => (selected ? "blue" : "transparent")};
-  color: ${({ selected }) => (selected ? "white" : "inherit")};
-`;
+import { OnChangePlugin } from "./plugins/OnChangePlugin";
+import { isElementNode } from "./helpers/isElementNode";
+import { findLastTextNode } from "./helpers/findLastTextNode";
+import { handleInputChange } from "./helpers/handleInputChange";
+import { MenuItem } from "./MenuItem/MenuItem";
+import { Menu } from "./Menu/Menu";
+import MentionsToolbar from "./Toolbars/MentionsToolbar";
+import OptionsToolBar from "./Toolbars/OptionsToolbar/OptionsToolBar";
 
 export default function SearchTransactions({ menu }: SearchTransactionsProps) {
   const [categories, setCategories] = useState<
@@ -139,54 +93,10 @@ export default function SearchTransactions({ menu }: SearchTransactionsProps) {
     namespace: "MyEditor",
     theme,
     onError,
-    nodes: [HeadingNode, MentionNode, BeautifulMentionNode],
+    nodes: [HeadingNode, BeautifulMentionNode],
   };
-
-  function MyOnChangePlugin(props: {
-    onChange: (editorState: EditorState) => void;
-  }): null {
-    // Access the editor through the LexicalComposerContext
-    const [editor] = useLexicalComposerContext();
-    const { onChange } = props;
-    // Wrap our listener in useEffect to handle the teardown and avoid stale references.
-    useEffect(() => {
-      // most listeners return a teardown function that can be called to clean them up.
-      return editor.registerUpdateListener(({ editorState }) => {
-        // call onChange here to pass the latest state up to the parent.
-        onChange(editorState);
-      });
-    }, [editor, onChange]);
-
-    return null;
-  }
-
-  type SerializedLexicalNode = {
-    type: string;
-    [key: string]: any;
-  };
-
-  type SerializedElementNode = SerializedLexicalNode & {
-    children: SerializedLexicalNode[];
-  };
-
-  function isElementNode(node: SerializedLexicalNode ): node is SerializedElementNode {
-    return "children" in node;
-  }
-
-  function findLastTextNode(
-    children: SerializedLexicalNode[]
-  ): SerializedLexicalNode | null {
-    for (let i = children.length - 1; i >= 0; i--) {
-      if (children[i].type === "text") {
-        return children[i];
-      }
-    }
-    return null;
-  }
 
   function onChange(editorState: EditorState) {
-    const editorStateJSON = editorState.toJSON();
-
     const searchTerm = editorState.read(() => {
       const root = $getRoot();
 
@@ -194,12 +104,17 @@ export default function SearchTransactions({ menu }: SearchTransactionsProps) {
     });
 
     const jsonObject = editorState.toJSON().root.children;
-    console.log(jsonObject)
+
     if (isElementNode(jsonObject[0])) {
       const children = jsonObject[0].children;
       const lastTextNode = findLastTextNode(children);
+
       if (lastTextNode) {
-        handleInputChange(lastTextNode.text.trimStart());
+        handleInputChange(
+          lastTextNode.text.trimStart(),
+          setFilteredResults,
+          allNames
+        );
       } else {
         console.log("No text node found.");
       }
@@ -208,152 +123,10 @@ export default function SearchTransactions({ menu }: SearchTransactionsProps) {
         "The node is not an element node and does not have children."
       );
     }
-
     //handleInputChange(searchTerm);
     //setEditorState(JSON.stringify(editorStateJSON));
     setEditorStateString(searchTerm);
   }
-
-
-  const MenuItem = React.forwardRef<
-    HTMLLIElement,
-    BeautifulMentionsMenuItemProps
-  >(({ selected, ...props }, ref) => {
-    return <StyledMenuItem ref={ref} selected={selected} {...props} />;
-  });
-
-  const Menu = React.forwardRef<any, BeautifulMentionsMenuProps>(
-    ({ open, ...other }, ref) => {
-      return <List ref={ref} {...other} />;
-    }
-  );
-
-  const MentionsToolbar = () => {
-    const { insertMention } = useBeautifulMentions();
-
-    return (
-      <>
-        {showOptions && (
-          <div className="categoryButtons">
-            <SearchCategoryButton
-              onClick={() => {
-                insertMention({ trigger: "payer:", value: "" });
-                setShowOptions(false);
-              }}
-              category={"payer"}
-              type={"member"}
-            />
-            <SearchCategoryButton
-              onClick={() => {
-                insertMention({ trigger: "participant:", value: "" });
-                setShowOptions(false);
-              }}
-              category={"participant"}
-              type={"member"}
-            />
-            <SearchCategoryButton
-              onClick={() => insertMention({ trigger: "before:", value: "" })}
-              category={"before"}
-              type={"date"}
-            />
-            <SearchCategoryButton
-              onClick={() => insertMention({ trigger: "during:", value: "" })}
-              category={"during"}
-              type={"date"}
-            />
-            <SearchCategoryButton
-              onClick={() => insertMention({ trigger: "after:", value: "" })}
-              category={"after"}
-              type={"date"}
-            />
-            <SearchCategoryButton
-              onClick={() => insertMention({ trigger: "category:", value: "" })}
-              category={"category"}
-              type={"label"}
-            />
-          </div>
-        )}
-      </>
-    );
-  };
-
-
-  // onClick={() => {
-  //   editor.update(() => {
-  //     const root = $getRoot();
-  //     root.clear();
-  //     insertMention({
-  //       trigger: result.prop + ":",
-  //       value: result.value,
-  //     });
-  //   });
-  // }}
-
-
-  const OptionsToolBar = () => {
-    const { insertMention } = useBeautifulMentions();
-    const[editor] = useLexicalComposerContext();
-
-    console.log(editor._editorState._nodeMap.entries())
-    return (
-      <>
-        {editorStateString === "" ? (
-          <></>
-        ) : (
-          filteredResults.map((result, index) => (
-            <div key={index}>
-              <div
-                className="result"
-                style={{ display: "flex", flexDirection: "row" }}
-                onClick={() => {
-                  editor.update(() => {
-                    const nodeMap = editor._editorState._nodeMap;
-                    let lastTextNodeKey = null;
-    
-                    // Find the last text node in the nodeMap
-                    for (let [key, node] of nodeMap.entries()) {
-                      if (node.__type === 'text') {
-                        lastTextNodeKey = key;
-                      }
-                    }
-    
-                    // Remove the last text node
-                    if (lastTextNodeKey) {
-                      const lastTextNode = $getNodeByKey(lastTextNodeKey);
-                      if (lastTextNode) {
-                        lastTextNode.remove();
-                      }
-                    }
-    
-                    // Insert the mention
-                    insertMention({
-                      trigger: result.prop + ":",
-                      value: result.value,
-                    });
-                  });
-                }}
-              >
-                <div className="resultDescr">{result.prop}:</div>
-                <div className="resultDescr">{result.value}</div>
-              </div>
-            </div>
-          ))
-        )}
-      </>
-    );
-  };
-
-  const handleInputChange = (searchTerm: string) => {
-    if (!searchTerm) {
-      setFilteredResults([]);
-      return;
-    }
-
-    const filtered = allNames.filter((name) =>
-      name.value.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-    setFilteredResults(filtered);
-  };
 
   return (
     <StyledSearchTransactions>
@@ -371,7 +144,6 @@ export default function SearchTransactions({ menu }: SearchTransactionsProps) {
       <div className="searchBarAndCategories">
         <div className="lexicalSearch">
           <LexicalComposer initialConfig={initialConfig}>
-            {/* <MyHeadingPlugin /> */}
             <RichTextPlugin
               contentEditable={<ContentEditable className="contentEditable" />}
               placeholder={
@@ -380,8 +152,7 @@ export default function SearchTransactions({ menu }: SearchTransactionsProps) {
               ErrorBoundary={LexicalErrorBoundary}
             />
             <HistoryPlugin />
-            <MyOnChangePlugin onChange={onChange} />
-            {/* <MentionsPlugin /> */}
+            <OnChangePlugin onChange={onChange} />
             <BeautifulMentionsPlugin // 👈 add the mentions plugin
               items={mentionItems}
               menuComponent={Menu}
@@ -390,8 +161,19 @@ export default function SearchTransactions({ menu }: SearchTransactionsProps) {
               insertOnBlur={false}
               //triggers={alphanumericTriggers}
             />
-            <MentionsToolbar />
-            <OptionsToolBar />
+            {filteredResults.length === 0 ||editorStateString === "" ? (
+              <MentionsToolbar
+                showOptions={showOptions}
+                setShowOptions={setShowOptions}
+              />
+            ) : (
+              <OptionsToolBar
+                editorStateString={editorStateString}
+                filteredResults={filteredResults}
+                setFilteredResults={setFilteredResults}
+              />
+            )}
+
             <AutoFocusPlugin />
           </LexicalComposer>
         </div>

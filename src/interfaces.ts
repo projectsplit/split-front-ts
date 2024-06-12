@@ -2,6 +2,7 @@ import { CSSProperties, MouseEventHandler } from "react";
 import { BudgetInfoResponse, Frequency, Participant, Payer } from "./types";
 import { Signal } from "@preact/signals-react";
 import React from "react";
+import { BeautifulMentionsItemData } from "lexical-beautiful-mentions";
 
 export interface InputProps
   extends React.InputHTMLAttributes<HTMLInputElement> {
@@ -308,5 +309,29 @@ export interface SearchBarProps extends InputProps {
 export interface SearchCategoryButtonProps {
   category: string;
   type: string;
-  onClick: (event: React.MouseEvent<HTMLButtonElement>) => void;
+  onClick: (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
+  
+}
+export interface StyledSearchCategoryButtonProps{
+  onClick?: (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
+ }
+export interface StyledMenuItemProps {
+  selected?: boolean;
+}
+
+export interface MentionsToolbarProps {
+  showOptions: boolean;
+  setShowOptions: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+export interface OptionsToolbarProps {
+  editorStateString: string | undefined;
+  filteredResults: {
+    [key: string]: BeautifulMentionsItemData;
+    value: string;
+  }[];
+  setFilteredResults: React.Dispatch<React.SetStateAction<{
+    [key: string]: BeautifulMentionsItemData;
+    value: string;
+  }[]>>;
 }

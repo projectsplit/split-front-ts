@@ -9,7 +9,7 @@ export const StyledSearchTransactions = styled.div`
   height: 100vh;
   z-index: 3;
   padding: 0;
-
+  
   p {
     margin: 0;
   }

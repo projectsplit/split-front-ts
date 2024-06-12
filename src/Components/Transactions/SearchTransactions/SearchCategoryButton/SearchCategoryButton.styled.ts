@@ -1,6 +1,7 @@
 import styled from "styled-components";
+import { StyledSearchCategoryButtonProps } from "../../../../interfaces";
 
-export const StyledSearchCategoryButton = styled.button`
+export const StyledSearchCategoryButton = styled.div<StyledSearchCategoryButtonProps>`
   border: none;
   background-color: transparent;
   cursor: pointer;
