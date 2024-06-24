@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { SearchTransactionsProps } from "../../../interfaces";
 import { StyledSearchTransactions } from "./SearchTransactions.styled";
 import { IoClose } from "react-icons/io5";
@@ -26,17 +26,23 @@ import { MenuItem } from "./MenuItem/MenuItem";
 import { Menu } from "./Menu/Menu";
 import MentionsToolbar from "./Toolbars/MentionsToolbar";
 import OptionsToolBar from "./Toolbars/OptionsToolbar/OptionsToolBar";
+import { PreventEnterCommandPlugin } from "./plugins/PreventEnterCommandPlugin";
+import { calculateDistanceFromTop } from "../../../helpers/calculateDistanceFromTop";
 
 export default function SearchTransactions({ menu }: SearchTransactionsProps) {
   const [categories, setCategories] = useState<
     { category: string; value: string }[]
   >([]);
   const [editorStateString, setEditorStateString] = useState<string>();
-
+  const [isEmpty, setIsEmpty] = useState(true);
+  const [contentEditableHeight, setContentEditableHeight] = useState<number>(0);
+  const contentEditableWrapRef  = useRef<HTMLDivElement>(null);
+console.log(contentEditableHeight)
   const [showOptions, setShowOptions] = useState<boolean>(true);
   // const [searchItem, setSearchItem] = useState<string>("");
   const allNames = [
     { value: "George", id: 30, prop: "payer" },
+    { value: "Georg2", id: 29, prop: "payer" },
     { value: "Kristi", id: 31, prop: "payer" },
     { value: "Bibi", id: 32, prop: "payer" },
     { value: "Alice", id: 33, prop: "participant" },
@@ -54,6 +60,7 @@ export default function SearchTransactions({ menu }: SearchTransactionsProps) {
 
   mentionItems["payer:"] = [
     { value: "George", id: 30, prop: "payer" },
+    { value: "Georg2", id: 29, prop: "payer" },
     { value: "Kristi", id: 31, prop: "payer" },
     { value: "Bibi", id: 32, prop: "payer" },
   ];
@@ -99,7 +106,6 @@ export default function SearchTransactions({ menu }: SearchTransactionsProps) {
   function onChange(editorState: EditorState) {
     const searchTerm = editorState.read(() => {
       const root = $getRoot();
-
       return root.getTextContent();
     });
 
@@ -126,8 +132,33 @@ export default function SearchTransactions({ menu }: SearchTransactionsProps) {
     //handleInputChange(searchTerm);
     //setEditorState(JSON.stringify(editorStateJSON));
     setEditorStateString(searchTerm);
+    if (searchTerm === "") {
+      setShowOptions(true);
+      setIsEmpty(true);
+    }
   }
 
+  useEffect(() => {
+    const handleResize = () => {
+      if (contentEditableWrapRef.current) {
+        setContentEditableHeight(contentEditableWrapRef.current.offsetHeight);
+      }
+    };
+
+    handleResize(); // Set initial height
+
+    // Optional: Add a resize observer to handle dynamic changes
+    const resizeObserver = new ResizeObserver(handleResize);
+    if (contentEditableWrapRef.current) {
+      resizeObserver.observe(contentEditableWrapRef.current);
+    }
+
+    return () => {
+      if (contentEditableWrapRef.current) {
+        resizeObserver.unobserve(contentEditableWrapRef.current);
+      }
+    };
+  }, []);
   return (
     <StyledSearchTransactions>
       <div className="header">
@@ -145,23 +176,29 @@ export default function SearchTransactions({ menu }: SearchTransactionsProps) {
         <div className="lexicalSearch">
           <LexicalComposer initialConfig={initialConfig}>
             <RichTextPlugin
-              contentEditable={<ContentEditable className="contentEditable" />}
+              contentEditable={
+                <div ref={contentEditableWrapRef} className="contentEditableWrap">
+                  <ContentEditable className="contentEditable" />
+                </div>
+              }
               placeholder={
-                <div className="contentEditablePlaceholder">Search</div>
+                isEmpty ? (
+                  <div className="contentEditablePlaceholder">Search</div>
+                ) : null
               }
               ErrorBoundary={LexicalErrorBoundary}
             />
             <HistoryPlugin />
             <OnChangePlugin onChange={onChange} />
-            <BeautifulMentionsPlugin // 👈 add the mentions plugin
+            <BeautifulMentionsPlugin
               items={mentionItems}
-              menuComponent={Menu}
+              menuComponent={(props) => <Menu {...props} contentEditableHeight={contentEditableHeight} />}
               menuItemComponent={MenuItem}
               onMenuItemSelect={() => setShowOptions(true)}
               insertOnBlur={false}
               //triggers={alphanumericTriggers}
             />
-            {filteredResults.length === 0 ||editorStateString === "" ? (
+            {filteredResults.length === 0 || editorStateString === "" ? (
               <MentionsToolbar
                 showOptions={showOptions}
                 setShowOptions={setShowOptions}
@@ -173,8 +210,8 @@ export default function SearchTransactions({ menu }: SearchTransactionsProps) {
                 setFilteredResults={setFilteredResults}
               />
             )}
-
             <AutoFocusPlugin />
+            <PreventEnterCommandPlugin />
           </LexicalComposer>
         </div>
       </div>

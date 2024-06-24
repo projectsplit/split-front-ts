@@ -9,7 +9,7 @@ export const StyledSearchTransactions = styled.div`
   height: 100vh;
   z-index: 3;
   padding: 0;
-  
+
   p {
     margin: 0;
   }
@@ -47,16 +47,32 @@ export const StyledSearchTransactions = styled.div`
     padding: 14px;
     .lexicalSearch {
       position: relative;
-
       .contentEditable {
-        padding: 0 1px;
+        /* p {
+          margin: 0; 
+          white-space: nowrap;
+          overflow: hidden;o
+        }
+        span {
+          white-space: nowrap; 
+          overflow: hidden;
+        } */
         border: 1px solid #ccc;
+        border-radius: 10px;
+        padding: 0.5rem;
+        color: white;
+        background-color: ${({ theme }) => theme.colors.inputGrey};
+        border-style: none;
+        font-size: 18px;
+        outline: none;
+        min-height: 20px;
       }
       .contentEditablePlaceholder {
         position: absolute;
-        top: 0;
-        left: 0;
+        top: 3.6%;
+        left: 0.5%;
         padding: 0 1px;
+        color: ${({ theme }) => theme.colors.grey};
       }
       .editor-bold {
         color: yellow;
@@ -72,7 +88,6 @@ export const StyledSearchTransactions = styled.div`
       .containerFocused {
         background-color: blue;
       }
-      
     }
   }
 `;

@@ -21,7 +21,7 @@ export const StyledCurrencyOptions = styled(StyledBottomMenu)`
       font-size: 16px;
       border: none;
       color: white;
-      background-color: #2c2c2c;
+      background-color: ${({ theme }) => theme.colors.inputGrey};
       margin-top: 8px;
     }
   }

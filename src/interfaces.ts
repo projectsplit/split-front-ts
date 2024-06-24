@@ -2,7 +2,7 @@ import { CSSProperties, MouseEventHandler } from "react";
 import { BudgetInfoResponse, Frequency, Participant, Payer } from "./types";
 import { Signal } from "@preact/signals-react";
 import React from "react";
-import { BeautifulMentionsItemData } from "lexical-beautiful-mentions";
+import { BeautifulMentionsItemData, BeautifulMentionsMenuProps } from "lexical-beautiful-mentions";
 
 export interface InputProps
   extends React.InputHTMLAttributes<HTMLInputElement> {
@@ -322,6 +322,7 @@ export interface StyledMenuItemProps {
 export interface MentionsToolbarProps {
   showOptions: boolean;
   setShowOptions: React.Dispatch<React.SetStateAction<boolean>>;
+  ref?: React.Ref<HTMLDivElement>;
 }
 
 export interface OptionsToolbarProps {
@@ -335,3 +336,9 @@ export interface OptionsToolbarProps {
     value: string;
   }[]>>;
 }
+
+export interface SearchMenuProps{
+  contentEditableHeight:number;
+}
+
+export interface CombinedMenuProps extends SearchMenuProps, BeautifulMentionsMenuProps {}
