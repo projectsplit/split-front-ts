@@ -48,6 +48,11 @@ export default function Transactions() {
     }
   );
 
+  const membersFetchedFromBackend = [
+    { memberId: "0f0fa971-f188-4694-90dc-54d7c8a99d87", value: "user1" },
+    { memberId: "aebebf70-a962-4885-9be4-4e10ecc147e6", value: "Io" },
+  ];
+
   useEffect(() => {
     let fetching = false;
     const onScroll = async (event: any) => {
@@ -130,7 +135,7 @@ export default function Transactions() {
       </div>
 
       <MenuAnimationBackground menu={menu} />
-      <SearchTransactionsAnimation menu={menu} />
+      <SearchTransactionsAnimation menu={menu} members={membersFetchedFromBackend} />
       
     </StyledTransactions>
   );

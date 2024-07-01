@@ -27,9 +27,9 @@ import { Menu } from "./Menu/Menu";
 import MentionsToolbar from "./Toolbars/MentionsToolbar";
 import OptionsToolBar from "./Toolbars/OptionsToolbar/OptionsToolBar";
 import { PreventEnterCommandPlugin } from "./plugins/PreventEnterCommandPlugin";
-import { calculateDistanceFromTop } from "../../../helpers/calculateDistanceFromTop";
+import { updateMembersMentions } from "./helpers/updateMembersMentions";
 
-export default function SearchTransactions({ menu }: SearchTransactionsProps) {
+export default function SearchTransactions({ menu, members }: SearchTransactionsProps) {
   const [categories, setCategories] = useState<
     { category: string; value: string }[]
   >([]);
@@ -37,18 +37,10 @@ export default function SearchTransactions({ menu }: SearchTransactionsProps) {
   const [isEmpty, setIsEmpty] = useState(true);
   const [contentEditableHeight, setContentEditableHeight] = useState<number>(0);
   const contentEditableWrapRef  = useRef<HTMLDivElement>(null);
-console.log(contentEditableHeight)
+
   const [showOptions, setShowOptions] = useState<boolean>(true);
   // const [searchItem, setSearchItem] = useState<string>("");
-  const allNames = [
-    { value: "George", id: 30, prop: "payer" },
-    { value: "Georg2", id: 29, prop: "payer" },
-    { value: "Kristi", id: 31, prop: "payer" },
-    { value: "Bibi", id: 32, prop: "payer" },
-    { value: "Alice", id: 33, prop: "participant" },
-    { value: "Bob", id: 34, prop: "participant" },
-    { value: "Charlie", id: 35, prop: "participant" },
-  ];
+
   const [filteredResults, setFilteredResults] = useState<
     {
       value: string;
@@ -58,17 +50,12 @@ console.log(contentEditableHeight)
 
   const mentionItems: Record<string, BeautifulMentionsItem[]> = {};
 
-  mentionItems["payer:"] = [
-    { value: "George", id: 30, prop: "payer" },
-    { value: "Georg2", id: 29, prop: "payer" },
-    { value: "Kristi", id: 31, prop: "payer" },
-    { value: "Bibi", id: 32, prop: "payer" },
-  ];
-  mentionItems["participant:"] = [
-    { value: "Alice", id: 33, prop: "participant" },
-    { value: "Bob", id: 34, prop: "participant" },
-    { value: "Charlie", id: 35, prop: "participant" },
-  ];
+  mentionItems["payer:"] = [];
+  mentionItems["participant:"] = [];
+  mentionItems["sender:"] = [];
+  mentionItems["receiver:"] = [];
+  
+ updateMembersMentions(members, mentionItems);
 
   const beautifulMentionsTheme: BeautifulMentionsTheme = {
     "payer:": {
@@ -119,7 +106,7 @@ console.log(contentEditableHeight)
         handleInputChange(
           lastTextNode.text.trimStart(),
           setFilteredResults,
-          allNames
+          members
         );
       } else {
         console.log("No text node found.");
@@ -131,6 +118,7 @@ console.log(contentEditableHeight)
     }
     //handleInputChange(searchTerm);
     //setEditorState(JSON.stringify(editorStateJSON));
+    console.log(jsonObject)
     setEditorStateString(searchTerm);
     if (searchTerm === "") {
       setShowOptions(true);

@@ -5,6 +5,7 @@ import SearchTransactions from "../Transactions/SearchTransactions/SearchTransac
 
 export default function SearchTransactionsAnimation({
   menu,
+  members
 }: SearchTransactionAnimationProps) {
   return (
     <CSSTransition
@@ -12,7 +13,7 @@ export default function SearchTransactionsAnimation({
       timeout={0}
       unmountOnExit
     >
-      <SearchTransactions menu={menu}/>
+      <SearchTransactions menu={menu} members={members}/>
     </CSSTransition>
   );
 }

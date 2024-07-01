@@ -1,10 +1,10 @@
 import { BeautifulMentionsItemData } from "lexical-beautiful-mentions";
-import { allNames } from "../../../../types";
+import { FetchedMembers } from "../../../../types";
 
 export const handleInputChange = (searchTerm: string,setFilteredResults: React.Dispatch<React.SetStateAction<{
     [key: string]: BeautifulMentionsItemData;
     value: string;
-}[]>>, allNames:allNames) => {
+}[]>>, fetchedMembers:FetchedMembers) => {
 
     if (!searchTerm) {
 
@@ -12,7 +12,7 @@ export const handleInputChange = (searchTerm: string,setFilteredResults: React.D
       return;
     }
 
-    const filtered = allNames.filter((name) =>
+    const filtered = fetchedMembers.filter((name) =>
       name.value.toLowerCase().includes(searchTerm.toLowerCase())
     );
     setFilteredResults(filtered);

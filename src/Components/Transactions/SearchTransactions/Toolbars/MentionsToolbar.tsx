@@ -28,6 +28,22 @@ const MentionsToolbar: React.FC<MentionsToolbarProps> = ({
             category={"participant"}
             type={"member"}
           />
+           <SearchCategoryButton
+            onClick={() => {
+              insertMention({ trigger: "sender:", value: "" });
+              setShowOptions(false);
+            }}
+            category={"sender"}
+            type={"member"}
+          />
+            <SearchCategoryButton
+            onClick={() => {
+              insertMention({ trigger: "receiver:", value: "" });
+              setShowOptions(false);
+            }}
+            category={"receiver"}
+            type={"member"}
+          />
           <SearchCategoryButton
             onClick={() => insertMention({ trigger: "before:", value: "" })}
             category={"before"}

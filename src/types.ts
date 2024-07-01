@@ -145,8 +145,8 @@ export type SerializedElementNode = SerializedLexicalNode & {
   children: SerializedLexicalNode[];
 };
 
-export type allNames= {
+export type FetchedMembers= {
   value: string;
-  id: number;
-  prop: string;
+  memberId:string;
 }[]
+
