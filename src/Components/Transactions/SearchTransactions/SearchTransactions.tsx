@@ -34,9 +34,7 @@ export default function SearchTransactions({
   menu,
   members,
 }: SearchTransactionsProps) {
-  const [categories, setCategories] = useState<
-    { category: string; value: string }[]
-  >([]);
+  const [editorState, setEditorState] = useState<EditorState | null>(null);
   const [editorStateString, setEditorStateString] = useState<string>();
   const [isEmpty, setIsEmpty] = useState(true);
   const [contentEditableHeight, setContentEditableHeight] = useState<number>(0);
@@ -99,6 +97,7 @@ export default function SearchTransactions({
   const keyWords: string[] = [];
 
   function onChange(editorState: EditorState) {
+    setEditorState(editorState);
     const searchTerm = editorState.read(() => {
       const root = $getRoot();
       return root.getTextContent();
@@ -109,14 +108,6 @@ export default function SearchTransactions({
     if (isElementNode(jsonObject[0])) {
       const children = jsonObject[0].children;
       const lastTextNode = findLastTextNode(children);
-
-      // console.log(jsonObject[0].children);
-      children.map((c) => {
-        if (c.trigger === "payer:") payersIds.push(c.data.memberId);
-        if (c.trigger === "participant:") participantsIds.push(c.data.memberId);
-        if (c.text !== " ") keyWords.push(c.text);
-      }); //create a submit button function that will be doing this job. Give editorState as input
-      //and save the info in local storage. Dedup memberIds and this way you will avoid undefined in keywords array
 
       if (lastTextNode) {
         handleInputChange(
@@ -139,6 +130,33 @@ export default function SearchTransactions({
       setIsEmpty(true);
     }
   }
+
+  const deduplicateStringArray = (array: string[]): string[] => {
+    return [...new Set(array)];
+  };
+  
+  const handleSubmitButton = (editorState: EditorState| null) => {
+    if (editorState === null) return;
+    
+    const jsonObject = editorState.toJSON().root.children;
+
+    if (isElementNode(jsonObject[0])) {
+      const children = jsonObject[0].children;
+      children.map((c) => {
+        if (c.trigger === "payer:") payersIds.push(c.data.memberId);
+        if (c.trigger === "participant:") participantsIds.push(c.data.memberId);
+        if (c.text !== " ") keyWords.push(c.text);
+      }); 
+      const deduplicatedPayersIds = deduplicateStringArray(payersIds);
+      const deduplicatedParticipantsIds = deduplicateStringArray(participantsIds);
+      const deduplicatedKeyWords = deduplicateStringArray(keyWords);
+
+      localStorage.setItem("payersIds", JSON.stringify(deduplicatedPayersIds));
+      localStorage.setItem("participantsIds", JSON.stringify(deduplicatedParticipantsIds));
+      localStorage.setItem("keyWords", JSON.stringify(deduplicatedKeyWords));
+    }
+  
+  };
 
   useEffect(() => {
     const handleResize = () => {
@@ -173,7 +191,7 @@ export default function SearchTransactions({
         </div>
         <div className="gap"></div>
       </div>
-  
+
       <div className="searchBarAndCategories">
         <div className="lexicalSearch">
           <LexicalComposer initialConfig={initialConfig}>
@@ -225,11 +243,12 @@ export default function SearchTransactions({
           </LexicalComposer>
         </div>
       </div>
-  
+
       <div className="submitButton">
-        <SubmitButton>Apply filters</SubmitButton>
+        <SubmitButton onClick={() => handleSubmitButton(editorState)}>
+          Apply filters
+        </SubmitButton>
       </div>
     </StyledSearchTransactions>
   );
-  
 }
