@@ -75,11 +75,12 @@ const getUserGroups = async (
 const getGroupTransactions = async (
   limit: number,
   groupId:string,
+  payersIds:string[],
+  participantsIds:string[],
   { pageParam = new Date().toISOString() }
 ) => {
-
   const response = await apiHttpClient.get<any>( //create type for this Fn
-    `/group/getgrouptransactions?last=${pageParam}&limit=${limit}&groupId=${groupId}`
+    `/group/getgrouptransactions?last=${pageParam}&limit=${limit}&groupId=${groupId}&payersIds=${payersIds}&participantsIds=${participantsIds}`
   );
   return response.data;
 };

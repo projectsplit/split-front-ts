@@ -15,8 +15,16 @@ export default function Transactions() {
   const params = useParams();
   const menu = useSignal<string | null>(null);
   const elRef = useRef<HTMLDivElement>(null);
-  const heightFromTop = window.innerHeight - calculateDistanceFromTop(elRef); //(58 + 36 + 18 + 4 + 30)
+  const heightFromTop = window.innerHeight - calculateDistanceFromTop(elRef);
   const fittingItems = Math.round(heightFromTop / 100);
+
+  const membersFetchedFromBackend = [
+    { memberId: "0f0fa971-f188-4694-90dc-54d7c8a99d87", value: "user1" },
+    { memberId: "aebebf70-a962-4885-9be4-4e10ecc147e6", value: "Io" },
+  ];
+
+  const payersIds: string[] = [];
+  const participantsIds: string[] = [];
 
   const {
     // isLoading,
@@ -30,9 +38,15 @@ export default function Transactions() {
   } = useInfiniteQuery(
     ["transactions", "active", params.groupid as string],
     ({ pageParam }) =>
-      api.getGroupTransactions(fittingItems, params.groupid as string, {
-        pageParam,
-      }), //TODO handle case of undefined groupId
+      api.getGroupTransactions(
+        fittingItems,
+        params.groupid as string,
+        payersIds,
+        participantsIds,
+        {
+          pageParam,
+        }
+      ), //TODO handle case of undefined groupId
     {
       getNextPageParam: (lastPage, _pages) => {
         if (lastPage.length > 0) {
@@ -47,11 +61,6 @@ export default function Transactions() {
       enabled: true,
     }
   );
-
-  const membersFetchedFromBackend = [
-    { memberId: "0f0fa971-f188-4694-90dc-54d7c8a99d87", value: "user1" },
-    { memberId: "aebebf70-a962-4885-9be4-4e10ecc147e6", value: "Io" },
-  ];
 
   useEffect(() => {
     let fetching = false;
@@ -135,8 +144,10 @@ export default function Transactions() {
       </div>
 
       <MenuAnimationBackground menu={menu} />
-      <SearchTransactionsAnimation menu={menu} members={membersFetchedFromBackend} />
-      
+      <SearchTransactionsAnimation
+        menu={menu}
+        members={membersFetchedFromBackend}
+      />
     </StyledTransactions>
   );
 }

@@ -7,20 +7,20 @@ export function updateMembersMentions(
   fetchedMembers.forEach((member) => {
     mentionItems["payer:"].push({
       value: member.value,
-      id: parseInt(member.memberId),
+      memberId: member.memberId,
     });
 
     mentionItems["participant:"].push({
       value: member.value,
-      id: parseInt(member.memberId),
+      memberId: member.memberId,
     });
     mentionItems["sender:"].push({
       value: member.value,
-      id: parseInt(member.memberId),
+      memberId: member.memberId,
     });
     mentionItems["receiver:"].push({
       value: member.value,
-      id: parseInt(member.memberId),
+      memberId: member.memberId,
     });
   });
 }

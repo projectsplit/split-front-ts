@@ -9,6 +9,8 @@ export const StyledSearchTransactions = styled.div`
   height: 100vh;
   z-index: 3;
   padding: 0;
+  display: flex;
+  flex-direction: column;
 
   p {
     margin: 0;
@@ -20,6 +22,7 @@ export const StyledSearchTransactions = styled.div`
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
+    flex-shrink: 0;
 
     .closeSign {
       display: flex;
@@ -44,19 +47,18 @@ export const StyledSearchTransactions = styled.div`
   }
 
   .searchBarAndCategories {
+    flex: 1;
     padding: 14px;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+
     .lexicalSearch {
       position: relative;
+      flex: 1;
+      overflow-y: auto;
+
       .contentEditable {
-        /* p {
-          margin: 0; 
-          white-space: nowrap;
-          overflow: hidden;o
-        }
-        span {
-          white-space: nowrap; 
-          overflow: hidden;
-        } */
         border: 1px solid #ccc;
         border-radius: 10px;
         padding: 0.5rem;
@@ -66,10 +68,11 @@ export const StyledSearchTransactions = styled.div`
         font-size: 18px;
         outline: none;
         min-height: 20px;
+  
       }
       .contentEditablePlaceholder {
         position: absolute;
-        top: 3.6%;
+        top: 1.2%;
         left: 0.5%;
         padding: 0 1px;
         color: ${({ theme }) => theme.colors.grey};
@@ -90,30 +93,15 @@ export const StyledSearchTransactions = styled.div`
       }
     }
   }
+
+  .submitButton {
+    z-index: 4;
+    display: flex;
+    flex-direction: column;
+    position: sticky;
+    bottom: 14px;
+    width: calc(100% - 28px); 
+    left: 14px;
+    background-color: ${({ theme }) => theme.colors.layer2};
+  }
 `;
-
-// .searchBarAndCategories {
-//   padding: 14px;
-//   .searchInputs {
-//     /* display: flex;
-//     flex-direction: row; */
-//     gap: 10px;
-//     border: 2px solid white;
-//     white-space: pre-wrap;
-//     user-select: text;
-//     overflow-wrap: break-word;
-//     .inputWrap{
-
-//     }
-//     .inputSpace {
-//       display: inline-block;
-//       width: 20px; /* Adjust the width as needed */
-//       pointer-events: none;
-//     }
-//   }
-//   .searchOptions {
-//     .paok {
-//       padding: 10px;
-//     }
-//   }
-// }

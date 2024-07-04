@@ -28,15 +28,19 @@ import MentionsToolbar from "./Toolbars/MentionsToolbar";
 import OptionsToolBar from "./Toolbars/OptionsToolbar/OptionsToolBar";
 import { PreventEnterCommandPlugin } from "./plugins/PreventEnterCommandPlugin";
 import { updateMembersMentions } from "./helpers/updateMembersMentions";
+import SubmitButton from "../../SubmitButton/SubmitButton";
 
-export default function SearchTransactions({ menu, members }: SearchTransactionsProps) {
+export default function SearchTransactions({
+  menu,
+  members,
+}: SearchTransactionsProps) {
   const [categories, setCategories] = useState<
     { category: string; value: string }[]
   >([]);
   const [editorStateString, setEditorStateString] = useState<string>();
   const [isEmpty, setIsEmpty] = useState(true);
   const [contentEditableHeight, setContentEditableHeight] = useState<number>(0);
-  const contentEditableWrapRef  = useRef<HTMLDivElement>(null);
+  const contentEditableWrapRef = useRef<HTMLDivElement>(null);
 
   const [showOptions, setShowOptions] = useState<boolean>(true);
   // const [searchItem, setSearchItem] = useState<string>("");
@@ -54,8 +58,8 @@ export default function SearchTransactions({ menu, members }: SearchTransactions
   mentionItems["participant:"] = [];
   mentionItems["sender:"] = [];
   mentionItems["receiver:"] = [];
-  
- updateMembersMentions(members, mentionItems);
+
+  updateMembersMentions(members, mentionItems);
 
   const beautifulMentionsTheme: BeautifulMentionsTheme = {
     "payer:": {
@@ -90,6 +94,10 @@ export default function SearchTransactions({ menu, members }: SearchTransactions
     nodes: [HeadingNode, BeautifulMentionNode],
   };
 
+  const payersIds: string[] = [];
+  const participantsIds: string[] = [];
+  const keyWords: string[] = [];
+
   function onChange(editorState: EditorState) {
     const searchTerm = editorState.read(() => {
       const root = $getRoot();
@@ -101,6 +109,14 @@ export default function SearchTransactions({ menu, members }: SearchTransactions
     if (isElementNode(jsonObject[0])) {
       const children = jsonObject[0].children;
       const lastTextNode = findLastTextNode(children);
+
+      // console.log(jsonObject[0].children);
+      children.map((c) => {
+        if (c.trigger === "payer:") payersIds.push(c.data.memberId);
+        if (c.trigger === "participant:") participantsIds.push(c.data.memberId);
+        if (c.text !== " ") keyWords.push(c.text);
+      }); //create a submit button function that will be doing this job. Give editorState as input
+      //and save the info in local storage. Dedup memberIds and this way you will avoid undefined in keywords array
 
       if (lastTextNode) {
         handleInputChange(
@@ -116,9 +132,7 @@ export default function SearchTransactions({ menu, members }: SearchTransactions
         "The node is not an element node and does not have children."
       );
     }
-    //handleInputChange(searchTerm);
-    //setEditorState(JSON.stringify(editorStateJSON));
-    console.log(jsonObject)
+
     setEditorStateString(searchTerm);
     if (searchTerm === "") {
       setShowOptions(true);
@@ -159,13 +173,16 @@ export default function SearchTransactions({ menu, members }: SearchTransactions
         </div>
         <div className="gap"></div>
       </div>
-
+  
       <div className="searchBarAndCategories">
         <div className="lexicalSearch">
           <LexicalComposer initialConfig={initialConfig}>
             <RichTextPlugin
               contentEditable={
-                <div ref={contentEditableWrapRef} className="contentEditableWrap">
+                <div
+                  ref={contentEditableWrapRef}
+                  className="contentEditableWrap"
+                >
                   <ContentEditable className="contentEditable" />
                 </div>
               }
@@ -180,7 +197,12 @@ export default function SearchTransactions({ menu, members }: SearchTransactions
             <OnChangePlugin onChange={onChange} />
             <BeautifulMentionsPlugin
               items={mentionItems}
-              menuComponent={(props) => <Menu {...props} contentEditableHeight={contentEditableHeight} />}
+              menuComponent={(props) => (
+                <Menu
+                  {...props}
+                  contentEditableHeight={contentEditableHeight}
+                />
+              )}
               menuItemComponent={MenuItem}
               onMenuItemSelect={() => setShowOptions(true)}
               insertOnBlur={false}
@@ -203,6 +225,11 @@ export default function SearchTransactions({ menu, members }: SearchTransactions
           </LexicalComposer>
         </div>
       </div>
+  
+      <div className="submitButton">
+        <SubmitButton>Apply filters</SubmitButton>
+      </div>
     </StyledSearchTransactions>
   );
+  
 }
