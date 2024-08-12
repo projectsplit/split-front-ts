@@ -29,19 +29,26 @@ import OptionsToolBar from "./Toolbars/OptionsToolbar/OptionsToolBar";
 import { PreventEnterCommandPlugin } from "./plugins/PreventEnterCommandPlugin";
 import { updateMembersMentions } from "./helpers/updateMembersMentions";
 import SubmitButton from "../../SubmitButton/SubmitButton";
+import { useQueryClient } from "@tanstack/react-query";
+import { useParams } from "react-router-dom";
 
 export default function SearchTransactions({
   menu,
   members,
+  enhancedMembersWithProps,
+  payersIds,
+  participantsIds,
+  keyWords
 }: SearchTransactionsProps) {
+
   const [editorState, setEditorState] = useState<EditorState | null>(null);
   const [editorStateString, setEditorStateString] = useState<string>();
   const [isEmpty, setIsEmpty] = useState(true);
   const [contentEditableHeight, setContentEditableHeight] = useState<number>(0);
   const contentEditableWrapRef = useRef<HTMLDivElement>(null);
-
+  const queryClient = useQueryClient();
+  const params = useParams();
   const [showOptions, setShowOptions] = useState<boolean>(true);
-  // const [searchItem, setSearchItem] = useState<string>("");
 
   const [filteredResults, setFilteredResults] = useState<
     {
@@ -92,9 +99,9 @@ export default function SearchTransactions({
     nodes: [HeadingNode, BeautifulMentionNode],
   };
 
-  const payersIds: string[] = [];
-  const participantsIds: string[] = [];
-  const keyWords: string[] = [];
+  const tempPayersIds: string[] = [];
+  const tempParticipantsIds: string[] = [];
+  const tempKeyWords: string[] = [];
 
   function onChange(editorState: EditorState) {
     setEditorState(editorState);
@@ -113,7 +120,7 @@ export default function SearchTransactions({
         handleInputChange(
           lastTextNode.text.trimStart(),
           setFilteredResults,
-          members
+          enhancedMembersWithProps
         );
       } else {
         console.log("No text node found.");
@@ -143,19 +150,26 @@ export default function SearchTransactions({
     if (isElementNode(jsonObject[0])) {
       const children = jsonObject[0].children;
       children.map((c) => {
-        if (c.trigger === "payer:") payersIds.push(c.data.memberId);
-        if (c.trigger === "participant:") participantsIds.push(c.data.memberId);
-        if (c.text !== " ") keyWords.push(c.text);
+        if (c.trigger === "payer:") tempPayersIds.push(c.data.memberId);
+        if (c.trigger === "participant:") tempParticipantsIds.push(c.data.memberId);
+        if (c.text !== " ") tempKeyWords.push(c.text);
       }); 
-      const deduplicatedPayersIds = deduplicateStringArray(payersIds);
-      const deduplicatedParticipantsIds = deduplicateStringArray(participantsIds);
-      const deduplicatedKeyWords = deduplicateStringArray(keyWords);
 
-      localStorage.setItem("payersIds", JSON.stringify(deduplicatedPayersIds));
-      localStorage.setItem("participantsIds", JSON.stringify(deduplicatedParticipantsIds));
-      localStorage.setItem("keyWords", JSON.stringify(deduplicatedKeyWords));
+      //console.log("before",filters.value.payersIds,filters.value.participantsIds,filters.value.keyWords)
+      
+      payersIds.value = deduplicateStringArray(tempPayersIds);
+      participantsIds.value =deduplicateStringArray(tempParticipantsIds);
+      keyWords.value =deduplicateStringArray(tempKeyWords);
+      
+      //console.log("after", payersIds.value,participantsIds.value,keyWords.value)
+
+      localStorage.setItem("payersIds",JSON.stringify(tempPayersIds) );
+      localStorage.setItem("participantsIds",JSON.stringify(tempParticipantsIds) );
+      localStorage.setItem("keyWords", JSON.stringify(tempKeyWords));
+
+      queryClient.refetchQueries(["transactions", "active", params.groupid as string,payersIds.value,participantsIds.value,keyWords.value])
+      menu.value = null
     }
-  
   };
 
   useEffect(() => {

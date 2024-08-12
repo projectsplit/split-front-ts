@@ -24,8 +24,6 @@ import CurrencyOptionsAnimation from "../MenuAnimations/CurrencyOptionsAnimation
 import { buildStartAndEndDates } from "./helpers/buildStartAndEndDates";
 import { useQueryClient } from "@tanstack/react-query";
 
-
-
 export default function Analytics() {
   const [selectedChart, setSelectedChart] =
     useState<string>("cumulativeSpending");
@@ -83,12 +81,14 @@ export default function Analytics() {
     currency.value = curr;
     localStorage.setItem("budgetCurrency", curr);
     if (selectedChart === "cumulativeSpending" || selectedChart === "barChart") {
-      queryClient.invalidateQueries(["cumulativeSpending", startDate, endDate, currency.value]);
-      queryClient.getQueryData(["cumulativeSpending", startDate, endDate, currency.value]);
+      // queryClient.invalidateQueries(["cumulativeSpending", startDate, endDate, currency.value]);
+      // queryClient.getQueryData(["cumulativeSpending", startDate, endDate, currency.value]);
+      queryClient.refetchQueries(["cumulativeSpending", startDate, endDate, currency.value])
     }
     if (selectedChart === "totalLentBorrowed") {
-      queryClient.invalidateQueries(["totalLentBorrowed", startDate, endDate, currency.value]);
-      queryClient.getQueryData(["totalLentBorrowed", startDate, endDate, currency.value]);
+      // queryClient.invalidateQueries(["totalLentBorrowed", startDate, endDate, currency.value]);
+      // queryClient.getQueryData(["totalLentBorrowed", startDate, endDate, currency.value]);
+      queryClient.refetchQueries([["totalLentBorrowed", startDate, endDate, currency.value]])
     }
     menu.value = null;
   }

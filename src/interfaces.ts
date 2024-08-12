@@ -1,5 +1,5 @@
 import { CSSProperties, MouseEventHandler } from "react";
-import { BudgetInfoResponse,  FetchedMembers, Frequency, Participant, Payer } from "./types";
+import { BudgetInfoResponse,  EnhancedMembersWithProps,  FetchedMembers,Frequency, Participant, Payer } from "./types";
 import { Signal } from "@preact/signals-react";
 import React from "react";
 import { BeautifulMentionsItemData, BeautifulMentionsMenuProps } from "lexical-beautiful-mentions";
@@ -295,11 +295,20 @@ export interface ExpenseProps {
 export interface SearchTransactionAnimationProps {
   menu: Signal<string | null>;
   members:FetchedMembers;
+  enhancedMembersWithProps:EnhancedMembersWithProps;
+  payersIds:Signal<string[]>;
+  participantsIds:Signal<string[]>;
+  keyWords:Signal<string[]>;
+  
 }
 
 export interface SearchTransactionsProps {
   menu: Signal<string | null>;
   members:FetchedMembers;
+  enhancedMembersWithProps:EnhancedMembersWithProps;
+  payersIds:Signal<string[]>;
+  participantsIds:Signal<string[]>;
+  keyWords:Signal<string[]>;
 }
 
 export interface SearchBarProps extends InputProps {

@@ -12,6 +12,7 @@ const OptionsToolBar = ({
   const { insertMention } = useBeautifulMentions();
   const [editor] = useLexicalComposerContext();
 
+
   return (
     <>
       {editorStateString === "" ? (

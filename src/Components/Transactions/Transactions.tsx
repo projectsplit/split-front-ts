@@ -10,10 +10,27 @@ import { FaMagnifyingGlass } from "react-icons/fa6";
 import { useSignal } from "@preact/signals-react";
 import MenuAnimationBackground from "../MenuAnimations/MenuAnimationBackground";
 import SearchTransactionsAnimation from "../MenuAnimations/SearchTransactionsAnimation";
+import { EnhancedMembersWithProps } from "../../types";
 
 export default function Transactions() {
   const params = useParams();
   const menu = useSignal<string | null>(null);
+
+  // const filters = useSignal<Filters>({
+  //   payersIds: (localStorage.getItem("payersIds") || ""),
+  //   participantsIds: (localStorage.getItem("participantsIds") || ""),
+  //   keyWords: (localStorage.getItem("keyWords") || "")
+  // });
+  const payersIds = useSignal<string[]>(
+    JSON.parse(localStorage.getItem("payersIds") ?? "[]")
+  );
+  const participantsIds = useSignal<string[]>(
+    JSON.parse(localStorage.getItem("participantsIds") ?? "[]")
+  );
+  const keyWords = useSignal<string[]>(
+    JSON.parse(localStorage.getItem("keyWords") ?? "[]")
+  );
+
   const elRef = useRef<HTMLDivElement>(null);
   const heightFromTop = window.innerHeight - calculateDistanceFromTop(elRef);
   const fittingItems = Math.round(heightFromTop / 100);
@@ -23,8 +40,15 @@ export default function Transactions() {
     { memberId: "aebebf70-a962-4885-9be4-4e10ecc147e6", value: "Io" },
   ];
 
-  const payersIds: string[] = [];
-  const participantsIds: string[] = [];
+  const memberProps: string[] = ["participant", "payer", "sender", "receiver"];
+
+  // Create new array with additional properties
+  const enhancedMembersWithProps: EnhancedMembersWithProps = membersFetchedFromBackend.flatMap(member =>
+    memberProps.map(prop => ({
+      ...member,
+      prop
+    }))
+  );
 
   const {
     // isLoading,
@@ -36,13 +60,20 @@ export default function Transactions() {
     isFetching,
     isFetchingNextPage,
   } = useInfiniteQuery(
-    ["transactions", "active", params.groupid as string],
+    [
+      "transactions",
+      "active",
+      params.groupid as string,
+      payersIds.value,
+      participantsIds.value,
+      keyWords.value,
+    ],
     ({ pageParam }) =>
       api.getGroupTransactions(
         fittingItems,
         params.groupid as string,
-        payersIds,
-        participantsIds,
+        payersIds.value,
+        participantsIds.value,
         {
           pageParam,
         }
@@ -56,7 +87,7 @@ export default function Transactions() {
         } else return undefined;
       },
       refetchOnWindowFocus: false,
-      refetchOnMount: false,
+      refetchOnMount: true,
       staleTime: 9000,
       enabled: true,
     }
@@ -147,6 +178,10 @@ export default function Transactions() {
       <SearchTransactionsAnimation
         menu={menu}
         members={membersFetchedFromBackend}
+        enhancedMembersWithProps={enhancedMembersWithProps}
+        payersIds={payersIds}
+        participantsIds={participantsIds}
+        keyWords={keyWords}
       />
     </StyledTransactions>
   );

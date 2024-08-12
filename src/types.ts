@@ -150,3 +150,8 @@ export type FetchedMembers= {
   memberId:string;
 }[]
 
+export type EnhancedMembersWithProps = {
+  value: string;
+  memberId: string;
+  prop: string;
+}[]
