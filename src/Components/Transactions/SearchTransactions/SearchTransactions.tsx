@@ -163,8 +163,8 @@ export default function SearchTransactions({
       
       //console.log("after", payersIds.value,participantsIds.value,keyWords.value)
 
-      localStorage.setItem("payersIds",JSON.stringify(tempPayersIds) );
-      localStorage.setItem("participantsIds",JSON.stringify(tempParticipantsIds) );
+      localStorage.setItem("payersIds",JSON.stringify(tempPayersIds));
+      localStorage.setItem("participantsIds",JSON.stringify(tempParticipantsIds));
       localStorage.setItem("keyWords", JSON.stringify(tempKeyWords));
 
       queryClient.refetchQueries(["transactions", "active", params.groupid as string,payersIds.value,participantsIds.value,keyWords.value])
@@ -193,6 +193,8 @@ export default function SearchTransactions({
       }
     };
   }, []);
+
+
   return (
     <StyledSearchTransactions>
       <div className="header">
@@ -244,6 +246,7 @@ export default function SearchTransactions({
               <MentionsToolbar
                 showOptions={showOptions}
                 setShowOptions={setShowOptions}
+                members={members}
               />
             ) : (
               <OptionsToolBar

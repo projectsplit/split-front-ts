@@ -72,16 +72,7 @@ export type UserPendingTransaction = {
   currency: string;
 };
 
-// export enum BudgetType {
-//   Weekly,
-//   Monthly,
-// }
 
-// export enum CycleType {
-//   Weekly,
-//   Monthly,
-//   Annually,
-// }
 
 export enum Frequency {
   Weekly,
@@ -146,8 +137,9 @@ export type SerializedElementNode = SerializedLexicalNode & {
 };
 
 export type FetchedMembers= {
-  value: string;
   memberId:string;
+  value: string;
+  
 }[]
 
 export type EnhancedMembersWithProps = {
@@ -155,3 +147,4 @@ export type EnhancedMembersWithProps = {
   memberId: string;
   prop: string;
 }[]
+

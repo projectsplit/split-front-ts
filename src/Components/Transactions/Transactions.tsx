@@ -10,7 +10,7 @@ import { FaMagnifyingGlass } from "react-icons/fa6";
 import { useSignal } from "@preact/signals-react";
 import MenuAnimationBackground from "../MenuAnimations/MenuAnimationBackground";
 import SearchTransactionsAnimation from "../MenuAnimations/SearchTransactionsAnimation";
-import { EnhancedMembersWithProps } from "../../types";
+import { EnhancedMembersWithProps, FetchedMembers } from "../../types";
 
 export default function Transactions() {
   const params = useParams();
@@ -35,7 +35,7 @@ export default function Transactions() {
   const heightFromTop = window.innerHeight - calculateDistanceFromTop(elRef);
   const fittingItems = Math.round(heightFromTop / 100);
 
-  const membersFetchedFromBackend = [
+  const membersFetchedFromBackend: FetchedMembers = [
     { memberId: "0f0fa971-f188-4694-90dc-54d7c8a99d87", value: "user1" },
     { memberId: "aebebf70-a962-4885-9be4-4e10ecc147e6", value: "Io" },
   ];
@@ -43,12 +43,13 @@ export default function Transactions() {
   const memberProps: string[] = ["participant", "payer", "sender", "receiver"];
 
   // Create new array with additional properties
-  const enhancedMembersWithProps: EnhancedMembersWithProps = membersFetchedFromBackend.flatMap(member =>
-    memberProps.map(prop => ({
-      ...member,
-      prop
-    }))
-  );
+  const enhancedMembersWithProps: EnhancedMembersWithProps =
+    membersFetchedFromBackend.flatMap((member) =>
+      memberProps.map((prop) => ({
+        ...member,
+        prop,
+      }))
+    );
 
   const {
     // isLoading,

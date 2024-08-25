@@ -1,10 +1,13 @@
 import { useBeautifulMentions } from "lexical-beautiful-mentions";
-import SearchCategoryButton from "../SearchCategoryButton/SearchCategoryButton";
+import SearchMemberButton from "../SearchCategoryButtons/SearchMemberButton/SearchMemberButton";
 import { MentionsToolbarProps } from "../../../../interfaces";
+import SearchDateButton from "../SearchCategoryButtons/SearchDateButton/SearchDateButton";
+import SearchLabelButton from "../SearchCategoryButtons/SearchLabelButton/SearchLabelButton";
 
 const MentionsToolbar: React.FC<MentionsToolbarProps> = ({
   showOptions,
   setShowOptions,
+  members
 }) => {
   const { insertMention } = useBeautifulMentions();
 
@@ -12,57 +15,65 @@ const MentionsToolbar: React.FC<MentionsToolbarProps> = ({
     <>
       {showOptions && (
         <div className="categoryButtons">
-          <SearchCategoryButton
+          <SearchMemberButton
             onClick={() => {
               insertMention({ trigger: "payer:", value: "" });
               setShowOptions(false);
             }}
             category={"payer"}
             type={"member"}
+            members={members}
           />
-          <SearchCategoryButton
+          <SearchMemberButton
             onClick={() => {
               insertMention({ trigger: "participant:", value: "" });
               setShowOptions(false);
             }}
             category={"participant"}
             type={"member"}
+            members={members}
           />
-           <SearchCategoryButton
+           <SearchMemberButton
             onClick={() => {
               insertMention({ trigger: "sender:", value: "" });
               setShowOptions(false);
             }}
             category={"sender"}
             type={"member"}
+            members={members}
           />
-            <SearchCategoryButton
+            <SearchMemberButton
             onClick={() => {
               insertMention({ trigger: "receiver:", value: "" });
               setShowOptions(false);
             }}
             category={"receiver"}
             type={"member"}
+            members={members}
           />
-          <SearchCategoryButton
+          <SearchDateButton
             onClick={() => insertMention({ trigger: "before:", value: "" })}
             category={"before"}
             type={"date"}
+            dates={""}
           />
-          <SearchCategoryButton
+          <SearchDateButton
             onClick={() => insertMention({ trigger: "during:", value: "" })}
             category={"during"}
             type={"date"}
+            dates={""}
           />
-          <SearchCategoryButton
+          <SearchDateButton
             onClick={() => insertMention({ trigger: "after:", value: "" })}
             category={"after"}
             type={"date"}
+            dates={""}
           />
-          <SearchCategoryButton
+          <SearchLabelButton
             onClick={() => insertMention({ trigger: "category:", value: "" })}
             category={"category"}
             type={"label"}
+            labels={""}
           />
         </div>
       )}

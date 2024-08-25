@@ -1,5 +1,5 @@
 import { CSSProperties, MouseEventHandler } from "react";
-import { BudgetInfoResponse,  EnhancedMembersWithProps,  FetchedMembers,Frequency, Participant, Payer } from "./types";
+import { BudgetInfoResponse,  EnhancedMembersWithProps,  FetchedMembers,Frequency, Participant, Payer} from "./types";
 import { Signal } from "@preact/signals-react";
 import React from "react";
 import { BeautifulMentionsItemData, BeautifulMentionsMenuProps } from "lexical-beautiful-mentions";
@@ -279,6 +279,8 @@ export interface PeriodOptionProps {
 export interface PillOptions {
   title: string;
   color: string;
+  closeButton: boolean;
+
 }
 
 export interface ExpenseProps {
@@ -321,8 +323,20 @@ export interface SearchCategoryButtonProps {
   category: string;
   type: string;
   onClick: (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
-  
 }
+
+export interface SearchMemberButtonProps extends SearchCategoryButtonProps {
+  members:FetchedMembers;
+}
+
+export interface SearchDateButtonProps extends SearchCategoryButtonProps {
+  dates:any;
+}
+
+export interface SearchLabelButtonProps extends SearchCategoryButtonProps {
+  labels:any;
+}
+
 export interface StyledSearchCategoryButtonProps{
   onClick?: (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
  }
@@ -334,6 +348,7 @@ export interface MentionsToolbarProps {
   showOptions: boolean;
   setShowOptions: React.Dispatch<React.SetStateAction<boolean>>;
   ref?: React.Ref<HTMLDivElement>;
+  members:FetchedMembers;
 }
 
 export interface OptionsToolbarProps {
@@ -354,3 +369,8 @@ export interface SearchMenuProps{
 
 export interface CombinedMenuProps extends SearchMenuProps, BeautifulMentionsMenuProps {}
 
+export interface MembersPillsDisplayProps {
+  category: string;
+  members: FetchedMembers;
+
+}

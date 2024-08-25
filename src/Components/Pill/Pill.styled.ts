@@ -4,7 +4,7 @@ interface StyledPillOptions {
 }
 export const StyledPill = styled.div<StyledPillOptions>`
   font-weight: 400;
-  font-size: 15px;
+  font-size: 18px;
   background-color: #131519c9;
   -webkit-tap-highlight-color: transparent;
 
@@ -20,4 +20,22 @@ export const StyledPill = styled.div<StyledPillOptions>`
   cursor: pointer;
   box-shadow: rgba(0, 0, 0, 0.50) 0px 4px 4px;
   color:${props => props.color};
-  `
+  
+  .title {
+    color:${props => props.color};
+  }
+
+  .titleAndCloseButton {
+    display: flex;
+    flex-direction: row;
+    align-items: center; /* Align title and closeSign vertically */
+    cursor: pointer;
+  }
+
+  .closeSign {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px; 
+  }
+`;

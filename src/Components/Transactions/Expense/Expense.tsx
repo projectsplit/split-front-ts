@@ -1,6 +1,6 @@
 import React from 'react'
 import { StyledExpese } from './Expense.styled'
-import Pill from './Pill/Pill'
+import Pill from '../../Pill/Pill'
 import { ExpenseProps } from '../../../interfaces'
 import dayjs from 'dayjs'
 import calendar from 'dayjs/plugin/calendar'
@@ -72,9 +72,9 @@ export default function Expense({
 
       <div className='labelsAndPersonalInfoStripe'>
         <div className='labels'>
-          <Pill title='food' color='blue' />
-          <Pill title='rent' color='red' />
-          <Pill title='drinks' color='yellow' />
+          <Pill title='food' color='blue' closeButton={false}/>
+          <Pill title='rent' color='red' closeButton={false}/>
+          <Pill title='drinks' color='yellow' closeButton={false}/>
 
         </div>
         <div className='personalInfo'>

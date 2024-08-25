@@ -4,7 +4,6 @@ import { StyledSearchCategoryButtonProps } from "../../../../interfaces";
 export const StyledSearchCategoryButton = styled.div<StyledSearchCategoryButtonProps>`
   border: none;
   background-color: transparent;
-  cursor: pointer;
 
   font-size: 20px;
   display: flex;
@@ -12,7 +11,17 @@ export const StyledSearchCategoryButton = styled.div<StyledSearchCategoryButtonP
   margin-top: 15px;
   margin-bottom: 15px;
 
+  .category{
+    cursor: pointer;
+  }
+
   .type {
     color: ${({ theme }) => theme.colors.grey};
+  }
+
+  .pills {
+    display: flex;
+    flex-direction: row;
+    
   }
 `;
