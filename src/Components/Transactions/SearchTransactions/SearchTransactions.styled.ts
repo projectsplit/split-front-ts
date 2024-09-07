@@ -12,6 +12,7 @@ export const StyledSearchTransactions = styled.div`
   display: flex;
   flex-direction: column;
 
+
   p {
     margin: 0;
   }
@@ -52,11 +53,13 @@ export const StyledSearchTransactions = styled.div`
     display: flex;
     flex-direction: column;
     overflow-y: auto;
+ 
 
     .lexicalSearch {
       position: relative;
       flex: 1;
       overflow-y: auto;
+      overflow-x: hidden;
 
       .contentEditable {
         border: 1px solid #ccc;

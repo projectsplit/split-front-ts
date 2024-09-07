@@ -22,7 +22,7 @@ import MenuAnimationBackground from "../../MenuAnimations/MenuAnimationBackgroun
 import CreateBudgetConfirmationAnimation from "../../MenuAnimations/CreateBudgetConfirmationAnimation";
 import InfoBoxAnimation from "../../MenuAnimations/InfoBoxAnimation";
 import CurrencyOptionsAnimation from "../../MenuAnimations/CurrencyOptionsAnimation";
-import { Signal, useSignal } from "@preact/signals-react";
+import { useSignal } from "@preact/signals-react";
 
 export default function CreateBudget() {
 

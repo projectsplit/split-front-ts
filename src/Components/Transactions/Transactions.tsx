@@ -37,6 +37,9 @@ export default function Transactions() {
 
   const membersFetchedFromBackend: FetchedMembers = [
     { memberId: "0f0fa971-f188-4694-90dc-54d7c8a99d87", value: "user1" },
+    { memberId: "0f0fa971-f188-4694-90dc-54d7c8a99d87", value: "user1" },
+    { memberId: "0f0fa971-f188-4694-90dc-54d7c8a99d87", value: "user1" },
+    { memberId: "0f0fa971-f188-4694-90dc-54d7c8a99d87", value: "user1" },
     { memberId: "aebebf70-a962-4885-9be4-4e10ecc147e6", value: "Io" },
   ];
 

@@ -322,11 +322,12 @@ export interface SearchBarProps extends InputProps {
 export interface SearchCategoryButtonProps {
   category: string;
   type: string;
-  onClick: (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
+  // onClick: (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
 }
 
 export interface SearchMemberButtonProps extends SearchCategoryButtonProps {
   members:FetchedMembers;
+  showOptions: Signal<boolean>;
 }
 
 export interface SearchDateButtonProps extends SearchCategoryButtonProps {
@@ -337,16 +338,15 @@ export interface SearchLabelButtonProps extends SearchCategoryButtonProps {
   labels:any;
 }
 
-export interface StyledSearchCategoryButtonProps{
-  onClick?: (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
- }
+// export interface StyledSearchCategoryButtonProps{
+//   onClick?: (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
+//  }
 export interface StyledMenuItemProps {
   selected?: boolean;
 }
 
 export interface MentionsToolbarProps {
-  showOptions: boolean;
-  setShowOptions: React.Dispatch<React.SetStateAction<boolean>>;
+  showOptions: Signal<boolean>;
   ref?: React.Ref<HTMLDivElement>;
   members:FetchedMembers;
 }
@@ -372,5 +372,5 @@ export interface CombinedMenuProps extends SearchMenuProps, BeautifulMentionsMen
 export interface MembersPillsDisplayProps {
   category: string;
   members: FetchedMembers;
-
+  showOptions: Signal<boolean>;
 }

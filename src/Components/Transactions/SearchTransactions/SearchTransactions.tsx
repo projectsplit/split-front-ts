@@ -31,7 +31,7 @@ import { updateMembersMentions } from "./helpers/updateMembersMentions";
 import SubmitButton from "../../SubmitButton/SubmitButton";
 import { useQueryClient } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
-
+import { useSignal } from "@preact/signals-react";
 export default function SearchTransactions({
   menu,
   members,
@@ -48,7 +48,8 @@ export default function SearchTransactions({
   const contentEditableWrapRef = useRef<HTMLDivElement>(null);
   const queryClient = useQueryClient();
   const params = useParams();
-  const [showOptions, setShowOptions] = useState<boolean>(true);
+
+  const showOptions = useSignal<boolean>(true);
 
   const [filteredResults, setFilteredResults] = useState<
     {
@@ -133,7 +134,7 @@ export default function SearchTransactions({
 
     setEditorStateString(searchTerm);
     if (searchTerm === "") {
-      setShowOptions(true);
+      showOptions.value=true;
       setIsEmpty(true);
     }
   }
@@ -238,14 +239,13 @@ export default function SearchTransactions({
                 />
               )}
               menuItemComponent={MenuItem}
-              onMenuItemSelect={() => setShowOptions(true)}
+              onMenuItemSelect={() => showOptions.value=true}
               insertOnBlur={false}
               //triggers={alphanumericTriggers}
             />
             {filteredResults.length === 0 || editorStateString === "" ? (
               <MentionsToolbar
                 showOptions={showOptions}
-                setShowOptions={setShowOptions}
                 members={members}
               />
             ) : (

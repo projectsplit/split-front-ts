@@ -5,12 +5,11 @@ import { SearchDateButtonProps } from "../../../../../interfaces";
 export default function SearchLabelButton({
   category,
   type,
-  onClick
 }: SearchDateButtonProps) {
 
 
   return (
-    <StyledSearchCategoryButton onClick={onClick} >
+    <StyledSearchCategoryButton  >
       <div className="category">{category}:</div>&nbsp;
       <div className="type">{type}</div>
     </StyledSearchCategoryButton>
