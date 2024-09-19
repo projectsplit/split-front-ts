@@ -16,11 +16,7 @@ export default function Transactions() {
   const params = useParams();
   const menu = useSignal<string | null>(null);
 
-  // const filters = useSignal<Filters>({
-  //   payersIds: (localStorage.getItem("payersIds") || ""),
-  //   participantsIds: (localStorage.getItem("participantsIds") || ""),
-  //   keyWords: (localStorage.getItem("keyWords") || "")
-  // });
+ 
   const payersIds = useSignal<string[]>(
     JSON.parse(localStorage.getItem("payersIds") ?? "[]")
   );
@@ -93,7 +89,7 @@ export default function Transactions() {
       refetchOnWindowFocus: false,
       refetchOnMount: true,
       staleTime: 9000,
-      enabled: true,
+      enabled: true,//payersData !== undefined && participantsData !== undefined
     }
   );
 

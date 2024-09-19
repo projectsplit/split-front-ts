@@ -280,7 +280,7 @@ export interface PillOptions {
   title: string;
   color: string;
   closeButton: boolean;
-
+  onClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
 }
 
 export interface ExpenseProps {

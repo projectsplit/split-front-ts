@@ -11,6 +11,10 @@ export const MembersPillsDisplay: React.FC<MembersPillsDisplayProps> = ({
 
   const { insertMention } = useBeautifulMentions();
 
+  const removeFilter = (memberId:string)=>{
+    
+  }
+
   return (
     <StyledMemberPillsDisplay>
       <div
@@ -23,10 +27,10 @@ export const MembersPillsDisplay: React.FC<MembersPillsDisplayProps> = ({
         {category}:
       </div>
       &nbsp;
-      <div className="pills">
+      <div className="pills" >
         {members.map((member) => (
           <div key={member.value}>
-            <Pill title={member.value} color="#A7A7A7" closeButton={true} />
+            <Pill title={member.value} color="#A7A7A7" closeButton={true} onClick={()=>console.log(member.memberId)} />
           </div>
         ))}
       </div>

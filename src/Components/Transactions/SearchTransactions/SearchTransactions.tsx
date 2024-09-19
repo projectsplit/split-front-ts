@@ -156,15 +156,14 @@ export default function SearchTransactions({
         if (c.text !== " ") tempKeyWords.push(c.text);
       }); 
 
-      //console.log("before",filters.value.payersIds,filters.value.participantsIds,filters.value.keyWords)
-      
+     
       payersIds.value = deduplicateStringArray(tempPayersIds);
       participantsIds.value =deduplicateStringArray(tempParticipantsIds);
       keyWords.value =deduplicateStringArray(tempKeyWords);
       
-      //console.log("after", payersIds.value,participantsIds.value,keyWords.value)
+      
 
-      localStorage.setItem("payersIds",JSON.stringify(tempPayersIds));
+      localStorage.setItem("payersIds",JSON.stringify(tempPayersIds)); //will be replaced with a submission to the DB for the specific group
       localStorage.setItem("participantsIds",JSON.stringify(tempParticipantsIds));
       localStorage.setItem("keyWords", JSON.stringify(tempKeyWords));
 
