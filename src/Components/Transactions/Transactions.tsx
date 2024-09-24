@@ -11,18 +11,20 @@ import { useSignal } from "@preact/signals-react";
 import MenuAnimationBackground from "../MenuAnimations/MenuAnimationBackground";
 import SearchTransactionsAnimation from "../MenuAnimations/SearchTransactionsAnimation";
 import { EnhancedMembersWithProps, FetchedMembers } from "../../types";
+import useGroupFilters from "../../hooks/useGroupFilters";
 
 export default function Transactions() {
   const params = useParams();
   const menu = useSignal<string | null>(null);
 
- 
-  const payersIds = useSignal<string[]>(
-    JSON.parse(localStorage.getItem("payersIds") ?? "[]")
+
+  const { data: filters, isSuccess } = useGroupFilters(
+    '64b68397d453ce79c81446a9'
   );
-  const participantsIds = useSignal<string[]>(
-    JSON.parse(localStorage.getItem("participantsIds") ?? "[]")
-  );
+
+  const payersIds = useSignal<string[]>(filters?.payersIds || []);//problem:payersIds never fill. Need to check dependencies on useGroupFilters
+  const participantsIds = useSignal<string[]>(filters?.participantsIds || []);
+  
   const keyWords = useSignal<string[]>(
     JSON.parse(localStorage.getItem("keyWords") ?? "[]")
   );
@@ -89,7 +91,7 @@ export default function Transactions() {
       refetchOnWindowFocus: false,
       refetchOnMount: true,
       staleTime: 9000,
-      enabled: true,//payersData !== undefined && participantsData !== undefined
+      enabled: true, //payersData !== undefined && participantsData !== undefined
     }
   );
 

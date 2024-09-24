@@ -10,6 +10,8 @@ import {
   BudgetInfoResponse,
   SpendingInfoResponse,
   GetTotalLentTotalBorrowedResponse,
+  CreateFiltersRequest,
+  FilterResponse,
 } from "../types";
 import { signOut } from "../util/signOut";
 
@@ -86,34 +88,50 @@ const getGroupTransactions = async (
 };
 
 const getBudgetInfo = async (): Promise<BudgetInfoResponse> => {
-
   const response = await apiHttpClient.get<BudgetInfoResponse>(
     `/budget/budgetinfo`
   );
   return response.data;
 };
 
-const getSpendingInfo = async (budgetType: Frequency, currency: string): Promise<SpendingInfoResponse> => {
+const getSpendingInfo = async (
+  budgetType: Frequency,
+  currency: string
+): Promise<SpendingInfoResponse> => {
   const response = await apiHttpClient.get<SpendingInfoResponse>(
     `/budget/spendinginfo?budgettype=${budgetType}&currency=${currency}`
   );
   return response.data;
 };
 
-const getCumulativeSpendingArray = async (startDate: string, endDate: string, currency: string): Promise<number[]> => {
+const getCumulativeSpendingArray = async (
+  startDate: string,
+  endDate: string,
+  currency: string
+): Promise<number[]> => {
   const response = await apiHttpClient.get<number[]>(
     `/analytics/cumulativespending?startDate=${startDate}&endDate=${endDate}&currency=${currency}`
   );
   return response.data;
 };
 
-const getTotalLentBorrowedArrays = async (startDate: string, endDate: string, currency: string): Promise<GetTotalLentTotalBorrowedResponse> => {
+const getGroupFilters = async (groupId: string): Promise<FilterResponse> => {
+  const response = await apiHttpClient.get<FilterResponse>(
+    `/filters/getfilters?groupId=${groupId}`
+  );
+  return response.data;
+};
+
+const getTotalLentBorrowedArrays = async (
+  startDate: string,
+  endDate: string,
+  currency: string
+): Promise<GetTotalLentTotalBorrowedResponse> => {
   const response = await apiHttpClient.get<GetTotalLentTotalBorrowedResponse>(
     `/analytics/totallentborrowed?startDate=${startDate}&endDate=${endDate}&currency=${currency}`
   );
-  return response.data
+  return response.data;
 };
-
 
 const getGroupsTotalAmounts = async () => {
   const response = await apiHttpClient.get<GroupsTotalAmountsResponse>(
@@ -123,7 +141,19 @@ const getGroupsTotalAmounts = async () => {
 };
 
 const createBudget = async (request: CreateBudgetRequest) => {
-  const response = await apiHttpClient.post<CreateBudgetRequest>(`/budget/create`, request);
+  const response = await apiHttpClient.post<CreateBudgetRequest>(
+    `/budget/create`,
+    request
+  );
+  return response.data;
+};
+
+const submitFilters = async (request: CreateFiltersRequest) => {
+  const response = await apiHttpClient.post<CreateFiltersRequest>(
+    `/filters/create`,
+    request
+  );
+  console.log(response);
   return response.data;
 };
 
@@ -142,5 +172,7 @@ export const api = {
   deleteBudget,
   getCumulativeSpendingArray,
   getTotalLentBorrowedArrays,
-  getGroupTransactions
+  getGroupTransactions,
+  submitFilters,
+  getGroupFilters
 };

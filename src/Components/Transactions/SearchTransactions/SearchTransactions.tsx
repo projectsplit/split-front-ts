@@ -29,22 +29,24 @@ import OptionsToolBar from "./Toolbars/OptionsToolbar/OptionsToolBar";
 import { PreventEnterCommandPlugin } from "./plugins/PreventEnterCommandPlugin";
 import { updateMembersMentions } from "./helpers/updateMembersMentions";
 import SubmitButton from "../../SubmitButton/SubmitButton";
-import { useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
 import { useSignal } from "@preact/signals-react";
+import { api } from "../../../apis/api";
+import { CreateFiltersRequest } from "../../../types";
 export default function SearchTransactions({
   menu,
   members,
   enhancedMembersWithProps,
   payersIds,
   participantsIds,
-  keyWords
+  keyWords,
 }: SearchTransactionsProps) {
-
   const [editorState, setEditorState] = useState<EditorState | null>(null);
   const [editorStateString, setEditorStateString] = useState<string>();
   const [isEmpty, setIsEmpty] = useState(true);
   const [contentEditableHeight, setContentEditableHeight] = useState<number>(0);
+  const submitFiltersErrors = useSignal<any[]>([]);
   const contentEditableWrapRef = useRef<HTMLDivElement>(null);
   const queryClient = useQueryClient();
   const params = useParams();
@@ -57,6 +59,24 @@ export default function SearchTransactions({
       [key: string]: BeautifulMentionsItemData;
     }[]
   >([]);
+
+  const submitFilters = useMutation<any, any, CreateFiltersRequest>({
+  
+    mutationFn: api.submitFilters,
+    onError: (error) => {
+      submitFiltersErrors.value = error.response.data;
+    },
+    onSuccess: () => {
+      queryClient.refetchQueries([
+        "transactions",
+        "active",
+        params.groupid as string,
+        payersIds.value,
+        participantsIds.value,
+        keyWords.value,
+      ]);
+    },
+  });
 
   const mentionItems: Record<string, BeautifulMentionsItem[]> = {};
 
@@ -134,7 +154,7 @@ export default function SearchTransactions({
 
     setEditorStateString(searchTerm);
     if (searchTerm === "") {
-      showOptions.value=true;
+      showOptions.value = true;
       setIsEmpty(true);
     }
   }
@@ -142,33 +162,42 @@ export default function SearchTransactions({
   const deduplicateStringArray = (array: string[]): string[] => {
     return [...new Set(array)];
   };
-  
-  const handleSubmitButton = (editorState: EditorState| null) => {
+
+  const handleSubmitButton = (editorState: EditorState | null) => {
     if (editorState === null) return;
-    
+
     const jsonObject = editorState.toJSON().root.children;
 
     if (isElementNode(jsonObject[0])) {
       const children = jsonObject[0].children;
       children.map((c) => {
         if (c.trigger === "payer:") tempPayersIds.push(c.data.memberId);
-        if (c.trigger === "participant:") tempParticipantsIds.push(c.data.memberId);
+        if (c.trigger === "participant:")
+          tempParticipantsIds.push(c.data.memberId);
         if (c.text !== " ") tempKeyWords.push(c.text);
-      }); 
+      });
 
-     
       payersIds.value = deduplicateStringArray(tempPayersIds);
-      participantsIds.value =deduplicateStringArray(tempParticipantsIds);
-      keyWords.value =deduplicateStringArray(tempKeyWords);
-      
-      
+      participantsIds.value = deduplicateStringArray(tempParticipantsIds);
+      keyWords.value = deduplicateStringArray(tempKeyWords);
 
-      localStorage.setItem("payersIds",JSON.stringify(tempPayersIds)); //will be replaced with a submission to the DB for the specific group
-      localStorage.setItem("participantsIds",JSON.stringify(tempParticipantsIds));
-      localStorage.setItem("keyWords", JSON.stringify(tempKeyWords));
+      submitFilters.mutate({
+        groupId: params.groupid as string,
+        participantsIds: tempParticipantsIds,
+        payersIds: tempPayersIds,
+        receiversIds: [],
+        sendersIds: [],
+      });
 
-      queryClient.refetchQueries(["transactions", "active", params.groupid as string,payersIds.value,participantsIds.value,keyWords.value])
-      menu.value = null
+      queryClient.refetchQueries([
+        "transactions",
+        "active",
+        params.groupid as string,
+        payersIds.value,
+        participantsIds.value,
+        keyWords.value,
+      ]);
+      menu.value = null;
     }
   };
 
@@ -193,7 +222,6 @@ export default function SearchTransactions({
       }
     };
   }, []);
-
 
   return (
     <StyledSearchTransactions>
@@ -238,15 +266,12 @@ export default function SearchTransactions({
                 />
               )}
               menuItemComponent={MenuItem}
-              onMenuItemSelect={() => showOptions.value=true}
+              onMenuItemSelect={() => (showOptions.value = true)}
               insertOnBlur={false}
               //triggers={alphanumericTriggers}
             />
             {filteredResults.length === 0 || editorStateString === "" ? (
-              <MentionsToolbar
-                showOptions={showOptions}
-                members={members}
-              />
+              <MentionsToolbar showOptions={showOptions} members={members} />
             ) : (
               <OptionsToolBar
                 editorStateString={editorStateString}

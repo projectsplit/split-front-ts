@@ -87,6 +87,25 @@ export type CreateBudgetRequest = {
   day: string | null;
 };
 
+export type CreateFiltersRequest = {
+  groupId:string;
+  participantsIds?:string[];
+  payersIds?:string[];
+  receiversIds?:string[];
+  sendersIds?:string[];
+  before?:Date;
+  after?:Date;
+}
+
+export type FilterResponse = {
+  participantsIds?:string[];
+  payersIds?:string[];
+  receiversIds?:string[];
+  sendersIds?:string[];
+  before?:Date;
+  after?:Date;
+}
+
 export type BudgetInfoResponse = {
   budgetSubmitted: boolean;
   averageSpentPerDay?: string;
