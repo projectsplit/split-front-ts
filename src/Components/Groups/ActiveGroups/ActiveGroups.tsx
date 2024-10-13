@@ -9,11 +9,13 @@ import { TreeItemBuilder } from "../../../helpers/TreeItemBuilder";
 import { useNavigate } from "react-router-dom";
 import { calculateDistanceFromTop } from "../../../helpers/calculateDistanceFromTop";
 
+
 export default function ActiveGroups() {
   const elRef = useRef<HTMLDivElement>(null);
   const heightFromTop = window.innerHeight - calculateDistanceFromTop(elRef); //(58 + 36 + 18 + 4 + 30)
   const fittingItems = Math.round(heightFromTop / 81);
   const navigate = useNavigate();
+ 
 
   const {
     // isLoading,

@@ -49,6 +49,8 @@ function App() {
           <Route path="/v/:token" element={<VerifyEmailLinkToken />} />
           <Route element={<PrivateRoutes />}>
             <Route path="/" element={<Home />} />
+
+           
             <Route path="/groups" element={<Groups />}>
               <Route index element={<RedirectToActiveGroups />} />
               {/*when the /groups rout is matched, it will render whatever is in the RedirectToActiveGroups*/}
@@ -65,7 +67,8 @@ function App() {
                 <Route path="/groups/active/:groupid/members" element={<Members />} />
                 <Route path="*" element={<RedirectToTransactions />} />
               </Route>
-
+              
+              
             <Route path="/budget" element={<Budget2 />}>
               <Route index element={<RedirectToBudget />} />
               <Route path="current" element={<CurrentBudget />} />

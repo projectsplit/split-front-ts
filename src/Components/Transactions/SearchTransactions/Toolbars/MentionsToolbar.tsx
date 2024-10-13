@@ -6,6 +6,7 @@ import SearchLabelButton from "../SearchCategoryButtons/SearchLabelButton/Search
 const MentionsToolbar: React.FC<MentionsToolbarProps> = ({
   showOptions,
   members,
+  submitButtonIsActive
 }) => {
 
   return (
@@ -17,44 +18,53 @@ const MentionsToolbar: React.FC<MentionsToolbarProps> = ({
             category={"payer"}
             type={"member"}
             members={members}
+            submitButtonIsActive={submitButtonIsActive}
+            
           />
           <SearchMemberButton
           showOptions={showOptions}
             category={"participant"}
             type={"member"}
             members={members}
+            submitButtonIsActive={submitButtonIsActive}
           />
           <SearchMemberButton
           showOptions={showOptions}
             category={"sender"}
             type={"member"}
             members={members}
+            submitButtonIsActive={submitButtonIsActive}
           />
           <SearchMemberButton
           showOptions={showOptions}
             category={"receiver"}
             type={"member"}
             members={members}
+            submitButtonIsActive={submitButtonIsActive}
           />
           <SearchDateButton
             category={"before"}
             type={"date"}
             dates={""}
+            submitButtonIsActive={submitButtonIsActive}
           />
           <SearchDateButton
             category={"during"}
             type={"date"}
             dates={""}
+            submitButtonIsActive={submitButtonIsActive}
           />
           <SearchDateButton
             category={"after"}
             type={"date"}
             dates={""}
+            submitButtonIsActive={submitButtonIsActive}
           />
           <SearchLabelButton
             category={"category"}
             type={"label"}
             labels={""}
+            submitButtonIsActive={submitButtonIsActive}
           />
         </div>
       )}

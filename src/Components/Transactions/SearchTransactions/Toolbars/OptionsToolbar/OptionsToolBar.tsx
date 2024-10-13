@@ -8,10 +8,10 @@ const OptionsToolBar = ({
   editorStateString,
   filteredResults,
   setFilteredResults,
+  submitButtonIsActive
 }: OptionsToolbarProps) => {
   const { insertMention } = useBeautifulMentions();
   const [editor] = useLexicalComposerContext();
-
 
   return (
     <>
@@ -43,6 +43,8 @@ const OptionsToolBar = ({
                     trigger: result.prop + ":",
                     value: result.value,
                   });
+                  //submitButtonIsActive.value=true;
+                  console.log("Here2")
                   setFilteredResults([]);
                 });
               }}

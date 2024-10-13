@@ -6,10 +6,7 @@ import SearchTransactions from "../Transactions/SearchTransactions/SearchTransac
 export default function SearchTransactionsAnimation({
   menu,
   members,
-  enhancedMembersWithProps,
-  payersIds,
-  participantsIds,
-  keyWords
+  enhancedMembersWithProps
 }: SearchTransactionAnimationProps) {
   return (
     <CSSTransition
@@ -17,7 +14,7 @@ export default function SearchTransactionsAnimation({
       timeout={0}
       unmountOnExit
     >
-      <SearchTransactions menu={menu} members={members} enhancedMembersWithProps={enhancedMembersWithProps} payersIds={payersIds} participantsIds={participantsIds} keyWords={keyWords}/>
+      <SearchTransactions menu={menu} members={members} enhancedMembersWithProps={enhancedMembersWithProps}/>
     </CSSTransition>
   );
 }

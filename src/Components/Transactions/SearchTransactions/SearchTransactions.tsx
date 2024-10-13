@@ -34,13 +34,13 @@ import { useParams } from "react-router-dom";
 import { useSignal } from "@preact/signals-react";
 import { api } from "../../../apis/api";
 import { CreateFiltersRequest } from "../../../types";
+import useGroupFilters from "../../../hooks/useGroupFilters";
+import Spinner from "../../Spinner/Spinner";
+
 export default function SearchTransactions({
   menu,
   members,
   enhancedMembersWithProps,
-  payersIds,
-  participantsIds,
-  keyWords,
 }: SearchTransactionsProps) {
   const [editorState, setEditorState] = useState<EditorState | null>(null);
   const [editorStateString, setEditorStateString] = useState<string>();
@@ -48,9 +48,13 @@ export default function SearchTransactions({
   const [contentEditableHeight, setContentEditableHeight] = useState<number>(0);
   const submitFiltersErrors = useSignal<any[]>([]);
   const contentEditableWrapRef = useRef<HTMLDivElement>(null);
+  const submitButtonIsActive = useSignal<boolean>(false);
+  const tempPayersIds = useSignal<string[]>([]);
+  const tempParticipantsIds = useSignal<string[]>([]);
+  const tempKeyWords = useSignal<string[]>([]);
+
   const queryClient = useQueryClient();
   const params = useParams();
-
   const showOptions = useSignal<boolean>(true);
 
   const [filteredResults, setFilteredResults] = useState<
@@ -60,8 +64,21 @@ export default function SearchTransactions({
     }[]
   >([]);
 
+  const groupFiltersData = useGroupFilters(params.groupid);
+
+  const payers = groupFiltersData.data?.payers;
+  const participants = groupFiltersData.data?.participants;
+  const senders = groupFiltersData.data?.senders;
+  const receivers = groupFiltersData.data?.receivers;
+
+  const filteredMembers = {
+    payers: payers ?? [],
+    participants: participants ?? [],
+    senders: senders ?? [],
+    receivers: receivers ?? [],
+  };
+
   const submitFilters = useMutation<any, any, CreateFiltersRequest>({
-  
     mutationFn: api.submitFilters,
     onError: (error) => {
       submitFiltersErrors.value = error.response.data;
@@ -71,9 +88,6 @@ export default function SearchTransactions({
         "transactions",
         "active",
         params.groupid as string,
-        payersIds.value,
-        participantsIds.value,
-        keyWords.value,
       ]);
     },
   });
@@ -120,10 +134,6 @@ export default function SearchTransactions({
     nodes: [HeadingNode, BeautifulMentionNode],
   };
 
-  const tempPayersIds: string[] = [];
-  const tempParticipantsIds: string[] = [];
-  const tempKeyWords: string[] = [];
-
   function onChange(editorState: EditorState) {
     setEditorState(editorState);
     const searchTerm = editorState.read(() => {
@@ -143,9 +153,29 @@ export default function SearchTransactions({
           setFilteredResults,
           enhancedMembersWithProps
         );
-      } else {
-        console.log("No text node found.");
       }
+      // else {
+      //   console.log("No text node found.");
+      // }
+      // children.map((c) => {
+      //   if (c.trigger === "payer:") {tempPayersIds.push(c.data.memberId) ;submitButtonIsActive.value=true};
+      //   if (c.trigger === "participant:")tempParticipantsIds.push(c.data.memberId);
+      //   if (c.text !== " ") tempKeyWords.push(c.text);
+      // });
+      
+      const excludedTerms = [
+        "payer:",
+        "participant:",
+        "sender:",
+        "receiver:",
+        "before:",
+        "during:",
+        "after:",
+        "category:",
+      ];
+      const trimmedSearchTerm = searchTerm.trim(); //used to treat all empty spaces the same. e.g. "" ," ", "  "
+      if (trimmedSearchTerm !== "" && tempPayersIds.value.length === 0 && !excludedTerms.includes(trimmedSearchTerm)) submitButtonIsActive.value = true;
+      if (trimmedSearchTerm === "") submitButtonIsActive.value = false;
     } else {
       console.log(
         "The node is not an element node and does not have children."
@@ -159,9 +189,9 @@ export default function SearchTransactions({
     }
   }
 
-  const deduplicateStringArray = (array: string[]): string[] => {
-    return [...new Set(array)];
-  };
+  // const deduplicateStringArray = (array: string[]): string[] => {
+  //   return [...new Set(array)];
+  // };
 
   const handleSubmitButton = (editorState: EditorState | null) => {
     if (editorState === null) return;
@@ -170,21 +200,18 @@ export default function SearchTransactions({
 
     if (isElementNode(jsonObject[0])) {
       const children = jsonObject[0].children;
-      children.map((c) => {
-        if (c.trigger === "payer:") tempPayersIds.push(c.data.memberId);
-        if (c.trigger === "participant:")
-          tempParticipantsIds.push(c.data.memberId);
-        if (c.text !== " ") tempKeyWords.push(c.text);
-      });
 
-      payersIds.value = deduplicateStringArray(tempPayersIds);
-      participantsIds.value = deduplicateStringArray(tempParticipantsIds);
-      keyWords.value = deduplicateStringArray(tempKeyWords);
+      console.log(children.map((c) =>c))
+      children.map((c) => {
+        if (c.trigger === "payer:") tempPayersIds.value.push(c.data.memberId);
+        if (c.trigger === "participant:") tempParticipantsIds.value.push(c.data.memberId);
+        if (c.text !== " ") tempKeyWords.value.push(c.text);
+      });
 
       submitFilters.mutate({
         groupId: params.groupid as string,
-        participantsIds: tempParticipantsIds,
-        payersIds: tempPayersIds,
+        participantsIds: tempParticipantsIds.value,
+        payersIds: tempPayersIds.value,
         receiversIds: [],
         sendersIds: [],
       });
@@ -193,9 +220,6 @@ export default function SearchTransactions({
         "transactions",
         "active",
         params.groupid as string,
-        payersIds.value,
-        participantsIds.value,
-        keyWords.value,
       ]);
       menu.value = null;
     }
@@ -225,71 +249,84 @@ export default function SearchTransactions({
 
   return (
     <StyledSearchTransactions>
-      <div className="header">
-        <div className="closeSign" onClick={() => (menu.value = null)}>
-          <IoClose />
-        </div>
-        <div className="searchingIn">
-          Searching In:&nbsp;
-          <span className="groupName">Tour </span>
-        </div>
-        <div className="gap"></div>
-      </div>
+      {!payers || !participants || !senders || !receivers ? (
+        <Spinner />
+      ) : (
+        <>
+          <div className="header">
+            <div className="closeSign" onClick={() => (menu.value = null)}>
+              <IoClose />
+            </div>
+            <div className="searchingIn">
+              Searching In:&nbsp;
+              <span className="groupName">Tour</span>
+            </div>
+            <div className="gap"></div>
+          </div>
 
-      <div className="searchBarAndCategories">
-        <div className="lexicalSearch">
-          <LexicalComposer initialConfig={initialConfig}>
-            <RichTextPlugin
-              contentEditable={
-                <div
-                  ref={contentEditableWrapRef}
-                  className="contentEditableWrap"
-                >
-                  <ContentEditable className="contentEditable" />
-                </div>
-              }
-              placeholder={
-                isEmpty ? (
-                  <div className="contentEditablePlaceholder">Search</div>
-                ) : null
-              }
-              ErrorBoundary={LexicalErrorBoundary}
-            />
-            <HistoryPlugin />
-            <OnChangePlugin onChange={onChange} />
-            <BeautifulMentionsPlugin
-              items={mentionItems}
-              menuComponent={(props) => (
-                <Menu
-                  {...props}
-                  contentEditableHeight={contentEditableHeight}
+          <div className="searchBarAndCategories">
+            <div className="lexicalSearch">
+              <LexicalComposer initialConfig={initialConfig}>
+                <RichTextPlugin
+                  contentEditable={
+                    <div
+                      ref={contentEditableWrapRef}
+                      className="contentEditableWrap"
+                    >
+                      <ContentEditable className="contentEditable" />
+                    </div>
+                  }
+                  placeholder={
+                    isEmpty ? (
+                      <div className="contentEditablePlaceholder">Search</div>
+                    ) : null
+                  }
+                  ErrorBoundary={LexicalErrorBoundary}
                 />
-              )}
-              menuItemComponent={MenuItem}
-              onMenuItemSelect={() => (showOptions.value = true)}
-              insertOnBlur={false}
-              //triggers={alphanumericTriggers}
-            />
-            {filteredResults.length === 0 || editorStateString === "" ? (
-              <MentionsToolbar showOptions={showOptions} members={members} />
-            ) : (
-              <OptionsToolBar
-                editorStateString={editorStateString}
-                filteredResults={filteredResults}
-                setFilteredResults={setFilteredResults}
-              />
-            )}
-            <AutoFocusPlugin />
-            <PreventEnterCommandPlugin />
-          </LexicalComposer>
-        </div>
-      </div>
+                <HistoryPlugin />
+                <OnChangePlugin onChange={onChange} />
+                <BeautifulMentionsPlugin
+                  items={mentionItems}
+                  menuComponent={(props) => (
+                    <Menu
+                      {...props}
+                      contentEditableHeight={contentEditableHeight}
+                    />
+                  )}
+                  menuItemComponent={MenuItem}
+                  onMenuItemSelect={() => (showOptions.value = true)}
+                  insertOnBlur={false}
+                />
+                {filteredResults.length === 0 || editorStateString === "" ? (
+                  <MentionsToolbar
+                    showOptions={showOptions}
+                    members={filteredMembers}
+                    submitButtonIsActive={submitButtonIsActive}
+                  />
+                ) : (
+                  <OptionsToolBar
+                    editorStateString={editorStateString}
+                    filteredResults={filteredResults}
+                    setFilteredResults={setFilteredResults}
+                    submitButtonIsActive={submitButtonIsActive}
+                  />
+                )}
+                <AutoFocusPlugin />
+                <PreventEnterCommandPlugin />
+              </LexicalComposer>
+            </div>
+          </div>
 
-      <div className="submitButton">
-        <SubmitButton onClick={() => handleSubmitButton(editorState)}>
-          Apply filters
-        </SubmitButton>
-      </div>
+          <div className="submitButton">
+            <SubmitButton
+              onClick={() => handleSubmitButton(editorState)}
+              submitButtonIsActive={submitButtonIsActive}
+            >
+              Apply filters
+            </SubmitButton>
+          </div>
+        </>
+      )}
     </StyledSearchTransactions>
   );
 }

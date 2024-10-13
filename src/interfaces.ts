@@ -1,5 +1,5 @@
 import { CSSProperties, MouseEventHandler } from "react";
-import { BudgetInfoResponse,  EnhancedMembersWithProps,  FetchedMembers,Frequency, Participant, Payer} from "./types";
+import { BudgetInfoResponse,  EnhancedMembersWithProps,  FetchedMembers,Frequency, Members, Participant, Payer} from "./types";
 import { Signal } from "@preact/signals-react";
 import React from "react";
 import { BeautifulMentionsItemData, BeautifulMentionsMenuProps } from "lexical-beautiful-mentions";
@@ -72,6 +72,7 @@ export interface SubmitButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
   children: any;
+  submitButtonIsActive?:Signal<boolean>;
 }
 
 export interface SpendingCycleSelectorProps
@@ -298,19 +299,12 @@ export interface SearchTransactionAnimationProps {
   menu: Signal<string | null>;
   members:FetchedMembers;
   enhancedMembersWithProps:EnhancedMembersWithProps;
-  payersIds:Signal<string[]>;
-  participantsIds:Signal<string[]>;
-  keyWords:Signal<string[]>;
-  
 }
 
 export interface SearchTransactionsProps {
   menu: Signal<string | null>;
   members:FetchedMembers;
   enhancedMembersWithProps:EnhancedMembersWithProps;
-  payersIds:Signal<string[]>;
-  participantsIds:Signal<string[]>;
-  keyWords:Signal<string[]>;
 }
 
 export interface SearchBarProps extends InputProps {
@@ -322,12 +316,14 @@ export interface SearchBarProps extends InputProps {
 export interface SearchCategoryButtonProps {
   category: string;
   type: string;
+  submitButtonIsActive:Signal<boolean>
   // onClick: (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
 }
 
 export interface SearchMemberButtonProps extends SearchCategoryButtonProps {
-  members:FetchedMembers;
   showOptions: Signal<boolean>;
+  members:Members;
+  submitButtonIsActive:Signal<boolean>;
 }
 
 export interface SearchDateButtonProps extends SearchCategoryButtonProps {
@@ -348,7 +344,8 @@ export interface StyledMenuItemProps {
 export interface MentionsToolbarProps {
   showOptions: Signal<boolean>;
   ref?: React.Ref<HTMLDivElement>;
-  members:FetchedMembers;
+  members:Members;
+  submitButtonIsActive:Signal<boolean>
 }
 
 export interface OptionsToolbarProps {
@@ -361,6 +358,7 @@ export interface OptionsToolbarProps {
     [key: string]: BeautifulMentionsItemData;
     value: string;
   }[]>>;
+  submitButtonIsActive:Signal<boolean>;
 }
 
 export interface SearchMenuProps{
@@ -373,4 +371,10 @@ export interface MembersPillsDisplayProps {
   category: string;
   members: FetchedMembers;
   showOptions: Signal<boolean>;
+  submitButtonIsActive:Signal<boolean>;
+}
+
+export interface GroupContextType {
+  selectedGroupId:Signal<string>;
+ 
 }

@@ -3,58 +3,47 @@ import { StyledSearchCategoryButton } from "../SearchCategoryButton.styled";
 import { SearchMemberButtonProps } from "../../../../../interfaces";
 import { MembersPillsDisplay } from "./MembersPillsDisplay/MembersPillsDisplay";
 import { useBeautifulMentions } from "lexical-beautiful-mentions";
-import { FetchedMembers } from "../../../../../types";
+
 
 export default function SearchMemberButton({
   category,
   type,
   members,
   showOptions,
+  submitButtonIsActive
 }: SearchMemberButtonProps) {
-  
   const { insertMention } = useBeautifulMentions();
-  //here we need to check local storage and build pills with the names of each category e.g. participant payer etc.
 
-  const participantIds: string[] = JSON.parse(
-    localStorage.getItem("participantsIds") || "[]"
-  );
-  const payerIds: string[] = JSON.parse(
-    localStorage.getItem("payersIds") || "[]"
-  );
-
-  // Filter members based on the IDs
-  const participants = members.filter((member) =>
-    participantIds.includes(member.memberId)
-  );
-  const payers = members.filter((member) => payerIds.includes(member.memberId));
-  const senders: FetchedMembers = [];
-  const receivers: FetchedMembers = [];
 
   return (
     <StyledSearchCategoryButton>
-      {category === "payer" && payers.length !== 0 ? (
+      {category === "payer" && members.payers.length !== 0 ? (
         <MembersPillsDisplay
           category={category}
-          members={payers}
+          members={members.payers}
           showOptions={showOptions}
+          submitButtonIsActive={submitButtonIsActive}
         />
-      ) : category === "participant" && participants.length !== 0 ? (
+      ) : category === "participant" && members.participants.length !== 0 ? (
         <MembersPillsDisplay
           category={category}
-          members={participants}
+          members={members.participants}
           showOptions={showOptions}
+          submitButtonIsActive={submitButtonIsActive}
         />
-      ) : category === "sender" && senders.length !== 0 ? (
+      ) : category === "sender" && members.senders.length !== 0 ? (
         <MembersPillsDisplay
           category={category}
-          members={senders}
+          members={members.senders}
           showOptions={showOptions}
+          submitButtonIsActive={submitButtonIsActive}
         />
-      ) : category === "receiver" && receivers.length !== 0 ? (
+      ) : category === "receiver" && members.receivers.length !== 0 ? (
         <MembersPillsDisplay
           category={category}
-          members={receivers}
+          members={members.receivers}
           showOptions={showOptions}
+          submitButtonIsActive={submitButtonIsActive}
         />
       ) : (
         <>
@@ -63,6 +52,8 @@ export default function SearchMemberButton({
             onClick={() => {
               insertMention({ trigger: category + ":", value: "" });
               showOptions.value = false;
+              //submitButtonIsActive.value=true;
+              console.log("Here3")
             }}
           >
             {category}:

@@ -16,22 +16,12 @@ import useGroupFilters from "../../hooks/useGroupFilters";
 export default function Transactions() {
   const params = useParams();
   const menu = useSignal<string | null>(null);
-
-
-  const { data: filters, isSuccess } = useGroupFilters(
-    '64b68397d453ce79c81446a9'
-  );
-
-  const payersIds = useSignal<string[]>(filters?.payersIds || []);//problem:payersIds never fill. Need to check dependencies on useGroupFilters
-  const participantsIds = useSignal<string[]>(filters?.participantsIds || []);
-  
-  const keyWords = useSignal<string[]>(
-    JSON.parse(localStorage.getItem("keyWords") ?? "[]")
-  );
-
   const elRef = useRef<HTMLDivElement>(null);
   const heightFromTop = window.innerHeight - calculateDistanceFromTop(elRef);
   const fittingItems = Math.round(heightFromTop / 100);
+
+  //useQuery to get filters here
+ 
 
   const membersFetchedFromBackend: FetchedMembers = [
     { memberId: "0f0fa971-f188-4694-90dc-54d7c8a99d87", value: "user1" },
@@ -65,17 +55,12 @@ export default function Transactions() {
     [
       "transactions",
       "active",
-      params.groupid as string,
-      payersIds.value,
-      participantsIds.value,
-      keyWords.value,
+      params.groupid as string
     ],
     ({ pageParam }) =>
       api.getGroupTransactions(
         fittingItems,
         params.groupid as string,
-        payersIds.value,
-        participantsIds.value,
         {
           pageParam,
         }
@@ -138,7 +123,7 @@ export default function Transactions() {
 
   return (
     <StyledTransactions ref={elRef}>
-      {isFetching && data === undefined ? <Spinner /> : null}
+      {(isFetching && data === undefined )||!params.groupid? <Spinner /> : null}
       <div className="transactionField">
         <div className="magnifyingGlass">
           <FaMagnifyingGlass onClick={() => (menu.value = "search")} />
@@ -181,9 +166,6 @@ export default function Transactions() {
         menu={menu}
         members={membersFetchedFromBackend}
         enhancedMembersWithProps={enhancedMembersWithProps}
-        payersIds={payersIds}
-        participantsIds={participantsIds}
-        keyWords={keyWords}
       />
     </StyledTransactions>
   );

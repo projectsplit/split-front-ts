@@ -5,6 +5,7 @@ import { SearchDateButtonProps } from "../../../../../interfaces";
 export default function SearchLabelButton({
   category,
   type,
+  submitButtonIsActive
 }: SearchDateButtonProps) {
 
 

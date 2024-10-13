@@ -98,12 +98,12 @@ export type CreateFiltersRequest = {
 }
 
 export type FilterResponse = {
-  participantsIds?:string[];
-  payersIds?:string[];
-  receiversIds?:string[];
-  sendersIds?:string[];
-  before?:Date;
-  after?:Date;
+  payers:FetchedMembers;
+  participants:FetchedMembers;
+  senders:FetchedMembers;
+  receivers:FetchedMembers;
+  // before?:Date;
+  // after?:Date;
 }
 
 export type BudgetInfoResponse = {
@@ -155,11 +155,12 @@ export type SerializedElementNode = SerializedLexicalNode & {
   children: SerializedLexicalNode[];
 };
 
-export type FetchedMembers= {
+export type FetchedMember = {
   memberId:string;
   value: string;
-  
-}[]
+};
+
+export type FetchedMembers= FetchedMember[]
 
 export type EnhancedMembersWithProps = {
   value: string;
@@ -167,3 +168,9 @@ export type EnhancedMembersWithProps = {
   prop: string;
 }[]
 
+export type Members = {
+  payers: FetchedMembers;
+  participants: FetchedMembers;
+  senders: FetchedMembers;
+  receivers: FetchedMembers; 
+};

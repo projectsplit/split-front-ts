@@ -18,7 +18,9 @@ export const theme = {
     labelColor6: "#8594E0",
     inputGrey: "#2d2d2d",
     grey:"#777777",
-    searchBarGrey:"#2c2c2c"
+    searchBarGrey:"#2c2c2c",
+    buttonActive:"#f0f0f0",
+    buttonNotActive:"black"
   },
 };
 //rgb(49, 162, 76) fb green

@@ -7,7 +7,7 @@ export const useRedirectToTransactions = () => {
     const navigate = useNavigate()
 
     useEffect(() => {
-        console.log('RAN')
+        
         //navigate(`/${params.groupid}/transactions`)
         navigate(`/groups/active/${params.groupid}/transactions`)
     }, [])
