@@ -8,7 +8,7 @@ import { useBeautifulMentions } from "lexical-beautiful-mentions";
 export default function SearchMemberButton({
   category,
   type,
-  members,
+  filteredMembers,
   showOptions,
   submitButtonIsActive
 }: SearchMemberButtonProps) {
@@ -17,31 +17,31 @@ export default function SearchMemberButton({
 
   return (
     <StyledSearchCategoryButton>
-      {category === "payer" && members.payers.length !== 0 ? (
+      {category === "payer" && filteredMembers.payers.length !== 0 ? (
         <MembersPillsDisplay
           category={category}
-          members={members.payers}
+          filteredMembers={filteredMembers.payers}
           showOptions={showOptions}
           submitButtonIsActive={submitButtonIsActive}
         />
-      ) : category === "participant" && members.participants.length !== 0 ? (
+      ) : category === "participant" && filteredMembers.participants.length !== 0 ? (
         <MembersPillsDisplay
           category={category}
-          members={members.participants}
+          filteredMembers={filteredMembers.participants}
           showOptions={showOptions}
           submitButtonIsActive={submitButtonIsActive}
         />
-      ) : category === "sender" && members.senders.length !== 0 ? (
+      ) : category === "sender" && filteredMembers.senders.length !== 0 ? (
         <MembersPillsDisplay
           category={category}
-          members={members.senders}
+          filteredMembers={filteredMembers.senders}
           showOptions={showOptions}
           submitButtonIsActive={submitButtonIsActive}
         />
-      ) : category === "receiver" && members.receivers.length !== 0 ? (
+      ) : category === "receiver" && filteredMembers.receivers.length !== 0 ? (
         <MembersPillsDisplay
           category={category}
-          members={members.receivers}
+          filteredMembers={filteredMembers.receivers}
           showOptions={showOptions}
           submitButtonIsActive={submitButtonIsActive}
         />

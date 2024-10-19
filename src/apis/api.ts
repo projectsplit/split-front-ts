@@ -151,7 +151,7 @@ const submitFilters = async (request: CreateFiltersRequest) => {
     `/filters/create`,
     request
   );
-  console.log(response);
+ 
   return response.data;
 };
 

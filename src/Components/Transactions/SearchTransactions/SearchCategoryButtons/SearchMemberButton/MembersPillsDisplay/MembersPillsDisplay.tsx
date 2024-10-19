@@ -7,18 +7,19 @@ import { FetchedMembers } from "../../../../../../types";
 
 export const MembersPillsDisplay: React.FC<MembersPillsDisplayProps> = ({
   category,
-  members,
+  filteredMembers,
   showOptions,
   submitButtonIsActive
 }) => {
 
-  const [showFilteredMembers, setFilteredMembers] = useState<FetchedMembers>(members)
+  const [showFilteredMembers, setFilteredMembers] = useState<FetchedMembers>(filteredMembers)
   const { insertMention } = useBeautifulMentions();
 
   const removeFilter = (memberId:string)=>{
     
     const updatedFilteredMembers = showFilteredMembers.filter((member)=>member.memberId!==memberId)
     setFilteredMembers(updatedFilteredMembers)
+    submitButtonIsActive.value=true;
   }
 
 

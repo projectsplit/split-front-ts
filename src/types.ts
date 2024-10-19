@@ -89,10 +89,11 @@ export type CreateBudgetRequest = {
 
 export type CreateFiltersRequest = {
   groupId:string;
-  participantsIds?:string[];
-  payersIds?:string[];
-  receiversIds?:string[];
-  sendersIds?:string[];
+  participantsIds:string[];
+  payersIds:string[];
+  receiversIds:string[];
+  sendersIds:string[];
+  description:string[];
   before?:Date;
   after?:Date;
 }

@@ -49,12 +49,25 @@ export default function SearchTransactions({
   const submitFiltersErrors = useSignal<any[]>([]);
   const contentEditableWrapRef = useRef<HTMLDivElement>(null);
   const submitButtonIsActive = useSignal<boolean>(false);
-  const tempPayersIds = useSignal<string[]>([]);
-  const tempParticipantsIds = useSignal<string[]>([]);
-  const tempKeyWords = useSignal<string[]>([]);
+  // const tempPayersIds = useSignal<string[]>([]);
+  // const tempParticipantsIds = useSignal<string[]>([]);
+  // const tempKeyWords = useSignal<string[]>([]);
+  const params = useParams();
+  const { isFetching, data: groupFiltersData, error }= useGroupFilters(params.groupid);
+
+  const filterState = useSignal<CreateFiltersRequest>({
+    groupId: "",
+    participantsIds: [],
+    payersIds:[],
+    receiversIds: [],
+    sendersIds: [],
+    description:[],
+    before: undefined,
+    after: undefined,
+  });
 
   const queryClient = useQueryClient();
-  const params = useParams();
+  
   const showOptions = useSignal<boolean>(true);
 
   const [filteredResults, setFilteredResults] = useState<
@@ -64,12 +77,48 @@ export default function SearchTransactions({
     }[]
   >([]);
 
-  const groupFiltersData = useGroupFilters(params.groupid);
+  useEffect(() => {
+    if (groupFiltersData) {
+      filterState.value = {
+        groupId: params.groupid || "",
+        participantsIds: groupFiltersData.participants?.map(participant => participant.memberId) || [],
+        payersIds: groupFiltersData.payers?.map(payer => payer.memberId) || [],
+        receiversIds: groupFiltersData.receivers?.map(receiver => receiver.memberId) || [],
+        sendersIds: groupFiltersData.senders?.map(sender => sender.memberId) || [],
+        description: [],  
+        before: undefined,  
+        after: undefined,   
+      };
+    }
+  }, [groupFiltersData, params.groupid]);
 
-  const payers = groupFiltersData.data?.payers;
-  const participants = groupFiltersData.data?.participants;
-  const senders = groupFiltersData.data?.senders;
-  const receivers = groupFiltersData.data?.receivers;
+  useEffect(() => {
+    const handleResize = () => {
+      filterState.value.groupId = params.groupid as string;
+      if (contentEditableWrapRef.current) {
+        setContentEditableHeight(contentEditableWrapRef.current.offsetHeight);
+      }
+    };
+
+    handleResize(); // Set initial height
+
+    // Optional: Add a resize observer to handle dynamic changes
+    const resizeObserver = new ResizeObserver(handleResize);
+    if (contentEditableWrapRef.current) {
+      resizeObserver.observe(contentEditableWrapRef.current);
+    }
+
+    return () => {
+      if (contentEditableWrapRef.current) {
+        resizeObserver.unobserve(contentEditableWrapRef.current);
+      }
+    };
+  }, []);
+
+  const payers = groupFiltersData?.payers;
+  const participants = groupFiltersData?.participants;
+  const senders = groupFiltersData?.senders;
+  const receivers = groupFiltersData?.receivers;
 
   const filteredMembers = {
     payers: payers ?? [],
@@ -154,15 +203,7 @@ export default function SearchTransactions({
           enhancedMembersWithProps
         );
       }
-      // else {
-      //   console.log("No text node found.");
-      // }
-      // children.map((c) => {
-      //   if (c.trigger === "payer:") {tempPayersIds.push(c.data.memberId) ;submitButtonIsActive.value=true};
-      //   if (c.trigger === "participant:")tempParticipantsIds.push(c.data.memberId);
-      //   if (c.text !== " ") tempKeyWords.push(c.text);
-      // });
-      
+
       const excludedTerms = [
         "payer:",
         "participant:",
@@ -174,7 +215,12 @@ export default function SearchTransactions({
         "category:",
       ];
       const trimmedSearchTerm = searchTerm.trim(); //used to treat all empty spaces the same. e.g. "" ," ", "  "
-      if (trimmedSearchTerm !== "" && tempPayersIds.value.length === 0 && !excludedTerms.includes(trimmedSearchTerm)) submitButtonIsActive.value = true;
+      if (
+        trimmedSearchTerm !== "" &&
+        filterState.value.payersIds.length === 0 &&
+        !excludedTerms.includes(trimmedSearchTerm) //TODO issue after filterState introduced. Does not activate Apply filter button
+      )
+        submitButtonIsActive.value = true;
       if (trimmedSearchTerm === "") submitButtonIsActive.value = false;
     } else {
       console.log(
@@ -189,10 +235,6 @@ export default function SearchTransactions({
     }
   }
 
-  // const deduplicateStringArray = (array: string[]): string[] => {
-  //   return [...new Set(array)];
-  // };
-
   const handleSubmitButton = (editorState: EditorState | null) => {
     if (editorState === null) return;
 
@@ -201,19 +243,19 @@ export default function SearchTransactions({
     if (isElementNode(jsonObject[0])) {
       const children = jsonObject[0].children;
 
-      console.log(children.map((c) =>c))
       children.map((c) => {
-        if (c.trigger === "payer:") tempPayersIds.value.push(c.data.memberId);
-        if (c.trigger === "participant:") tempParticipantsIds.value.push(c.data.memberId);
-        if (c.text !== " ") tempKeyWords.value.push(c.text);
+        if (c.trigger === "payer:") filterState.value.payersIds.push(c.data.memberId)//tempPayersIds.value.push(c.data.memberId);
+        if (c.trigger === "participant:") filterState.value.participantsIds.push(c.data.memberId)//tempParticipantsIds.value.push(c.data.memberId);
+        if (c.text !== " ") filterState.value.description.push(c.text);
       });
 
       submitFilters.mutate({
-        groupId: params.groupid as string,
-        participantsIds: tempParticipantsIds.value,
-        payersIds: tempPayersIds.value,
-        receiversIds: [],
-        sendersIds: [],
+        groupId: filterState.value.groupId,
+        participantsIds: filterState.value.participantsIds,
+        payersIds:filterState.value.payersIds ,
+        receiversIds:filterState.value.receiversIds, 
+        sendersIds:filterState.value.sendersIds,
+        description:filterState.value.description
       });
 
       queryClient.refetchQueries([
@@ -225,31 +267,9 @@ export default function SearchTransactions({
     }
   };
 
-  useEffect(() => {
-    const handleResize = () => {
-      if (contentEditableWrapRef.current) {
-        setContentEditableHeight(contentEditableWrapRef.current.offsetHeight);
-      }
-    };
-
-    handleResize(); // Set initial height
-
-    // Optional: Add a resize observer to handle dynamic changes
-    const resizeObserver = new ResizeObserver(handleResize);
-    if (contentEditableWrapRef.current) {
-      resizeObserver.observe(contentEditableWrapRef.current);
-    }
-
-    return () => {
-      if (contentEditableWrapRef.current) {
-        resizeObserver.unobserve(contentEditableWrapRef.current);
-      }
-    };
-  }, []);
-
   return (
     <StyledSearchTransactions>
-      {!payers || !participants || !senders || !receivers ? (
+      {isFetching ? (
         <Spinner />
       ) : (
         <>
@@ -300,7 +320,7 @@ export default function SearchTransactions({
                 {filteredResults.length === 0 || editorStateString === "" ? (
                   <MentionsToolbar
                     showOptions={showOptions}
-                    members={filteredMembers}
+                    filteredMembers={filteredMembers}
                     submitButtonIsActive={submitButtonIsActive}
                   />
                 ) : (

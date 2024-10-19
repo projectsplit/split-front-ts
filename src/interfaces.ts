@@ -322,7 +322,7 @@ export interface SearchCategoryButtonProps {
 
 export interface SearchMemberButtonProps extends SearchCategoryButtonProps {
   showOptions: Signal<boolean>;
-  members:Members;
+  filteredMembers:Members;
   submitButtonIsActive:Signal<boolean>;
 }
 
@@ -344,7 +344,7 @@ export interface StyledMenuItemProps {
 export interface MentionsToolbarProps {
   showOptions: Signal<boolean>;
   ref?: React.Ref<HTMLDivElement>;
-  members:Members;
+  filteredMembers:Members;
   submitButtonIsActive:Signal<boolean>
 }
 
@@ -369,12 +369,11 @@ export interface CombinedMenuProps extends SearchMenuProps, BeautifulMentionsMen
 
 export interface MembersPillsDisplayProps {
   category: string;
-  members: FetchedMembers;
+  filteredMembers: FetchedMembers;
   showOptions: Signal<boolean>;
   submitButtonIsActive:Signal<boolean>;
 }
 
 export interface GroupContextType {
   selectedGroupId:Signal<string>;
- 
 }

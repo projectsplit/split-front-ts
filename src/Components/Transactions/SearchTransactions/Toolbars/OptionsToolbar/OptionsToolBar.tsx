@@ -42,6 +42,7 @@ const OptionsToolBar = ({
                   insertMention({
                     trigger: result.prop + ":",
                     value: result.value,
+                    data: { memberId: result.memberId }
                   });
                   //submitButtonIsActive.value=true;
                   console.log("Here2")
